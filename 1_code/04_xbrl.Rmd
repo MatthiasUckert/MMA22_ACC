@@ -1,0 +1,96 @@
+---
+title: "Textual Analysis"
+author: "Matthias Uckert"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_notebook
+---
+
+    # github_document:
+    # toc: true
+    # toc_depth: 2
+
+# Description
+
+xxx
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
+knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
+```
+
+# Script Setup
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse); library(zip); library(furrr)
+
+.dir_main <- "2_output/04_xbrl"
+if(!dir.exists(.dir_main)) dir.create(.dir_main, recursive = TRUE)
+
+source("1_code/00_functions/f-all.R")
+source("1_code/00_functions/f-xbrl.R")
+```
+
+# Code
+
+## Paths
+```{r}
+.dir_sec <- "2_output/01_get_edgar_data/documents/"
+.path_sec_data <- "2_output/01_get_edgar_data/txt_download.rds"
+```
+
+## List Files
+```{r}
+tab_files_sec <- list_files_tab(.dir_sec, reg = "zip$") %>%
+  filter(startsWith(doc_id, "xxx"))
+```
+
+```{r}
+.dir_tmp <- "2_output/04_xbrl/tmp"
+.dir_elements_raw <- "2_output/04_xbrl/elements_raw"
+if(!dir.exists(.dir_tmp)) dir.create(.dir_tmp, recursive = TRUE)
+if(!dir.exists(.dir_elements_raw)) dir.create(.dir_elements_raw, recursive = TRUE)
+```
+
+
+```{r}
+.prc <- list_files_tab(.dir_elements_raw)
+tab_files_sec_use <- filter(tab_files_sec, !doc_id %in% .prc$doc_id)
+
+plan("multisession", workers = 8)
+future_walk(
+  .x = tab_files_sec_use$path[3], 
+  .f = ~ xbrl_extract_elements(.x, .dir_tmp, .dir_elements_raw),
+  .options = furrr_options(seed = TRUE),
+  .progress = TRUE
+  )
+plan("default")
+
+```
+
+```{r}
+.dir_elements_prc <- "2_output/04_xbrl/elements_prc"
+if(!dir.exists(.dir_elements_prc)) dir.create(.dir_elements_prc, recursive = TRUE)
+```
+
+
+```{r}
+tab_files_elements_raw <- list_files_tab(.dir_elements_raw)
+.prc <- list_files_tab(.dir_elements_prc)
+tab_files_elements_use <- filter(tab_files_elements_raw, !doc_id %in% .prc$doc_id)
+
+plan("multisession", workers = 4)
+future_walk(
+  .x = tab_files_elements_use$path,
+  .f = ~ {
+    read_rds(.x) %>%
+      xbrl_process_elements() %>%
+      write_rds(file.path(.dir_elements_prc, basename(.x)), compress = "gz")
+  },
+  .options = furrr_options(seed = TRUE),
+  .progress = TRUE
+)
+plan("default")
+
+```
+

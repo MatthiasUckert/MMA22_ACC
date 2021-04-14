@@ -1,0 +1,208 @@
+---
+title: "Getting Data AnnualReport.com"
+author: "Matthias Uckert"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_notebook
+---
+
+    # github_document:
+    # toc: true
+    # toc_depth: 2
+
+# Description
+
+xxx
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
+knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
+```
+
+# Script Setup
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse); library(rvest); library(xml2); library(janitor); library(furrr)
+library(openxlsx); library(fuzzyjoin); library(stringdist); library(ISOcodes)
+
+.dir_main <- "2_output/02_get_arcom_data"
+if(!dir.exists(.dir_main)) dir.create(.dir_main, recursive = TRUE)
+
+source("1_code/00_functions/f-all.R")
+source("1_code/00_functions/f-get_arcom_data.R")
+```
+
+
+# Code
+## Read Orbis Firms
+```{r}
+.path_orbis <- "0_data/orbis_listed.xlsx"
+tab_orbis <- read.xlsx(.path_orbis, 2) %>%
+  rename(Alpha_2 = Country.ISO.code) %>%
+  left_join(select(ISO_3166_1, Alpha_2, country_code = Alpha_3, country = Name), by = "Alpha_2") %>%
+  select(isin = ISIN.number, company = Company.name.Latin.alphabet, country_code, country)
+
+```
+
+
+
+## Get Annual Report Firms
+```{r}
+.path_firm_links <- "2_output/02_get_arcom_data/arcom_firm_links.rds"
+if (!file.exists(.path_firm_links)) {
+  .prc <- tibble(id = character(), .rows = 0)
+} else {
+  .prc <- read_rds(.path_firm_links)
+}
+
+.urls <- set_names(paste0("https://www.annualreports.com/Companies?ind=i", 1:250), 1:250)
+urls_use <- .urls[!names(.urls) %in% .prc$id]
+length(urls_use)
+
+if (length(urls_use) > 0) {
+  sf <- safely(get_company_table)
+  
+  plan("multisession", workers = 4)
+  lst_firm_links <- future_map(
+    .x = urls_use,
+    .f = sf,
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  ) %>% transpose()
+  plan("default")
+  
+  err <- compact(lst_firm_links$error)
+  
+  tab_firm_links <- bind_rows(.prc, bind_rows(lst_firm_links$result, .id = "id"))
+
+  write_rds(tab_firm_links, .path_firm_links)
+} else {
+  tab_firm_links <- .prc
+}
+```
+
+
+```{r}
+urls_use <- .urls[!names(.urls) %in% tab_firm_links$id]
+length(urls_use)
+browseURL(urls_use[1])
+rm(urls_use)
+```
+
+
+## Get Annual Report HTMLs
+```{r}
+.dir_html <- "2_output/02_get_arcom_data/html"
+if (!dir.exists(.dir_html)) dir.create(.dir_html, recursive = TRUE)
+.prc <- list_files_tab(.dir_html)
+
+tab_firm_links <- mutate(tab_firm_links, doc_id = basename(link))
+tab_links_use <- filter(tab_firm_links, !doc_id %in% .prc$doc_id)
+
+if (nrow(tab_links_use) > 0) {
+  plan("multisession", workers = 4)
+  future_walk(
+    .x = tab_links_use$link,
+    .f = ~ write_html(read_html(.x), file.path(.dir_html, paste0(basename(.x), ".html"))),
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  )
+  plan("default")
+}
+
+```
+
+```{r}
+files <- list_files_tab(.dir_html)
+```
+
+## Get Annual Report Links
+```{r}
+.path_report_links <- "2_output/02_get_arcom_data/arcom_report_links.rds"
+
+if (!file.exists(.path_report_links)) {
+  plan("multisession", workers = 6)
+  tab_report_links <- future_map_dfr(
+    .x = files$path,
+    .f = get_infos,
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  )
+  plan("default")
+  write_rds(tab_report_links, .path_report_links)
+} else {
+  tab_report_links <- read_rds(.path_report_links)
+}
+
+
+```
+
+
+## Match Firms
+```{r}
+tab0 <- mutate(tab_firm_links, match = standardize_name(company))
+tab1 <- mutate(tab_orbis, match = standardize_name(company))
+
+tab_match_full <- inner_join(tab0, tab1, by = "match", suffix = c("_0", "_1"))
+
+tab0 <- filter(tab0, !match %in% tab_match_full$match)
+tab1 <- filter(tab1, !match %in% tab_match_full$match)
+
+tab_match_fuzzy <- stringdist_inner_join(
+  x = tab0,
+  y = tab1,
+  by = "match",
+  max_dist = 2
+) %>% mutate(sim = stringsim(match.x, match.y)) %>%
+  arrange(match.x, desc(sim)) %>%
+  distinct(match.x, .keep_all = TRUE) %>%
+  select(-match.x, -match.y) %>%
+  rename(company_0 = company.x, company_1 = company.y)
+
+select(tab_match_fuzzy, sim, company_0, company_1) %>%
+  arrange(desc(sim)) %>%
+  mutate(row = row_number())
+```
+
+
+```{r}
+tab_match_fuzzy <- tab_match_fuzzy %>%
+  slice(c(1,2,3,4,5,6,7,9,10,11,12,14,15,18,21,24,29)) %>%
+  select(-sim)
+```
+
+
+```{r}
+tab_match <- bind_rows(tab_match_full, tab_match_fuzzy) %>%
+  mutate(doc_id = basename(link)) %>%
+  select(doc_id, isin, company = company_1) %>%
+  left_join(select(tab_report_links, doc_id, link, year), by = "doc_id") %>%
+  filter(between(year, 2005, 2020)) %>%
+  select(isin, year, company, link) %>%
+  mutate(doc_id = gsub("\\.pdf$", "", basename(link)))
+
+write_rds(tab_match, "2_output/02_get_arcom_data/arcom_matched_firms.rds")
+```
+
+
+```{r message=FALSE, warning=FALSE}
+.dir_ar <- "2_output/02_get_arcom_data/documents"
+if (!dir.exists(.dir_ar)) dir.create(.dir_ar, recursive = TRUE)
+
+.prc <- list_files_tab(.dir_ar)
+
+tab_download_use <- filter(tab_match, !doc_id %in% .prc$doc_id)
+
+walk(tab_download_use$link, ~ downlad_ar(.x, .dir_ar))
+```
+
+
+
+```{r}
+tab_data <- tab_match %>%
+  left_join(tab_orbis, by = c("isin", "company")) %>%
+  select(doc_id, isin, year, company, country_code, country)
+
+write_rds(tab_data, "2_output/02_get_arcom_data/arcom_firm_data.rds")
+```
+
