@@ -32,3 +32,20 @@ remove_html_tags <- function(.string, rm_linebreaks = TRUE) {
   }
     trimws(string_)
 }
+
+create_dirs <- function(.dirs) {
+  dirs0_ <- unlist(.dirs)
+  file_ext_ <- tools::file_ext(dirs0_)
+  dirs1_ <- dplyr::if_else(file_ext_ == "", dirs0_, dirname(dirs0_))
+
+  purrr::walk(
+    .x = unique(dirs1_),
+    .f = ~ {
+      if (!dir.exists(.x)) {
+        dir.create(.x, showWarnings = FALSE, recursive = TRUE)
+      }
+    }
+  )
+  return(.dirs)
+  
+}

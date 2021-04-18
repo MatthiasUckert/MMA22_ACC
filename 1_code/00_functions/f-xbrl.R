@@ -361,7 +361,7 @@ xbrl_extract_elements <- function(.zip, .dir_tmp, .dir_out) {
   
 }
 
-.inst <- read_rds(tab_files_elements_use$path[1])
+# .inst <- read_rds(tab_files_elements_use$path[1])
 xbrl_process_elements <- function(.inst) {
   chr_desc_ <- .inst$role[["description"]]
   chr_type_ <- .inst$role[["type"]]
