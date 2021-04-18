@@ -7,11 +7,11 @@ navbar:
     - text: "Getting Data from www.annualreport.com"
       href: 02_get_arcom_data.html
     - text: "Ratio Analysis"
-    - href: 05_excel_ratio_analysis.html
+      href: 05_excel_ratio_analysis.html
 output_dir: "."
 output:
   html_document:
-    theme: yeti
+    theme: journal
     highlight: textmate
 #    include:
 #      after_body: _footer.html
