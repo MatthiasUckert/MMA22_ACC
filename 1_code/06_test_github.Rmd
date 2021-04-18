@@ -1,6 +1,10 @@
 ---
 title: "R Notebook"
-output: html_output
+knit: (function(input_file, encoding) {
+  out_dir <- '../3_docs';
+  rmarkdown::render(input_file, encoding=encoding, output_file=file.path(dirname(input_file), out_dir, 'index.html'))
+  })
+output: html_document
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
@@ -9,6 +13,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 ```{r}
 plot(cars)
+"../"
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
