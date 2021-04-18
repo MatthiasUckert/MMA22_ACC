@@ -2,8 +2,7 @@
 title: "Getting Data AnnualReport.com"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: 
-  html_notebook
+output: html_document
 ---
 
     # github_document:

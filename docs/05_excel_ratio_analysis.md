@@ -1,7 +1,7 @@
 ---
 title: "Textual Analysis"
 author: "Matthias Uckert"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "18 April, 2021"
 output: html_document
 ---
 
@@ -13,14 +13,12 @@ output: html_document
 
 xxx
 
-```{r setup, include=FALSE, purl=FALSE}
-knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
-knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
-```
+
 
 # Script Setup
 
-```{r message=FALSE, warning=FALSE}
+
+```r
 library(tidyverse); library(tidytext); library(readtext); library(furrr)
 library(fst); library(stringi); library(ISOcodes); library(scales); library(openxlsx);
 library(janitor)
@@ -31,7 +29,8 @@ source("1_code/00_functions/f-excel_ratio_analysis.R")
 
 ## Paths
 
-```{r}
+
+```r
 lst_paths <- list(
   dir_main = "2_output/05_excel_ratio_analysis",
   dir_fs = "E:/R/R_projects/MMA22_ACC/0_data/financial_statements",
@@ -47,7 +46,8 @@ lst_paths <- list(
 ```
 
 ## Files
-```{r}
+
+```r
 tab_files <- list_files_tab(lst_paths$dir_fs, "xlsx") %>%
   mutate(
     year = stri_extract_last_regex(doc_id, "\\d{4}"),
@@ -62,7 +62,8 @@ tab_orbis <- read.xlsx(lst_paths$path_info, 2) %>%
 ```
 
 
-```{r}
+
+```r
 plan("multisession", workers = 8)
 
 if (!file.exists(lst_paths$path_fs_tables)) {
@@ -76,12 +77,11 @@ if (!file.exists(lst_paths$path_fs_tables)) {
 } else {
   lst_fs <- read_rds(lst_paths$path_fs_tables)
 }
-
-
 ```
 
 
-```{r}
+
+```r
 .prc <- list_files_tab(lst_paths$dir_excel)
 lst_fs_use <- lst_fs[!names(lst_fs) %in% .prc$doc_id]
 
@@ -97,7 +97,8 @@ plan("default")
 
 
 
-```{r}
+
+```r
 tab_files <- list_files_tab(lst_paths$dir_excel)
 tab <- map_dfr(
   .x = set_names(tab_files$path, tab_files$doc_id),
