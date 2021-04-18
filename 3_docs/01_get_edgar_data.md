@@ -7,7 +7,7 @@ output: html_notebook
 
 # Description
 
-This script
+In this section we will retrieve information from the SEC EDGAR database.
 
 
 ```r
@@ -215,13 +215,13 @@ if (nrow(tab_f500_use) > 0) {
 ```
 
 ```
-## [=======================>-----------------------------------------------------------------------] 25%
-## [===================================>-----------------------------------------------------------] 38%
-## [===============================================>-----------------------------------------------] 50%
-## [==========================================================>------------------------------------] 62%
-## [======================================================================>------------------------] 75%
-## [==================================================================================>------------] 88%
-## [===============================================================================================] 100%
+## [=============================>-----------------------------------------------------------------------------------------] 25%
+## [============================================>--------------------------------------------------------------------------] 38%
+## [===========================================================>-----------------------------------------------------------] 50%
+## [=========================================================================>---------------------------------------------] 62%
+## [========================================================================================>------------------------------] 75%
+## [=======================================================================================================>---------------] 88%
+## [=======================================================================================================================] 100%
 ```
 
 ```
@@ -244,24 +244,24 @@ filter(tab_f500_t10, !symbol %in% read_rds(lst_paths$path_filing)$symbol)
 ```
 
 ```
-##   symbol                name                 sector   price price_earnings dividend_yield
-## 1  BRK.B  Berkshire Hathaway             Financials  191.42          30.43       0.000000
-## 2   DWDP           DowDuPont              Materials   68.21          49.43       2.152975
-## 3    UTX United Technologies            Industrials  127.48          19.26       2.121694
-## 4   PCLN   Priceline.com Inc Consumer Discretionary 1806.06          24.26       0.000000
-## 5   CELG       Celgene Corp.            Health Care   91.02          13.27       0.000000
-## 6    TWX    Time Warner Inc. Consumer Discretionary   93.02          15.35       1.692777
-## 7    RTN        Raytheon Co.            Industrials  198.74          25.78       1.561276
-## 8    AGN       Allergan, Plc            Health Care  164.20          10.65       1.643289
-##   earnings_share x52_week_low x52_week_high   market_cap      ebitda price_sales price_book
-## 1           9.76       217.62        160.93 261401203633           0    1.432823       1.58
-## 2           1.59        77.08         64.01 165203312427  5250000000    2.692239       1.54
-## 3           5.70       139.24        107.05 105387272474 10584000000    1.732412       3.40
-## 4          42.66      2067.99       1589.00  91817448863  4803487000    9.176564       6.92
-## 5           3.58       147.17         92.85  74921079154  5233000000    5.830071       7.49
-## 6           6.62       103.90         85.88  74185800000  7671000000    2.373599       2.73
-## 7           6.95       213.45        147.86  59066255840  3868000000    2.293833       5.28
-## 8          38.35       256.80        160.07  56668833898 -2888100000    4.820115       0.83
+##   symbol                name                 sector   price price_earnings dividend_yield earnings_share x52_week_low
+## 1  BRK.B  Berkshire Hathaway             Financials  191.42          30.43       0.000000           9.76       217.62
+## 2   DWDP           DowDuPont              Materials   68.21          49.43       2.152975           1.59        77.08
+## 3    UTX United Technologies            Industrials  127.48          19.26       2.121694           5.70       139.24
+## 4   PCLN   Priceline.com Inc Consumer Discretionary 1806.06          24.26       0.000000          42.66      2067.99
+## 5   CELG       Celgene Corp.            Health Care   91.02          13.27       0.000000           3.58       147.17
+## 6    TWX    Time Warner Inc. Consumer Discretionary   93.02          15.35       1.692777           6.62       103.90
+## 7    RTN        Raytheon Co.            Industrials  198.74          25.78       1.561276           6.95       213.45
+## 8    AGN       Allergan, Plc            Health Care  164.20          10.65       1.643289          38.35       256.80
+##   x52_week_high   market_cap      ebitda price_sales price_book
+## 1        160.93 261401203633           0    1.432823       1.58
+## 2         64.01 165203312427  5250000000    2.692239       1.54
+## 3        107.05 105387272474 10584000000    1.732412       3.40
+## 4       1589.00  91817448863  4803487000    9.176564       6.92
+## 5         92.85  74921079154  5233000000    5.830071       7.49
+## 6         85.88  74185800000  7671000000    2.373599       2.73
+## 7        147.86  59066255840  3868000000    2.293833       5.28
+## 8        160.07  56668833898 -2888100000    4.820115       0.83
 ##                                                           sec_filings
 ## 1 http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=BRK.B
 ## 2  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DWDP
@@ -626,4 +626,170 @@ cat(paste0(
 write_rds(tab_download_htm, "2_output/01_get_edgar_data/htm_download.rds")
 write_rds(tab_download_txt, "2_output/01_get_edgar_data/txt_download.rds")
 write_rds(tab_download_xxx, "2_output/01_get_edgar_data/xxx_download.rds")
+```
+
+# Own Function Calls
+
+```r
+lsf.str()
+```
+
+```
+## create_dirs : function (.dirs)  
+## downlad_ar : function (.url, .dir)  
+## download_edgar_files : function (.tab, .dir, .retry = 5, .sleep = 1)  
+## get_company_table : function (.url)  
+## get_f500 : function ()  
+## get_infos : function (.path)  
+## list_files_tab : function (dirs, reg = "*", id = "doc_id", rec = FALSE, info = FALSE)  
+## map_company_filings : function (.tickers, .ownership = FALSE, .type = "", .before = "", .count = 100, .page = 1, .progress = TRUE, .sleep = 0, 
+##     .retry = 5)  
+## map_filing_details : function (.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5)  
+## remove_html_tags : function (.string, rm_linebreaks = TRUE)  
+## safe_get_company_table : function (...)  
+## standardize_name : function (.name)
+```
+
+
+# Session Info
+
+```r
+sessioninfo::session_info()
+```
+
+```
+## - Session info ---------------------------------------------------------------------------------------------------------------
+##  setting  value                       
+##  version  R version 4.0.3 (2020-10-10)
+##  os       Windows 10 x64              
+##  system   x86_64, mingw32             
+##  ui       RStudio                     
+##  language (EN)                        
+##  collate  English_Germany.1252        
+##  ctype    English_Germany.1252        
+##  tz       Europe/Berlin               
+##  date     2021-04-18                  
+## 
+## - Packages -------------------------------------------------------------------------------------------------------------------
+##  ! package        * version    date       lib source        
+##  P assertthat       0.2.1      2019-03-21 [?] CRAN (R 4.0.0)
+##  P backports        1.2.1      2020-12-09 [?] CRAN (R 4.0.3)
+##  P base64enc        0.1-3      2015-07-28 [?] CRAN (R 4.0.0)
+##  P broom            0.7.6      2021-04-05 [?] CRAN (R 4.0.3)
+##  P bslib            0.2.4      2021-01-25 [?] CRAN (R 4.0.4)
+##  P cellranger       1.1.0      2016-07-27 [?] CRAN (R 4.0.0)
+##  P checkmate        2.0.0      2020-02-06 [?] CRAN (R 4.0.0)
+##  P cli              2.4.0      2021-04-05 [?] CRAN (R 4.0.3)
+##  P codetools        0.2-16     2018-12-24 [?] CRAN (R 4.0.3)
+##  P colorspace       2.0-0      2020-11-11 [?] CRAN (R 4.0.3)
+##  P crayon           1.4.1      2021-02-08 [?] CRAN (R 4.0.4)
+##  P curl             4.3        2019-12-02 [?] CRAN (R 4.0.0)
+##  P data.table       1.14.0     2021-02-21 [?] CRAN (R 4.0.4)
+##  P DBI              1.1.1      2021-01-15 [?] CRAN (R 4.0.3)
+##  P dbplyr           2.1.1      2021-04-06 [?] CRAN (R 4.0.3)
+##  P digest           0.6.27     2020-10-24 [?] CRAN (R 4.0.3)
+##  P dplyr          * 1.0.5      2021-03-05 [?] CRAN (R 4.0.4)
+##  P edgarWebR      * 1.0.3      2020-09-28 [?] CRAN (R 4.0.5)
+##  P ellipsis         0.3.1      2020-05-15 [?] CRAN (R 4.0.0)
+##  P evaluate         0.14       2019-05-28 [?] CRAN (R 4.0.0)
+##  P fansi            0.4.2      2021-01-15 [?] CRAN (R 4.0.3)
+##  P farver           2.1.0      2021-02-28 [?] CRAN (R 4.0.4)
+##  P forcats        * 0.5.1      2021-01-27 [?] CRAN (R 4.0.4)
+##  P fs               1.5.0      2020-07-31 [?] CRAN (R 4.0.2)
+##  P furrr          * 0.2.2      2021-01-29 [?] CRAN (R 4.0.4)
+##  P future         * 1.21.0     2020-12-10 [?] CRAN (R 4.0.3)
+##  P fuzzyjoin      * 0.1.6      2020-05-15 [?] CRAN (R 4.0.2)
+##  P generics         0.1.0      2020-10-31 [?] CRAN (R 4.0.3)
+##  P ggplot2        * 3.3.3      2020-12-30 [?] CRAN (R 4.0.3)
+##  P globals          0.14.0     2020-11-22 [?] CRAN (R 4.0.3)
+##  P glue             1.4.2      2020-08-27 [?] CRAN (R 4.0.2)
+##  P gtable           0.3.0      2019-03-25 [?] CRAN (R 4.0.0)
+##  P haven            2.3.1      2020-06-01 [?] CRAN (R 4.0.0)
+##  P here           * 1.0.1      2020-12-13 [?] CRAN (R 4.0.3)
+##  P highr            0.8        2019-03-20 [?] CRAN (R 4.0.0)
+##  P hms              1.0.0      2021-01-13 [?] CRAN (R 4.0.3)
+##  P htmltools        0.5.1.1    2021-01-22 [?] CRAN (R 4.0.4)
+##  P httr             1.4.2      2020-07-20 [?] CRAN (R 4.0.2)
+##  P ISOcodes       * 2021.02.24 2021-02-24 [?] CRAN (R 4.0.4)
+##  P janeaustenr      0.1.5      2017-06-10 [?] CRAN (R 4.0.0)
+##  P janitor        * 2.1.0      2021-01-05 [?] CRAN (R 4.0.3)
+##  P jquerylib        0.1.3      2020-12-17 [?] CRAN (R 4.0.4)
+##  P jsonlite         1.7.2      2020-12-09 [?] CRAN (R 4.0.3)
+##  P kableExtra     * 1.3.4      2021-02-20 [?] CRAN (R 4.0.4)
+##  P knitr            1.31       2021-01-27 [?] CRAN (R 4.0.4)
+##  P koRpus         * 0.13-5     2021-02-02 [?] CRAN (R 4.0.5)
+##  P koRpus.lang.en * 0.1-4      2020-10-24 [?] CRAN (R 4.0.5)
+##  P labeling         0.4.2      2020-10-20 [?] CRAN (R 4.0.3)
+##  P lattice          0.20-41    2020-04-02 [?] CRAN (R 4.0.3)
+##  P lifecycle        1.0.0      2021-02-15 [?] CRAN (R 4.0.4)
+##  P listenv          0.8.0      2019-12-05 [?] CRAN (R 4.0.0)
+##  P lubridate      * 1.7.10     2021-02-26 [?] CRAN (R 4.0.4)
+##  P magick           2.7.1      2021-03-20 [?] CRAN (R 4.0.5)
+##  P magrittr         2.0.1      2020-11-17 [?] CRAN (R 4.0.3)
+##  P Matrix           1.2-18     2019-11-27 [?] CRAN (R 4.0.3)
+##  P matrixStats      0.58.0     2021-01-29 [?] CRAN (R 4.0.4)
+##  P modelr           0.1.8      2020-05-19 [?] CRAN (R 4.0.0)
+##  P munsell          0.5.0      2018-06-12 [?] CRAN (R 4.0.0)
+##  P openxlsx       * 4.2.3      2020-10-27 [?] CRAN (R 4.0.3)
+##  P pander           0.6.3      2018-11-06 [?] CRAN (R 4.0.0)
+##  P parallelly       1.24.0     2021-03-14 [?] CRAN (R 4.0.4)
+##  P patchwork      * 1.1.1      2020-12-17 [?] CRAN (R 4.0.3)
+##  P pillar           1.5.1      2021-03-05 [?] CRAN (R 4.0.4)
+##  P pkgconfig        2.0.3      2019-09-22 [?] CRAN (R 4.0.0)
+##  P plyr             1.8.6      2020-03-03 [?] CRAN (R 4.0.0)
+##  P prettyunits      1.1.1      2020-01-24 [?] CRAN (R 4.0.0)
+##  P progress         1.2.2      2019-05-16 [?] CRAN (R 4.0.0)
+##  P pryr             0.1.4      2018-02-18 [?] CRAN (R 4.0.2)
+##  P purrr          * 0.3.4      2020-04-17 [?] CRAN (R 4.0.0)
+##  P R.cache          0.14.0     2019-12-06 [?] CRAN (R 4.0.0)
+##  P R.methodsS3      1.8.1      2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.oo             1.24.0     2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.utils          2.10.1     2020-08-26 [?] CRAN (R 4.0.2)
+##  P R6               2.5.0      2020-10-28 [?] CRAN (R 4.0.3)
+##  P rapportools      1.0        2014-01-07 [?] CRAN (R 4.0.2)
+##  P Rcpp             1.0.6      2021-01-15 [?] CRAN (R 4.0.3)
+##  P readr          * 1.4.0      2020-10-05 [?] CRAN (R 4.0.3)
+##  P readxl           1.3.1      2019-03-13 [?] CRAN (R 4.0.0)
+##    renv             0.13.1     2021-03-18 [1] CRAN (R 4.0.3)
+##  P reprex           2.0.0      2021-04-02 [?] CRAN (R 4.0.5)
+##  P rlang            0.4.10     2020-12-30 [?] CRAN (R 4.0.3)
+##  P rmarkdown        2.7        2021-02-19 [?] CRAN (R 4.0.4)
+##  P rprojroot        2.0.2      2020-11-15 [?] CRAN (R 4.0.3)
+##  P rstudioapi       0.13       2020-11-12 [?] CRAN (R 4.0.3)
+##  P rvest          * 1.0.0      2021-03-09 [?] CRAN (R 4.0.4)
+##  P sass             0.3.1      2021-01-24 [?] CRAN (R 4.0.4)
+##  P scales         * 1.1.1      2020-05-11 [?] CRAN (R 4.0.0)
+##  P sessioninfo      1.1.1      2018-11-05 [?] CRAN (R 4.0.0)
+##  P snakecase        0.11.0     2019-05-25 [?] CRAN (R 4.0.0)
+##  P SnowballC        0.7.0      2020-04-01 [?] CRAN (R 4.0.0)
+##  P stringdist     * 0.9.6.3    2020-10-09 [?] CRAN (R 4.0.3)
+##  P stringi        * 1.5.3      2020-09-09 [?] CRAN (R 4.0.2)
+##  P stringr        * 1.4.0      2019-02-10 [?] CRAN (R 4.0.2)
+##  P styler           1.4.1      2021-03-30 [?] CRAN (R 4.0.5)
+##  P summarytools   * 0.9.9      2021-03-19 [?] CRAN (R 4.0.5)
+##  P svglite          2.0.0      2021-02-20 [?] CRAN (R 4.0.4)
+##  P sylly          * 0.1-6      2020-09-20 [?] CRAN (R 4.0.5)
+##  P sylly.en         0.1-3      2018-03-19 [?] CRAN (R 4.0.5)
+##  P systemfonts      1.0.1      2021-02-09 [?] CRAN (R 4.0.4)
+##  P textstem       * 0.1.4      2018-04-09 [?] CRAN (R 4.0.5)
+##  P tibble         * 3.1.0      2021-02-25 [?] CRAN (R 4.0.4)
+##  P tidyr          * 1.1.3      2021-03-03 [?] CRAN (R 4.0.4)
+##  P tidyselect       1.1.0      2020-05-11 [?] CRAN (R 4.0.0)
+##  P tidytext       * 0.3.0      2021-01-06 [?] CRAN (R 4.0.3)
+##  P tidyverse      * 1.3.0      2019-11-21 [?] CRAN (R 4.0.0)
+##  P tokenizers       0.2.1      2018-03-29 [?] CRAN (R 4.0.0)
+##  P utf8             1.2.1      2021-03-12 [?] CRAN (R 4.0.3)
+##  P vctrs            0.3.7      2021-03-29 [?] CRAN (R 4.0.5)
+##  P viridisLite      0.3.0      2018-02-01 [?] CRAN (R 4.0.0)
+##  P webshot          0.5.2      2019-11-22 [?] CRAN (R 4.0.0)
+##  P withr            2.4.1      2021-01-26 [?] CRAN (R 4.0.4)
+##  P xfun             0.22       2021-03-11 [?] CRAN (R 4.0.4)
+##  P xml2           * 1.3.2      2020-04-23 [?] CRAN (R 4.0.0)
+##  P yaml             2.2.1      2020-02-01 [?] CRAN (R 4.0.0)
+##  P zip              2.1.1      2020-08-27 [?] CRAN (R 4.0.2)
+## 
+## [1] E:/R/R_projects/MMA22_ACC/renv/library/R-4.0/x86_64-w64-mingw32
+## [2] C:/Users/MUcke/AppData/Local/Temp/Rtmp6R4XZP/renv-system-library
+## 
+##  P -- Loaded and on-disk path mismatch.
 ```
