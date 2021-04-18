@@ -80,13 +80,107 @@ tab_f500_t10 <- slice(tab_f500_all, 1:.n_companies)
 select(tab_f500_t10, symbol, name, sector)
 ```
 
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["symbol"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sector"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"AAPL","2":"Apple Inc.","3":"Information Technology"},{"1":"GOOGL","2":"Alphabet Inc Class A","3":"Information Technology"},{"1":"GOOG","2":"Alphabet Inc Class C","3":"Information Technology"},{"1":"MSFT","2":"Microsoft Corp.","3":"Information Technology"},{"1":"AMZN","2":"Amazon.com Inc","3":"Consumer Discretionary"},{"1":"FB","2":"Facebook, Inc.","3":"Information Technology"},{"1":"JPM","2":"JPMorgan Chase & Co.","3":"Financials"},{"1":"JNJ","2":"Johnson & Johnson","3":"Health Care"},{"1":"XOM","2":"Exxon Mobil Corp.","3":"Energy"},{"1":"BAC","2":"Bank of America Corp","3":"Financials"},{"1":"WMT","2":"Wal-Mart Stores","3":"Consumer Staples"},{"1":"WFC","2":"Wells Fargo","3":"Financials"},{"1":"V","2":"Visa Inc.","3":"Information Technology"},{"1":"BRK.B","2":"Berkshire Hathaway","3":"Financials"},{"1":"T","2":"AT&T Inc","3":"Telecommunication Services"},{"1":"HD","2":"Home Depot","3":"Consumer Discretionary"},{"1":"CVX","2":"Chevron Corp.","3":"Energy"},{"1":"UNH","2":"United Health Group Inc.","3":"Health Care"},{"1":"INTC","2":"Intel Corp.","3":"Information Technology"},{"1":"PFE","2":"Pfizer Inc.","3":"Health Care"},{"1":"VZ","2":"Verizon Communications","3":"Telecommunication Services"},{"1":"PG","2":"Procter & Gamble","3":"Consumer Staples"},{"1":"BA","2":"Boeing Company","3":"Industrials"},{"1":"ORCL","2":"Oracle Corp.","3":"Information Technology"},{"1":"CSCO","2":"Cisco Systems","3":"Information Technology"},{"1":"C","2":"Citigroup Inc.","3":"Financials"},{"1":"KO","2":"Coca-Cola Company (The)","3":"Consumer Staples"},{"1":"MA","2":"Mastercard Inc.","3":"Information Technology"},{"1":"CMCSA","2":"Comcast Corp.","3":"Consumer Discretionary"},{"1":"ABBV","2":"AbbVie Inc.","3":"Health Care"},{"1":"DWDP","2":"DowDuPont","3":"Materials"},{"1":"PEP","2":"PepsiCo Inc.","3":"Consumer Staples"},{"1":"DIS","2":"The Walt Disney Company","3":"Consumer Discretionary"},{"1":"PM","2":"Philip Morris International","3":"Consumer Staples"},{"1":"MRK","2":"Merck & Co.","3":"Health Care"},{"1":"IBM","2":"International Business Machines","3":"Information Technology"},{"1":"MMM","2":"3M Company","3":"Industrials"},{"1":"NVDA","2":"Nvidia Corporation","3":"Information Technology"},{"1":"GE","2":"General Electric","3":"Industrials"},{"1":"MCD","2":"McDonald's Corp.","3":"Consumer Discretionary"},{"1":"AMGN","2":"Amgen Inc","3":"Health Care"},{"1":"MO","2":"Altria Group Inc","3":"Consumer Staples"},{"1":"NFLX","2":"Netflix Inc.","3":"Information Technology"},{"1":"HON","2":"Honeywell Int'l Inc.","3":"Industrials"},{"1":"MDT","2":"Medtronic plc","3":"Health Care"},{"1":"GILD","2":"Gilead Sciences","3":"Health Care"},{"1":"NKE","2":"Nike","3":"Consumer Discretionary"},{"1":"UTX","2":"United Technologies","3":"Industrials"},{"1":"BMY","2":"Bristol-Myers Squibb","3":"Health Care"},{"1":"ABT","2":"Abbott Laboratories","3":"Health Care"},{"1":"UNP","2":"Union Pacific","3":"Industrials"},{"1":"TXN","2":"Texas Instruments","3":"Information Technology"},{"1":"ACN","2":"Accenture plc","3":"Information Technology"},{"1":"LMT","2":"Lockheed Martin Corp.","3":"Industrials"},{"1":"MS","2":"Morgan Stanley","3":"Financials"},{"1":"GS","2":"Goldman Sachs Group","3":"Financials"},{"1":"SLB","2":"Schlumberger Ltd.","3":"Energy"},{"1":"UPS","2":"United Parcel Service","3":"Industrials"},{"1":"QCOM","2":"QUALCOMM Inc.","3":"Information Technology"},{"1":"ADBE","2":"Adobe Systems Inc","3":"Information Technology"},{"1":"AVGO","2":"Broadcom","3":"Information Technology"},{"1":"CAT","2":"Caterpillar Inc.","3":"Industrials"},{"1":"PCLN","2":"Priceline.com Inc","3":"Consumer Discretionary"},{"1":"USB","2":"U.S. Bancorp","3":"Financials"},{"1":"PYPL","2":"PayPal","3":"Information Technology"},{"1":"KHC","2":"Kraft Heinz Co","3":"Consumer Staples"},{"1":"CHTR","2":"Charter Communications","3":"Consumer Discretionary"},{"1":"BLK","2":"BlackRock","3":"Financials"},{"1":"LLY","2":"Lilly (Eli) & Co.","3":"Health Care"},{"1":"TMO","2":"Thermo Fisher Scientific","3":"Health Care"},{"1":"LOW","2":"Lowe's Cos.","3":"Consumer Discretionary"},{"1":"COST","2":"Costco Wholesale Corp.","3":"Consumer Staples"},{"1":"AXP","2":"American Express Co","3":"Financials"},{"1":"CRM","2":"Salesforce.com","3":"Information Technology"},{"1":"SBUX","2":"Starbucks Corp.","3":"Consumer Discretionary"},{"1":"CVS","2":"CVS Health","3":"Consumer Staples"},{"1":"CELG","2":"Celgene Corp.","3":"Health Care"},{"1":"TWX","2":"Time Warner Inc.","3":"Consumer Discretionary"},{"1":"PNC","2":"PNC Financial Services","3":"Financials"},{"1":"WBA","2":"Walgreens Boots Alliance","3":"Consumer Staples"},{"1":"SCHW","2":"Charles Schwab Corporation","3":"Financials"},{"1":"NEE","2":"NextEra Energy","3":"Utilities"},{"1":"BIIB","2":"Biogen Inc.","3":"Health Care"},{"1":"CB","2":"Chubb Limited","3":"Financials"},{"1":"FDX","2":"FedEx Corporation","3":"Industrials"},{"1":"DHR","2":"Danaher Corp.","3":"Health Care"},{"1":"FOX","2":"Twenty-First Century Fox Class B","3":"Consumer Discretionary"},{"1":"MDLZ","2":"Mondelez International","3":"Consumer Staples"},{"1":"COP","2":"ConocoPhillips","3":"Energy"},{"1":"GD","2":"General Dynamics","3":"Industrials"},{"1":"CL","2":"Colgate-Palmolive","3":"Consumer Staples"},{"1":"GM","2":"General Motors","3":"Consumer Discretionary"},{"1":"ANTM","2":"Anthem Inc.","3":"Health Care"},{"1":"EOG","2":"EOG Resources","3":"Energy"},{"1":"AMT","2":"American Tower Corp A","3":"Real Estate"},{"1":"AET","2":"Aetna Inc","3":"Health Care"},{"1":"RTN","2":"Raytheon Co.","3":"Industrials"},{"1":"NOC","2":"Northrop Grumman Corp.","3":"Industrials"},{"1":"SYK","2":"Stryker Corp.","3":"Health Care"},{"1":"AGN","2":"Allergan, Plc","3":"Health Care"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
+    ##     symbol                             name                     sector
+    ## 1     AAPL                       Apple Inc.     Information Technology
+    ## 2    GOOGL             Alphabet Inc Class A     Information Technology
+    ## 3     GOOG             Alphabet Inc Class C     Information Technology
+    ## 4     MSFT                  Microsoft Corp.     Information Technology
+    ## 5     AMZN                   Amazon.com Inc     Consumer Discretionary
+    ## 6       FB                   Facebook, Inc.     Information Technology
+    ## 7      JPM             JPMorgan Chase & Co.                 Financials
+    ## 8      JNJ                Johnson & Johnson                Health Care
+    ## 9      XOM                Exxon Mobil Corp.                     Energy
+    ## 10     BAC             Bank of America Corp                 Financials
+    ## 11     WMT                  Wal-Mart Stores           Consumer Staples
+    ## 12     WFC                      Wells Fargo                 Financials
+    ## 13       V                        Visa Inc.     Information Technology
+    ## 14   BRK.B               Berkshire Hathaway                 Financials
+    ## 15       T                         AT&T Inc Telecommunication Services
+    ## 16      HD                       Home Depot     Consumer Discretionary
+    ## 17     CVX                    Chevron Corp.                     Energy
+    ## 18     UNH         United Health Group Inc.                Health Care
+    ## 19    INTC                      Intel Corp.     Information Technology
+    ## 20     PFE                      Pfizer Inc.                Health Care
+    ## 21      VZ           Verizon Communications Telecommunication Services
+    ## 22      PG                 Procter & Gamble           Consumer Staples
+    ## 23      BA                   Boeing Company                Industrials
+    ## 24    ORCL                     Oracle Corp.     Information Technology
+    ## 25    CSCO                    Cisco Systems     Information Technology
+    ## 26       C                   Citigroup Inc.                 Financials
+    ## 27      KO          Coca-Cola Company (The)           Consumer Staples
+    ## 28      MA                  Mastercard Inc.     Information Technology
+    ## 29   CMCSA                    Comcast Corp.     Consumer Discretionary
+    ## 30    ABBV                      AbbVie Inc.                Health Care
+    ## 31    DWDP                        DowDuPont                  Materials
+    ## 32     PEP                     PepsiCo Inc.           Consumer Staples
+    ## 33     DIS          The Walt Disney Company     Consumer Discretionary
+    ## 34      PM      Philip Morris International           Consumer Staples
+    ## 35     MRK                      Merck & Co.                Health Care
+    ## 36     IBM  International Business Machines     Information Technology
+    ## 37     MMM                       3M Company                Industrials
+    ## 38    NVDA               Nvidia Corporation     Information Technology
+    ## 39      GE                 General Electric                Industrials
+    ## 40     MCD                 McDonald's Corp.     Consumer Discretionary
+    ## 41    AMGN                        Amgen Inc                Health Care
+    ## 42      MO                 Altria Group Inc           Consumer Staples
+    ## 43    NFLX                     Netflix Inc.     Information Technology
+    ## 44     HON             Honeywell Int'l Inc.                Industrials
+    ## 45     MDT                    Medtronic plc                Health Care
+    ## 46    GILD                  Gilead Sciences                Health Care
+    ## 47     NKE                             Nike     Consumer Discretionary
+    ## 48     UTX              United Technologies                Industrials
+    ## 49     BMY             Bristol-Myers Squibb                Health Care
+    ## 50     ABT              Abbott Laboratories                Health Care
+    ## 51     UNP                    Union Pacific                Industrials
+    ## 52     TXN                Texas Instruments     Information Technology
+    ## 53     ACN                    Accenture plc     Information Technology
+    ## 54     LMT            Lockheed Martin Corp.                Industrials
+    ## 55      MS                   Morgan Stanley                 Financials
+    ## 56      GS              Goldman Sachs Group                 Financials
+    ## 57     SLB                Schlumberger Ltd.                     Energy
+    ## 58     UPS            United Parcel Service                Industrials
+    ## 59    QCOM                    QUALCOMM Inc.     Information Technology
+    ## 60    ADBE                Adobe Systems Inc     Information Technology
+    ## 61    AVGO                         Broadcom     Information Technology
+    ## 62     CAT                 Caterpillar Inc.                Industrials
+    ## 63    PCLN                Priceline.com Inc     Consumer Discretionary
+    ## 64     USB                     U.S. Bancorp                 Financials
+    ## 65    PYPL                           PayPal     Information Technology
+    ## 66     KHC                   Kraft Heinz Co           Consumer Staples
+    ## 67    CHTR           Charter Communications     Consumer Discretionary
+    ## 68     BLK                        BlackRock                 Financials
+    ## 69     LLY                Lilly (Eli) & Co.                Health Care
+    ## 70     TMO         Thermo Fisher Scientific                Health Care
+    ## 71     LOW                      Lowe's Cos.     Consumer Discretionary
+    ## 72    COST           Costco Wholesale Corp.           Consumer Staples
+    ## 73     AXP              American Express Co                 Financials
+    ## 74     CRM                   Salesforce.com     Information Technology
+    ## 75    SBUX                  Starbucks Corp.     Consumer Discretionary
+    ## 76     CVS                       CVS Health           Consumer Staples
+    ## 77    CELG                    Celgene Corp.                Health Care
+    ## 78     TWX                 Time Warner Inc.     Consumer Discretionary
+    ## 79     PNC           PNC Financial Services                 Financials
+    ## 80     WBA         Walgreens Boots Alliance           Consumer Staples
+    ## 81    SCHW       Charles Schwab Corporation                 Financials
+    ## 82     NEE                   NextEra Energy                  Utilities
+    ## 83    BIIB                      Biogen Inc.                Health Care
+    ## 84      CB                    Chubb Limited                 Financials
+    ## 85     FDX                FedEx Corporation                Industrials
+    ## 86     DHR                    Danaher Corp.                Health Care
+    ## 87     FOX Twenty-First Century Fox Class B     Consumer Discretionary
+    ## 88    MDLZ           Mondelez International           Consumer Staples
+    ## 89     COP                   ConocoPhillips                     Energy
+    ## 90      GD                 General Dynamics                Industrials
+    ## 91      CL                Colgate-Palmolive           Consumer Staples
+    ## 92      GM                   General Motors     Consumer Discretionary
+    ## 93    ANTM                      Anthem Inc.                Health Care
+    ## 94     EOG                    EOG Resources                     Energy
+    ## 95     AMT            American Tower Corp A                Real Estate
+    ## 96     AET                        Aetna Inc                Health Care
+    ## 97     RTN                     Raytheon Co.                Industrials
+    ## 98     NOC           Northrop Grumman Corp.                Industrials
+    ## 99     SYK                    Stryker Corp.                Health Care
+    ## 100    AGN                    Allergan, Plc                Health Care
 
 ## Get Company Index-Links
 
@@ -150,13 +244,33 @@ In total we got 8 errors.
 filter(tab_f500_t10, !symbol %in% read_rds(lst_paths$path_filing)$symbol)
 ```
 
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["symbol"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sector"],"name":[3],"type":["chr"],"align":["left"]},{"label":["price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["price_earnings"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["dividend_yield"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["earnings_share"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["x52_week_low"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["x52_week_high"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["market_cap"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["ebitda"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["price_sales"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["price_book"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["sec_filings"],"name":[14],"type":["chr"],"align":["left"]}],"data":[{"1":"BRK.B","2":"Berkshire Hathaway","3":"Financials","4":"191.42","5":"30.43","6":"0.000000","7":"9.76","8":"217.62","9":"160.93","10":"261401203633","11":"0","12":"1.432823","13":"1.58","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=BRK.B"},{"1":"DWDP","2":"DowDuPont","3":"Materials","4":"68.21","5":"49.43","6":"2.152975","7":"1.59","8":"77.08","9":"64.01","10":"165203312427","11":"5250000000","12":"2.692239","13":"1.54","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DWDP"},{"1":"UTX","2":"United Technologies","3":"Industrials","4":"127.48","5":"19.26","6":"2.121694","7":"5.70","8":"139.24","9":"107.05","10":"105387272474","11":"10584000000","12":"1.732412","13":"3.40","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=UTX"},{"1":"PCLN","2":"Priceline.com Inc","3":"Consumer Discretionary","4":"1806.06","5":"24.26","6":"0.000000","7":"42.66","8":"2067.99","9":"1589.00","10":"91817448863","11":"4803487000","12":"9.176564","13":"6.92","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=PCLN"},{"1":"CELG","2":"Celgene Corp.","3":"Health Care","4":"91.02","5":"13.27","6":"0.000000","7":"3.58","8":"147.17","9":"92.85","10":"74921079154","11":"5233000000","12":"5.830071","13":"7.49","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=CELG"},{"1":"TWX","2":"Time Warner Inc.","3":"Consumer Discretionary","4":"93.02","5":"15.35","6":"1.692777","7":"6.62","8":"103.90","9":"85.88","10":"74185800000","11":"7671000000","12":"2.373599","13":"2.73","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=TWX"},{"1":"RTN","2":"Raytheon Co.","3":"Industrials","4":"198.74","5":"25.78","6":"1.561276","7":"6.95","8":"213.45","9":"147.86","10":"59066255840","11":"3868000000","12":"2.293833","13":"5.28","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=RTN"},{"1":"AGN","2":"Allergan, Plc","3":"Health Care","4":"164.20","5":"10.65","6":"1.643289","7":"38.35","8":"256.80","9":"160.07","10":"56668833898","11":"-2888100000","12":"4.820115","13":"0.83","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=AGN"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
+    ##   symbol                name                 sector   price price_earnings dividend_yield
+    ## 1  BRK.B  Berkshire Hathaway             Financials  191.42          30.43       0.000000
+    ## 2   DWDP           DowDuPont              Materials   68.21          49.43       2.152975
+    ## 3    UTX United Technologies            Industrials  127.48          19.26       2.121694
+    ## 4   PCLN   Priceline.com Inc Consumer Discretionary 1806.06          24.26       0.000000
+    ## 5   CELG       Celgene Corp.            Health Care   91.02          13.27       0.000000
+    ## 6    TWX    Time Warner Inc. Consumer Discretionary   93.02          15.35       1.692777
+    ## 7    RTN        Raytheon Co.            Industrials  198.74          25.78       1.561276
+    ## 8    AGN       Allergan, Plc            Health Care  164.20          10.65       1.643289
+    ##   earnings_share x52_week_low x52_week_high   market_cap      ebitda price_sales price_book
+    ## 1           9.76       217.62        160.93 261401203633           0    1.432823       1.58
+    ## 2           1.59        77.08         64.01 165203312427  5250000000    2.692239       1.54
+    ## 3           5.70       139.24        107.05 105387272474 10584000000    1.732412       3.40
+    ## 4          42.66      2067.99       1589.00  91817448863  4803487000    9.176564       6.92
+    ## 5           3.58       147.17         92.85  74921079154  5233000000    5.830071       7.49
+    ## 6           6.62       103.90         85.88  74185800000  7671000000    2.373599       2.73
+    ## 7           6.95       213.45        147.86  59066255840  3868000000    2.293833       5.28
+    ## 8          38.35       256.80        160.07  56668833898 -2888100000    4.820115       0.83
+    ##                                                           sec_filings
+    ## 1 http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=BRK.B
+    ## 2  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DWDP
+    ## 3   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=UTX
+    ## 4  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=PCLN
+    ## 5  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=CELG
+    ## 6   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=TWX
+    ## 7   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=RTN
+    ## 8   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=AGN
 
 ``` r
 browseURL("https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&match=&filenum=&State=&Country=&SIC=&myowner=exclude&action=getcompany")
@@ -282,13 +396,21 @@ tab_details %>%
     )
 ```
 
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["10-K"],"name":[2],"type":["int"],"align":["right"]},{"label":["10-K/A"],"name":[3],"type":["int"],"align":["right"]},{"label":["10-K405"],"name":[4],"type":["int"],"align":["right"]},{"label":["10-K405/A"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"1993","2":"780","3":"124","4":"0","5":"0"},{"1":"1994","2":"855","3":"185","4":"347","5":"28"},{"1":"1995","2":"900","3":"142","4":"469","5":"28"},{"1":"1996","2":"938","3":"106","4":"491","5":"109"},{"1":"1997","2":"929","3":"74","4":"696","5":"149"},{"1":"1998","2":"1020","3":"111","4":"464","5":"72"},{"1":"1999","2":"1056","3":"92","4":"572","5":"42"},{"1":"2000","2":"1058","3":"80","4":"611","5":"97"},{"1":"2001","2":"875","3":"147","4":"812","5":"10"},{"1":"2002","2":"2258","3":"232","4":"0","5":"0"},{"1":"2003","2":"2629","3":"170","4":"0","5":"0"},{"1":"2004","2":"2666","3":"150","4":"0","5":"0"},{"1":"2005","2":"2843","3":"140","4":"0","5":"0"},{"1":"2006","2":"3037","3":"126","4":"0","5":"0"},{"1":"2007","2":"2932","3":"248","4":"0","5":"0"},{"1":"2008","2":"3400","3":"174","4":"0","5":"0"},{"1":"2009","2":"3855","3":"75","4":"0","5":"0"},{"1":"2010","2":"3965","3":"141","4":"0","5":"0"},{"1":"2011","2":"4116","3":"44","4":"0","5":"0"},{"1":"2012","2":"4117","3":"148","4":"0","5":"0"},{"1":"2013","2":"4124","3":"30","4":"0","5":"0"},{"1":"2014","2":"4008","3":"53","4":"0","5":"0"},{"1":"2015","2":"4863","3":"76","4":"0","5":"0"},{"1":"2016","2":"4744","3":"36","4":"0","5":"0"},{"1":"2017","2":"4626","3":"116","4":"0","5":"0"},{"1":"2018","2":"4586","3":"47","4":"0","5":"0"},{"1":"2019","2":"4830","3":"44","4":"0","5":"0"},{"1":"2020","2":"4868","3":"36","4":"0","5":"0"},{"1":"2021","2":"280","3":"0","4":"0","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
+    ## # A tibble: 29 x 5
+    ## # Groups:   year [29]
+    ##     year `10-K` `10-K/A` `10-K405` `10-K405/A`
+    ##    <dbl>  <int>    <int>     <int>       <int>
+    ##  1  1993    780      124         0           0
+    ##  2  1994    855      185       347          28
+    ##  3  1995    900      142       469          28
+    ##  4  1996    938      106       491         109
+    ##  5  1997    929       74       696         149
+    ##  6  1998   1020      111       464          72
+    ##  7  1999   1056       92       572          42
+    ##  8  2000   1058       80       611          97
+    ##  9  2001    875      147       812          10
+    ## 10  2002   2258      232         0           0
+    ## # ... with 19 more rows
 
 ## Select Documents for Download
 
@@ -347,13 +469,26 @@ tab_download %>%
   )
 ```
 
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["10-K"],"name":[2],"type":["int"],"align":["right"]},{"label":["10-K/A"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"2005","2":"1357","3":"62"},{"1":"2006","2":"1455","3":"63"},{"1":"2007","2":"1401","3":"124"},{"1":"2008","2":"1629","3":"87"},{"1":"2009","2":"1844","3":"31"},{"1":"2010","2":"1896","3":"58"},{"1":"2011","2":"1969","3":"22"},{"1":"2012","2":"1950","3":"74"},{"1":"2013","2":"1970","3":"15"},{"1":"2014","2":"1907","3":"24"},{"1":"2015","2":"2326","3":"28"},{"1":"2016","2":"2268","3":"18"},{"1":"2017","2":"2200","3":"58"},{"1":"2018","2":"2193","3":"22"},{"1":"2019","2":"2308","3":"22"},{"1":"2020","2":"2337","3":"18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
+    ## # A tibble: 16 x 3
+    ## # Groups:   year [16]
+    ##     year `10-K` `10-K/A`
+    ##    <dbl>  <int>    <int>
+    ##  1  2005   1357       62
+    ##  2  2006   1455       63
+    ##  3  2007   1401      124
+    ##  4  2008   1629       87
+    ##  5  2009   1844       31
+    ##  6  2010   1896       58
+    ##  7  2011   1969       22
+    ##  8  2012   1950       74
+    ##  9  2013   1970       15
+    ## 10  2014   1907       24
+    ## 11  2015   2326       28
+    ## 12  2016   2268       18
+    ## 13  2017   2200       58
+    ## 14  2018   2193       22
+    ## 15  2019   2308       22
+    ## 16  2020   2337       18
 
 ``` r
 .tmp <- tab_download %>%

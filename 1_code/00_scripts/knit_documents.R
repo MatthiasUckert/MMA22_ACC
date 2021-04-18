@@ -3,8 +3,7 @@ rmarkdown::render(
   output_format = rmarkdown::github_document(
     toc = TRUE,
     toc_depth = 2,
-    number_sections = FALSE,
-    df_print = "paged"
+    number_sections = FALSE
   ),
   output_dir = "3_docs/"
 )

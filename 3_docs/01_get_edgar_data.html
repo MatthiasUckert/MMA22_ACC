@@ -76,36 +76,129 @@ body {
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick look at the companies we use</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(tab_f500_t10, symbol, name, sector)</span></code></pre></div>
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["symbol"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sector"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"AAPL","2":"Apple Inc.","3":"Information Technology"},{"1":"GOOGL","2":"Alphabet Inc Class A","3":"Information Technology"},{"1":"GOOG","2":"Alphabet Inc Class C","3":"Information Technology"},{"1":"MSFT","2":"Microsoft Corp.","3":"Information Technology"},{"1":"AMZN","2":"Amazon.com Inc","3":"Consumer Discretionary"},{"1":"FB","2":"Facebook, Inc.","3":"Information Technology"},{"1":"JPM","2":"JPMorgan Chase & Co.","3":"Financials"},{"1":"JNJ","2":"Johnson & Johnson","3":"Health Care"},{"1":"XOM","2":"Exxon Mobil Corp.","3":"Energy"},{"1":"BAC","2":"Bank of America Corp","3":"Financials"},{"1":"WMT","2":"Wal-Mart Stores","3":"Consumer Staples"},{"1":"WFC","2":"Wells Fargo","3":"Financials"},{"1":"V","2":"Visa Inc.","3":"Information Technology"},{"1":"BRK.B","2":"Berkshire Hathaway","3":"Financials"},{"1":"T","2":"AT&T Inc","3":"Telecommunication Services"},{"1":"HD","2":"Home Depot","3":"Consumer Discretionary"},{"1":"CVX","2":"Chevron Corp.","3":"Energy"},{"1":"UNH","2":"United Health Group Inc.","3":"Health Care"},{"1":"INTC","2":"Intel Corp.","3":"Information Technology"},{"1":"PFE","2":"Pfizer Inc.","3":"Health Care"},{"1":"VZ","2":"Verizon Communications","3":"Telecommunication Services"},{"1":"PG","2":"Procter & Gamble","3":"Consumer Staples"},{"1":"BA","2":"Boeing Company","3":"Industrials"},{"1":"ORCL","2":"Oracle Corp.","3":"Information Technology"},{"1":"CSCO","2":"Cisco Systems","3":"Information Technology"},{"1":"C","2":"Citigroup Inc.","3":"Financials"},{"1":"KO","2":"Coca-Cola Company (The)","3":"Consumer Staples"},{"1":"MA","2":"Mastercard Inc.","3":"Information Technology"},{"1":"CMCSA","2":"Comcast Corp.","3":"Consumer Discretionary"},{"1":"ABBV","2":"AbbVie Inc.","3":"Health Care"},{"1":"DWDP","2":"DowDuPont","3":"Materials"},{"1":"PEP","2":"PepsiCo Inc.","3":"Consumer Staples"},{"1":"DIS","2":"The Walt Disney Company","3":"Consumer Discretionary"},{"1":"PM","2":"Philip Morris International","3":"Consumer Staples"},{"1":"MRK","2":"Merck & Co.","3":"Health Care"},{"1":"IBM","2":"International Business Machines","3":"Information Technology"},{"1":"MMM","2":"3M Company","3":"Industrials"},{"1":"NVDA","2":"Nvidia Corporation","3":"Information Technology"},{"1":"GE","2":"General Electric","3":"Industrials"},{"1":"MCD","2":"McDonald's Corp.","3":"Consumer Discretionary"},{"1":"AMGN","2":"Amgen Inc","3":"Health Care"},{"1":"MO","2":"Altria Group Inc","3":"Consumer Staples"},{"1":"NFLX","2":"Netflix Inc.","3":"Information Technology"},{"1":"HON","2":"Honeywell Int'l Inc.","3":"Industrials"},{"1":"MDT","2":"Medtronic plc","3":"Health Care"},{"1":"GILD","2":"Gilead Sciences","3":"Health Care"},{"1":"NKE","2":"Nike","3":"Consumer Discretionary"},{"1":"UTX","2":"United Technologies","3":"Industrials"},{"1":"BMY","2":"Bristol-Myers Squibb","3":"Health Care"},{"1":"ABT","2":"Abbott Laboratories","3":"Health Care"},{"1":"UNP","2":"Union Pacific","3":"Industrials"},{"1":"TXN","2":"Texas Instruments","3":"Information Technology"},{"1":"ACN","2":"Accenture plc","3":"Information Technology"},{"1":"LMT","2":"Lockheed Martin Corp.","3":"Industrials"},{"1":"MS","2":"Morgan Stanley","3":"Financials"},{"1":"GS","2":"Goldman Sachs Group","3":"Financials"},{"1":"SLB","2":"Schlumberger Ltd.","3":"Energy"},{"1":"UPS","2":"United Parcel Service","3":"Industrials"},{"1":"QCOM","2":"QUALCOMM Inc.","3":"Information Technology"},{"1":"ADBE","2":"Adobe Systems Inc","3":"Information Technology"},{"1":"AVGO","2":"Broadcom","3":"Information Technology"},{"1":"CAT","2":"Caterpillar Inc.","3":"Industrials"},{"1":"PCLN","2":"Priceline.com Inc","3":"Consumer Discretionary"},{"1":"USB","2":"U.S. Bancorp","3":"Financials"},{"1":"PYPL","2":"PayPal","3":"Information Technology"},{"1":"KHC","2":"Kraft Heinz Co","3":"Consumer Staples"},{"1":"CHTR","2":"Charter Communications","3":"Consumer Discretionary"},{"1":"BLK","2":"BlackRock","3":"Financials"},{"1":"LLY","2":"Lilly (Eli) & Co.","3":"Health Care"},{"1":"TMO","2":"Thermo Fisher Scientific","3":"Health Care"},{"1":"LOW","2":"Lowe's Cos.","3":"Consumer Discretionary"},{"1":"COST","2":"Costco Wholesale Corp.","3":"Consumer Staples"},{"1":"AXP","2":"American Express Co","3":"Financials"},{"1":"CRM","2":"Salesforce.com","3":"Information Technology"},{"1":"SBUX","2":"Starbucks Corp.","3":"Consumer Discretionary"},{"1":"CVS","2":"CVS Health","3":"Consumer Staples"},{"1":"CELG","2":"Celgene Corp.","3":"Health Care"},{"1":"TWX","2":"Time Warner Inc.","3":"Consumer Discretionary"},{"1":"PNC","2":"PNC Financial Services","3":"Financials"},{"1":"WBA","2":"Walgreens Boots Alliance","3":"Consumer Staples"},{"1":"SCHW","2":"Charles Schwab Corporation","3":"Financials"},{"1":"NEE","2":"NextEra Energy","3":"Utilities"},{"1":"BIIB","2":"Biogen Inc.","3":"Health Care"},{"1":"CB","2":"Chubb Limited","3":"Financials"},{"1":"FDX","2":"FedEx Corporation","3":"Industrials"},{"1":"DHR","2":"Danaher Corp.","3":"Health Care"},{"1":"FOX","2":"Twenty-First Century Fox Class B","3":"Consumer Discretionary"},{"1":"MDLZ","2":"Mondelez International","3":"Consumer Staples"},{"1":"COP","2":"ConocoPhillips","3":"Energy"},{"1":"GD","2":"General Dynamics","3":"Industrials"},{"1":"CL","2":"Colgate-Palmolive","3":"Consumer Staples"},{"1":"GM","2":"General Motors","3":"Consumer Discretionary"},{"1":"ANTM","2":"Anthem Inc.","3":"Health Care"},{"1":"EOG","2":"EOG Resources","3":"Energy"},{"1":"AMT","2":"American Tower Corp A","3":"Real Estate"},{"1":"AET","2":"Aetna Inc","3":"Health Care"},{"1":"RTN","2":"Raytheon Co.","3":"Industrials"},{"1":"NOC","2":"Northrop Grumman Corp.","3":"Industrials"},{"1":"SYK","2":"Stryker Corp.","3":"Health Care"},{"1":"AGN","2":"Allergan, Plc","3":"Health Care"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
+<pre><code>##     symbol                             name                     sector
+## 1     AAPL                       Apple Inc.     Information Technology
+## 2    GOOGL             Alphabet Inc Class A     Information Technology
+## 3     GOOG             Alphabet Inc Class C     Information Technology
+## 4     MSFT                  Microsoft Corp.     Information Technology
+## 5     AMZN                   Amazon.com Inc     Consumer Discretionary
+## 6       FB                   Facebook, Inc.     Information Technology
+## 7      JPM             JPMorgan Chase &amp; Co.                 Financials
+## 8      JNJ                Johnson &amp; Johnson                Health Care
+## 9      XOM                Exxon Mobil Corp.                     Energy
+## 10     BAC             Bank of America Corp                 Financials
+## 11     WMT                  Wal-Mart Stores           Consumer Staples
+## 12     WFC                      Wells Fargo                 Financials
+## 13       V                        Visa Inc.     Information Technology
+## 14   BRK.B               Berkshire Hathaway                 Financials
+## 15       T                         AT&amp;T Inc Telecommunication Services
+## 16      HD                       Home Depot     Consumer Discretionary
+## 17     CVX                    Chevron Corp.                     Energy
+## 18     UNH         United Health Group Inc.                Health Care
+## 19    INTC                      Intel Corp.     Information Technology
+## 20     PFE                      Pfizer Inc.                Health Care
+## 21      VZ           Verizon Communications Telecommunication Services
+## 22      PG                 Procter &amp; Gamble           Consumer Staples
+## 23      BA                   Boeing Company                Industrials
+## 24    ORCL                     Oracle Corp.     Information Technology
+## 25    CSCO                    Cisco Systems     Information Technology
+## 26       C                   Citigroup Inc.                 Financials
+## 27      KO          Coca-Cola Company (The)           Consumer Staples
+## 28      MA                  Mastercard Inc.     Information Technology
+## 29   CMCSA                    Comcast Corp.     Consumer Discretionary
+## 30    ABBV                      AbbVie Inc.                Health Care
+## 31    DWDP                        DowDuPont                  Materials
+## 32     PEP                     PepsiCo Inc.           Consumer Staples
+## 33     DIS          The Walt Disney Company     Consumer Discretionary
+## 34      PM      Philip Morris International           Consumer Staples
+## 35     MRK                      Merck &amp; Co.                Health Care
+## 36     IBM  International Business Machines     Information Technology
+## 37     MMM                       3M Company                Industrials
+## 38    NVDA               Nvidia Corporation     Information Technology
+## 39      GE                 General Electric                Industrials
+## 40     MCD                 McDonald&#39;s Corp.     Consumer Discretionary
+## 41    AMGN                        Amgen Inc                Health Care
+## 42      MO                 Altria Group Inc           Consumer Staples
+## 43    NFLX                     Netflix Inc.     Information Technology
+## 44     HON             Honeywell Int&#39;l Inc.                Industrials
+## 45     MDT                    Medtronic plc                Health Care
+## 46    GILD                  Gilead Sciences                Health Care
+## 47     NKE                             Nike     Consumer Discretionary
+## 48     UTX              United Technologies                Industrials
+## 49     BMY             Bristol-Myers Squibb                Health Care
+## 50     ABT              Abbott Laboratories                Health Care
+## 51     UNP                    Union Pacific                Industrials
+## 52     TXN                Texas Instruments     Information Technology
+## 53     ACN                    Accenture plc     Information Technology
+## 54     LMT            Lockheed Martin Corp.                Industrials
+## 55      MS                   Morgan Stanley                 Financials
+## 56      GS              Goldman Sachs Group                 Financials
+## 57     SLB                Schlumberger Ltd.                     Energy
+## 58     UPS            United Parcel Service                Industrials
+## 59    QCOM                    QUALCOMM Inc.     Information Technology
+## 60    ADBE                Adobe Systems Inc     Information Technology
+## 61    AVGO                         Broadcom     Information Technology
+## 62     CAT                 Caterpillar Inc.                Industrials
+## 63    PCLN                Priceline.com Inc     Consumer Discretionary
+## 64     USB                     U.S. Bancorp                 Financials
+## 65    PYPL                           PayPal     Information Technology
+## 66     KHC                   Kraft Heinz Co           Consumer Staples
+## 67    CHTR           Charter Communications     Consumer Discretionary
+## 68     BLK                        BlackRock                 Financials
+## 69     LLY                Lilly (Eli) &amp; Co.                Health Care
+## 70     TMO         Thermo Fisher Scientific                Health Care
+## 71     LOW                      Lowe&#39;s Cos.     Consumer Discretionary
+## 72    COST           Costco Wholesale Corp.           Consumer Staples
+## 73     AXP              American Express Co                 Financials
+## 74     CRM                   Salesforce.com     Information Technology
+## 75    SBUX                  Starbucks Corp.     Consumer Discretionary
+## 76     CVS                       CVS Health           Consumer Staples
+## 77    CELG                    Celgene Corp.                Health Care
+## 78     TWX                 Time Warner Inc.     Consumer Discretionary
+## 79     PNC           PNC Financial Services                 Financials
+## 80     WBA         Walgreens Boots Alliance           Consumer Staples
+## 81    SCHW       Charles Schwab Corporation                 Financials
+## 82     NEE                   NextEra Energy                  Utilities
+## 83    BIIB                      Biogen Inc.                Health Care
+## 84      CB                    Chubb Limited                 Financials
+## 85     FDX                FedEx Corporation                Industrials
+## 86     DHR                    Danaher Corp.                Health Care
+## 87     FOX Twenty-First Century Fox Class B     Consumer Discretionary
+## 88    MDLZ           Mondelez International           Consumer Staples
+## 89     COP                   ConocoPhillips                     Energy
+## 90      GD                 General Dynamics                Industrials
+## 91      CL                Colgate-Palmolive           Consumer Staples
+## 92      GM                   General Motors     Consumer Discretionary
+## 93    ANTM                      Anthem Inc.                Health Care
+## 94     EOG                    EOG Resources                     Energy
+## 95     AMT            American Tower Corp A                Real Estate
+## 96     AET                        Aetna Inc                Health Care
+## 97     RTN                     Raytheon Co.                Industrials
+## 98     NOC           Northrop Grumman Corp.                Industrials
+## 99     SYK                    Stryker Corp.                Health Care
+## 100    AGN                    Allergan, Plc                Health Care</code></pre>
 <h2 id="get-company-index-links">Get Company Index-Links</h2>
 <p>Retrieve EDGAR Index-Links for Fortune 500 company set. The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis</p>
 <p>We use a custom function: <strong>map_company_filings()</strong> to retrieve the Index Links from EDGAR.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(map_company_filings)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(map_company_filings)</span></span></code></pre></div>
 <p>Here we use a really simple caching procedure so that we don’t have to re-run the whole expression if we already extracted index-links.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lst_paths<span class="sc">$</span>path_filing)) {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">symbol =</span> <span class="fu">character</span>(), <span class="at">.rows =</span> <span class="dv">0</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_filing)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>tab_f500_use <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab_f500_t10, <span class="sc">!</span>symbol <span class="sc">%in%</span> .prc<span class="sc">$</span>symbol)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(tab_f500_use) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  lst_filings <span class="ot">&lt;-</span> <span class="fu">map_company_filings</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.tickers =</span> tab_f500_use<span class="sc">$</span>symbol, <span class="at">.type =</span> <span class="st">&quot;10-K&quot;</span>, <span class="at">.count =</span> <span class="dv">100</span>, <span class="at">.sleep =</span> .<span class="dv">2</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  tab_filings <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(.prc, <span class="fu">bind_rows</span>(lst_filings<span class="sc">$</span>result, <span class="at">.id =</span> <span class="st">&quot;symbol&quot;</span>))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(tab_filings, lst_paths<span class="sc">$</span>path_filing)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  tab_filings <span class="ot">&lt;-</span> .prc</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lst_paths<span class="sc">$</span>path_filing)) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">symbol =</span> <span class="fu">character</span>(), <span class="at">.rows =</span> <span class="dv">0</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_filing)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>tab_f500_use <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab_f500_t10, <span class="sc">!</span>symbol <span class="sc">%in%</span> .prc<span class="sc">$</span>symbol)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(tab_f500_use) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  lst_filings <span class="ot">&lt;-</span> <span class="fu">map_company_filings</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.tickers =</span> tab_f500_use<span class="sc">$</span>symbol, <span class="at">.type =</span> <span class="st">&quot;10-K&quot;</span>, <span class="at">.count =</span> <span class="dv">100</span>, <span class="at">.sleep =</span> .<span class="dv">2</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  tab_filings <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(.prc, <span class="fu">bind_rows</span>(lst_filings<span class="sc">$</span>result, <span class="at">.id =</span> <span class="st">&quot;symbol&quot;</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(tab_filings, lst_paths<span class="sc">$</span>path_filing)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  tab_filings <span class="ot">&lt;-</span> .prc</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <pre><code>## [=======================&gt;-----------------------------------------------------------------------] 25%
 ## [===================================&gt;-----------------------------------------------------------] 38%
 ## [===============================================&gt;-----------------------------------------------] 50%
@@ -116,23 +209,42 @@ body {
 
 ## [1] &quot;Results: 0&quot;
 ## [1] &quot;Errors:  8&quot;</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tab_filings <span class="ot">&lt;-</span> tab_filings <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">stri_replace_all_fixed</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">basename</span>(href), <span class="fu">paste0</span>(<span class="st">&quot;.&quot;</span>, <span class="fu">file_ext</span>(href)), <span class="st">&quot;&quot;</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(id, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tab_filings <span class="ot">&lt;-</span> tab_filings <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">stri_replace_all_fixed</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">basename</span>(href), <span class="fu">paste0</span>(<span class="st">&quot;.&quot;</span>, <span class="fu">file_ext</span>(href)), <span class="st">&quot;&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(id, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>In total we got 8 errors.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(tab_f500_t10, <span class="sc">!</span>symbol <span class="sc">%in%</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_filing)<span class="sc">$</span>symbol)</span></code></pre></div>
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["symbol"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sector"],"name":[3],"type":["chr"],"align":["left"]},{"label":["price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["price_earnings"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["dividend_yield"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["earnings_share"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["x52_week_low"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["x52_week_high"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["market_cap"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["ebitda"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["price_sales"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["price_book"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["sec_filings"],"name":[14],"type":["chr"],"align":["left"]}],"data":[{"1":"BRK.B","2":"Berkshire Hathaway","3":"Financials","4":"191.42","5":"30.43","6":"0.000000","7":"9.76","8":"217.62","9":"160.93","10":"261401203633","11":"0","12":"1.432823","13":"1.58","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=BRK.B"},{"1":"DWDP","2":"DowDuPont","3":"Materials","4":"68.21","5":"49.43","6":"2.152975","7":"1.59","8":"77.08","9":"64.01","10":"165203312427","11":"5250000000","12":"2.692239","13":"1.54","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DWDP"},{"1":"UTX","2":"United Technologies","3":"Industrials","4":"127.48","5":"19.26","6":"2.121694","7":"5.70","8":"139.24","9":"107.05","10":"105387272474","11":"10584000000","12":"1.732412","13":"3.40","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=UTX"},{"1":"PCLN","2":"Priceline.com Inc","3":"Consumer Discretionary","4":"1806.06","5":"24.26","6":"0.000000","7":"42.66","8":"2067.99","9":"1589.00","10":"91817448863","11":"4803487000","12":"9.176564","13":"6.92","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=PCLN"},{"1":"CELG","2":"Celgene Corp.","3":"Health Care","4":"91.02","5":"13.27","6":"0.000000","7":"3.58","8":"147.17","9":"92.85","10":"74921079154","11":"5233000000","12":"5.830071","13":"7.49","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=CELG"},{"1":"TWX","2":"Time Warner Inc.","3":"Consumer Discretionary","4":"93.02","5":"15.35","6":"1.692777","7":"6.62","8":"103.90","9":"85.88","10":"74185800000","11":"7671000000","12":"2.373599","13":"2.73","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=TWX"},{"1":"RTN","2":"Raytheon Co.","3":"Industrials","4":"198.74","5":"25.78","6":"1.561276","7":"6.95","8":"213.45","9":"147.86","10":"59066255840","11":"3868000000","12":"2.293833","13":"5.28","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=RTN"},{"1":"AGN","2":"Allergan, Plc","3":"Health Care","4":"164.20","5":"10.65","6":"1.643289","7":"38.35","8":"256.80","9":"160.07","10":"56668833898","11":"-2888100000","12":"4.820115","13":"0.83","14":"http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=AGN"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">browseURL</span>(<span class="st">&quot;https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&amp;match=&amp;filenum=&amp;State=&amp;Country=&amp;SIC=&amp;myowner=exclude&amp;action=getcompany&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(tab_f500_t10, <span class="sc">!</span>symbol <span class="sc">%in%</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_filing)<span class="sc">$</span>symbol)</span></code></pre></div>
+<pre><code>##   symbol                name                 sector   price price_earnings dividend_yield
+## 1  BRK.B  Berkshire Hathaway             Financials  191.42          30.43       0.000000
+## 2   DWDP           DowDuPont              Materials   68.21          49.43       2.152975
+## 3    UTX United Technologies            Industrials  127.48          19.26       2.121694
+## 4   PCLN   Priceline.com Inc Consumer Discretionary 1806.06          24.26       0.000000
+## 5   CELG       Celgene Corp.            Health Care   91.02          13.27       0.000000
+## 6    TWX    Time Warner Inc. Consumer Discretionary   93.02          15.35       1.692777
+## 7    RTN        Raytheon Co.            Industrials  198.74          25.78       1.561276
+## 8    AGN       Allergan, Plc            Health Care  164.20          10.65       1.643289
+##   earnings_share x52_week_low x52_week_high   market_cap      ebitda price_sales price_book
+## 1           9.76       217.62        160.93 261401203633           0    1.432823       1.58
+## 2           1.59        77.08         64.01 165203312427  5250000000    2.692239       1.54
+## 3           5.70       139.24        107.05 105387272474 10584000000    1.732412       3.40
+## 4          42.66      2067.99       1589.00  91817448863  4803487000    9.176564       6.92
+## 5           3.58       147.17         92.85  74921079154  5233000000    5.830071       7.49
+## 6           6.62       103.90         85.88  74185800000  7671000000    2.373599       2.73
+## 7           6.95       213.45        147.86  59066255840  3868000000    2.293833       5.28
+## 8          38.35       256.80        160.07  56668833898 -2888100000    4.820115       0.83
+##                                                           sec_filings
+## 1 http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=BRK.B
+## 2  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=DWDP
+## 3   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=UTX
+## 4  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=PCLN
+## 5  http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=CELG
+## 6   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=TWX
+## 7   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=RTN
+## 8   http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=AGN</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">browseURL</span>(<span class="st">&quot;https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&amp;match=&amp;filenum=&amp;State=&amp;Country=&amp;SIC=&amp;myowner=exclude&amp;action=getcompany&quot;</span>)</span></code></pre></div>
 <p>Let’s quickly look at the result. (There are several ways to do this. For small Dataframes we can simply use the RStudio build-in viewer)</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_filings, <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_filings, <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>## Rows: 2,364
 ## Columns: 13
 ## $ symbol           &lt;chr&gt; &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;AAPL&quot;, &quot;~
@@ -148,32 +260,32 @@ body {
 ## $ description      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
 ## $ size             &lt;chr&gt; &quot;12 MB&quot;, &quot;12 MB&quot;, &quot;12 MB&quot;, &quot;14 MB&quot;, &quot;13 MB&quot;, &quot;9 MB&quot;, &quot;12 MB&quot;, &quot;11 MB&quot;, &quot;9~
 ## $ id               &lt;chr&gt; &quot;0000320193-20-000096-index&quot;, &quot;0000320193-19-000119-index&quot;, &quot;0000320193-1~</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_filings)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_filings)</span></span></code></pre></div>
 <h2 id="get-company-details">Get Company Details</h2>
 <p>After we got the index links from EDGAR, we proceed by scraping filing details. Again, we use a custom function to do this <strong>map_filing_details()</strong> and use a simple caching algorithm.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lst_paths<span class="sc">$</span>path_detail)) {</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">character</span>(), <span class="at">.rows =</span> <span class="dv">0</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_detail)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>tab_filings_use <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab_filings, <span class="sc">!</span>id <span class="sc">%in%</span> .prc<span class="sc">$</span>id)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(tab_filings_use) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">map_filing_details</span>(</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.id =</span> tab_filings_use<span class="sc">$</span>id, <span class="at">.hrefs =</span> tab_filings_use<span class="sc">$</span>href, <span class="at">.sleep =</span> <span class="dv">1</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">transpose</span>(lst_details<span class="sc">$</span>result)</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_details, <span class="sc">~</span> <span class="fu">bind_rows</span>(.x, <span class="at">.id =</span> <span class="st">&quot;id&quot;</span>))</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> <span class="fu">reduce</span>(lst_details, left_join, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(.prc, .tab_details)</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(.tab_details, lst_paths<span class="sc">$</span>path_detail)</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> .prc</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tab_filings_use)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lst_paths<span class="sc">$</span>path_detail)) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">character</span>(), <span class="at">.rows =</span> <span class="dv">0</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  .prc <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(lst_paths<span class="sc">$</span>path_detail)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>tab_filings_use <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab_filings, <span class="sc">!</span>id <span class="sc">%in%</span> .prc<span class="sc">$</span>id)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(tab_filings_use) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">map_filing_details</span>(</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.id =</span> tab_filings_use<span class="sc">$</span>id, <span class="at">.hrefs =</span> tab_filings_use<span class="sc">$</span>href, <span class="at">.sleep =</span> <span class="dv">1</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">transpose</span>(lst_details<span class="sc">$</span>result)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  lst_details <span class="ot">&lt;-</span> <span class="fu">map</span>(lst_details, <span class="sc">~</span> <span class="fu">bind_rows</span>(.x, <span class="at">.id =</span> <span class="st">&quot;id&quot;</span>))</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> <span class="fu">reduce</span>(lst_details, left_join, <span class="at">by =</span> <span class="st">&quot;id&quot;</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(.prc, .tab_details)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_rds</span>(.tab_details, lst_paths<span class="sc">$</span>path_detail)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  tab_details <span class="ot">&lt;-</span> .prc</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tab_filings_use)</span></code></pre></div>
 <p>From the 2,364 index links we retrieved in the last step, we got 89,302 different document links. It’s important to notice, that such data retrieval tasks often result in very large datasets.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_details, <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_details, <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>## Rows: 89,302
 ## Columns: 38
 ## $ id                          &lt;chr&gt; &quot;0000320193-20-000096-index&quot;, &quot;0000320193-20-000096-index&quot;, &quot;0~
@@ -214,43 +326,50 @@ body {
 ## $ film_number                 &lt;chr&gt; &quot;201273977&quot;, &quot;201273977&quot;, &quot;201273977&quot;, &quot;201273977&quot;, &quot;201273977~
 ## $ sic_code                    &lt;chr&gt; &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;, &quot;3571&quot;~
 ## $ sic_href                    &lt;chr&gt; &quot;https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;SI~</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_details)</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tab_details <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type.x, year) <span class="sc">%&gt;%</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> type.x, </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n, </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sort =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["10-K"],"name":[2],"type":["int"],"align":["right"]},{"label":["10-K/A"],"name":[3],"type":["int"],"align":["right"]},{"label":["10-K405"],"name":[4],"type":["int"],"align":["right"]},{"label":["10-K405/A"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"1993","2":"780","3":"124","4":"0","5":"0"},{"1":"1994","2":"855","3":"185","4":"347","5":"28"},{"1":"1995","2":"900","3":"142","4":"469","5":"28"},{"1":"1996","2":"938","3":"106","4":"491","5":"109"},{"1":"1997","2":"929","3":"74","4":"696","5":"149"},{"1":"1998","2":"1020","3":"111","4":"464","5":"72"},{"1":"1999","2":"1056","3":"92","4":"572","5":"42"},{"1":"2000","2":"1058","3":"80","4":"611","5":"97"},{"1":"2001","2":"875","3":"147","4":"812","5":"10"},{"1":"2002","2":"2258","3":"232","4":"0","5":"0"},{"1":"2003","2":"2629","3":"170","4":"0","5":"0"},{"1":"2004","2":"2666","3":"150","4":"0","5":"0"},{"1":"2005","2":"2843","3":"140","4":"0","5":"0"},{"1":"2006","2":"3037","3":"126","4":"0","5":"0"},{"1":"2007","2":"2932","3":"248","4":"0","5":"0"},{"1":"2008","2":"3400","3":"174","4":"0","5":"0"},{"1":"2009","2":"3855","3":"75","4":"0","5":"0"},{"1":"2010","2":"3965","3":"141","4":"0","5":"0"},{"1":"2011","2":"4116","3":"44","4":"0","5":"0"},{"1":"2012","2":"4117","3":"148","4":"0","5":"0"},{"1":"2013","2":"4124","3":"30","4":"0","5":"0"},{"1":"2014","2":"4008","3":"53","4":"0","5":"0"},{"1":"2015","2":"4863","3":"76","4":"0","5":"0"},{"1":"2016","2":"4744","3":"36","4":"0","5":"0"},{"1":"2017","2":"4626","3":"116","4":"0","5":"0"},{"1":"2018","2":"4586","3":"47","4":"0","5":"0"},{"1":"2019","2":"4830","3":"44","4":"0","5":"0"},{"1":"2020","2":"4868","3":"36","4":"0","5":"0"},{"1":"2021","2":"280","3":"0","4":"0","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_details)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>tab_details <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type.x, year) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> type.x, </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n, </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sort =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<pre><code>## # A tibble: 29 x 5
+## # Groups:   year [29]
+##     year `10-K` `10-K/A` `10-K405` `10-K405/A`
+##    &lt;dbl&gt;  &lt;int&gt;    &lt;int&gt;     &lt;int&gt;       &lt;int&gt;
+##  1  1993    780      124         0           0
+##  2  1994    855      185       347          28
+##  3  1995    900      142       469          28
+##  4  1996    938      106       491         109
+##  5  1997    929       74       696         149
+##  6  1998   1020      111       464          72
+##  7  1999   1056       92       572          42
+##  8  2000   1058       80       611          97
+##  9  2001    875      147       812          10
+## 10  2002   2258      232         0           0
+## # ... with 19 more rows</code></pre>
 <h2 id="select-documents-for-download">Select Documents for Download</h2>
 <p>In order to reduce the amount of documents we download, we pre-select specific documents.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="ot">&lt;-</span> tab_details <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(tab_filings, symbol, id), <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_ext =</span> tools<span class="sc">::</span><span class="fu">file_ext</span>(href),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(period_date),</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>,</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">stri_replace_all_regex</span>(., <span class="st">&quot;[[:blank:]]+&quot;</span>, <span class="st">&quot; &quot;</span>)),</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(type.y, description.y), <span class="sc">~</span> <span class="fu">if_else</span>(. <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot; &quot;</span>), <span class="cn">NA_character_</span>, .))</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, document, <span class="at">state =</span> company_incorporation_state, </span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">sic =</span> sic_code, year, symbol, company_name, company_cik, </span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">type1 =</span> type.x, <span class="at">type2 =</span> type.y, <span class="at">desc =</span> description.y, </span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>         period_date, href, size, file_ext) <span class="sc">%&gt;%</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(year, <span class="dv">2005</span>, <span class="dv">2020</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_download, <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="ot">&lt;-</span> tab_details <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(tab_filings, symbol, id), <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_ext =</span> tools<span class="sc">::</span><span class="fu">file_ext</span>(href),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(period_date),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">stri_replace_all_regex</span>(., <span class="st">&quot;[[:blank:]]+&quot;</span>, <span class="st">&quot; &quot;</span>)),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(type.y, description.y), <span class="sc">~</span> <span class="fu">if_else</span>(. <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot; &quot;</span>), <span class="cn">NA_character_</span>, .))</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, document, <span class="at">state =</span> company_incorporation_state, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">sic =</span> sic_code, year, symbol, company_name, company_cik, </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">type1 =</span> type.x, <span class="at">type2 =</span> type.y, <span class="at">desc =</span> description.y, </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>         period_date, href, size, file_ext) <span class="sc">%&gt;%</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(year, <span class="dv">2005</span>, <span class="dv">2020</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tab_download, <span class="dv">100</span>)</span></code></pre></div>
 <pre><code>## Rows: 31,736
 ## Columns: 15
 ## $ id           &lt;chr&gt; &quot;0000320193-20-000096-index&quot;, &quot;0000320193-20-000096-index&quot;, &quot;0000320193-20-00~
@@ -268,102 +387,114 @@ body {
 ## $ href         &lt;chr&gt; &quot;https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200~
 ## $ size         &lt;dbl&gt; 2.467306, 0.123356, 0.056918, 0.074685, 0.009230, 0.005991, 0.010582, 0.01061~
 ## $ file_ext     &lt;chr&gt; &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;htm&quot;, &quot;jpg&quot;, &quot;jpg&quot;, ~</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type1, year) <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> type1, </span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n, </span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sort =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<div data-pagedtable="false">
-
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["10-K"],"name":[2],"type":["int"],"align":["right"]},{"label":["10-K/A"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"2005","2":"1357","3":"62"},{"1":"2006","2":"1455","3":"63"},{"1":"2007","2":"1401","3":"124"},{"1":"2008","2":"1629","3":"87"},{"1":"2009","2":"1844","3":"31"},{"1":"2010","2":"1896","3":"58"},{"1":"2011","2":"1969","3":"22"},{"1":"2012","2":"1950","3":"74"},{"1":"2013","2":"1970","3":"15"},{"1":"2014","2":"1907","3":"24"},{"1":"2015","2":"2326","3":"28"},{"1":"2016","2":"2268","3":"18"},{"1":"2017","2":"2200","3":"58"},{"1":"2018","2":"2193","3":"22"},{"1":"2019","2":"2308","3":"22"},{"1":"2020","2":"2337","3":"18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-
-</div>
-
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>.tmp <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">sum</span>(size), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> size)) <span class="sc">+</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Size per Year (in MB)&quot;</span>)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>.geom_n <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Number of Documents per year&quot;</span>)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="sc">/</span> .geom_n</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type1, year) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> type1, </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> n, </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sort =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## # A tibble: 16 x 3
+## # Groups:   year [16]
+##     year `10-K` `10-K/A`
+##    &lt;dbl&gt;  &lt;int&gt;    &lt;int&gt;
+##  1  2005   1357       62
+##  2  2006   1455       63
+##  3  2007   1401      124
+##  4  2008   1629       87
+##  5  2009   1844       31
+##  6  2010   1896       58
+##  7  2011   1969       22
+##  8  2012   1950       74
+##  9  2013   1970       15
+## 10  2014   1907       24
+## 11  2015   2326       28
+## 12  2016   2268       18
+## 13  2017   2200       58
+## 14  2018   2193       22
+## 15  2019   2308       22
+## 16  2020   2337       18</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>.tmp <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">sum</span>(size), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> size)) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Size per Year (in MB)&quot;</span>)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>.geom_n <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Number of Documents per year&quot;</span>)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="sc">/</span> .geom_n</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>tab_download_txt <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span>, desc <span class="sc">==</span> <span class="st">&quot;Complete submission text file&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_txt)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_txt<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tab_download_txt <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span>, desc <span class="sc">==</span> <span class="st">&quot;Complete submission text file&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_txt)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_txt<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 1,327
 ## Size: 28,347 MB</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tab_download_htm <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>), <span class="fu">grepl</span>(<span class="st">&quot;10-K&quot;</span>, desc)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_htm)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_htm<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tab_download_htm <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>), <span class="fu">grepl</span>(<span class="st">&quot;10-K&quot;</span>, desc)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_htm)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_htm<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 967
 ## Size: 3,728 MB</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tab_download_xxx <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;x&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_xxx)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_xxx<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tab_download_xxx <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;x&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_xxx)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_xxx<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 6,049
 ## Size: 9,511 MB</code></pre>
 <h2 id="download-documents">Download Documents</h2>
 <p>Again we use a custom function <strong>download_edgar_files()</strong> to download the documents.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>.dir_docs <span class="ot">&lt;-</span> <span class="st">&quot;2_output/01_get_edgar_data/documents/&quot;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>tab_xxx <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_xxx, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>tab_htm <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_htm, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>tab_txt <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_txt, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>tab_zip_files <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(.dir_docs, <span class="at">info =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(doc_id, file_ext, path, size) <span class="sc">%&gt;%</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_zip_files)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_zip_files<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>.dir_docs <span class="ot">&lt;-</span> <span class="st">&quot;2_output/01_get_edgar_data/documents/&quot;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>tab_xxx <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_xxx, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>tab_htm <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_htm, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>tab_txt <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_txt, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>tab_zip_files <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(.dir_docs, <span class="at">info =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(doc_id, file_ext, path, size) <span class="sc">%&gt;%</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_zip_files)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_zip_files<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 3,298
 ## Size: 3,768 MB</code></pre>
 <h2 id="save-files">Save Files</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_htm, <span class="st">&quot;2_output/01_get_edgar_data/htm_download.rds&quot;</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_txt, <span class="st">&quot;2_output/01_get_edgar_data/txt_download.rds&quot;</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_xxx, <span class="st">&quot;2_output/01_get_edgar_data/xxx_download.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_htm, <span class="st">&quot;2_output/01_get_edgar_data/htm_download.rds&quot;</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_txt, <span class="st">&quot;2_output/01_get_edgar_data/txt_download.rds&quot;</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_xxx, <span class="st">&quot;2_output/01_get_edgar_data/xxx_download.rds&quot;</span>)</span></code></pre></div>
 
 </body>
 </html>
