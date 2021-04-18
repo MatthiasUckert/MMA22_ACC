@@ -6,7 +6,7 @@ navbar:
       href: 01_get_edgar_data.html
     - text: "Getting Data from www.annualreport.com"
       href: 02_get_arcom_data.html
-    - text: "RAtio Analysis"
+    - text: "Ratio Analysis"
     - href: 05_excel_ratio_analysis.html
 output_dir: "."
 output:
