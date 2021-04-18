@@ -7,6 +7,6 @@ rmarkdown::render(
     keep_md = TRUE,
     self_contained = TRUE
   ),
-  output_dir = "3_docs/"
+  output_dir = "docs/"
   
 )
