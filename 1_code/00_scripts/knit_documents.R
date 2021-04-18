@@ -10,3 +10,5 @@ rmarkdown::render(
   output_dir = "docs/"
   
 )
+
+rmarkdown::render_site("docs/", )
