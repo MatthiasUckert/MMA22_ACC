@@ -10,6 +10,11 @@ output: html_notebook
 This script
 
 
+```r
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+
+
 
 # Script Setup
 
@@ -526,7 +531,7 @@ tab_download %>%
 .geom_size / .geom_n
 ```
 
-![](E:/R/R_projects/MMA22_ACC/3_docs/01_get_edgar_data_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](Figs/unnamed-chunk-11-1.png)<!-- -->
 
 
 ```r

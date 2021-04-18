@@ -9,6 +9,10 @@ output: html_notebook
 
 This script
 
+```{r global_options}
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
 knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
@@ -30,7 +34,7 @@ source("1_code/00_functions/f-get_edgar_data.R")
 
 ## Paths
 
-```{r}
+```{r paths}
 lst_paths <- list(
   dir_main    = "2_output/01_get_edgar_data/",
   path_filing = "2_output/01_get_edgar_data/edgar_filings.rds",
@@ -55,7 +59,7 @@ Throughout this script we will use custom functions to download and transform da
 # View(get_f500)
 ```
 
-```{r message=FALSE, warning=FALSE}
+```{r get-fortune500-firms, message=FALSE, warning=FALSE}
   # browseURL("https://datahub.io/core/s-and-p-500-companies-financials#r")
 tab_f500_all <- get_f500() %>%
   # Function from the janitor package, makes nice column names
