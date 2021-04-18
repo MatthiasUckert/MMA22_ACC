@@ -1,10 +1,15 @@
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-include:
-  - 01_get_edgar_data.md
-  - README.md
-theme: jekyll-theme-cayman
-
+name: "R Markdown Websites Tutorial"
+navbar:
+  title: "HOME"
+  left:
+    - text: "First Observations"
+      href: 01_get_edgar_data.html
+    - text: "Basic Workflow"
+      href: 02_get_arcom_data.html
+output_dir: "."
+output:
+  html_document:
+    theme: yeti
+    highlight: textmate
+#    include:
+#      after_body: _footer.html
