@@ -53,12 +53,7 @@ standardize_name <- function(.name) {
     stringi::stri_replace_all_regex(., "[[:punct:]]", " ") %>%
     stringi::stri_replace_all_regex(., "([[:space:]]|[[:blank:]])+", " ") %>%
     tolower() %>%
-    trimws() 
-  # %>%
-  #   gsub("\\bn\\s?a o\\s?n$|\\bn\\s?a$|\\bo\\s?n$|\\binh o\\s?n$|\\bvzo o\\s?n$|eo \\d.+|\\bvzo$|\\bord o\\s?n$", "", .) %>%
-  #   trimws() %>%
-  #   gsub("\\ba\\s?g$|\\bs\\s?a$|\\bs\\s?e$|\\bk\\s?g\\s?a\\s?a$|\\bag st$", "", .) %>%
-  #   trimws()
+    trimws()
 } 
 
 downlad_ar <- function(.url, .dir) {

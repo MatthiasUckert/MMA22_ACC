@@ -1,0 +1,8 @@
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - 3_docs/01_get_edgar_data.md
+  - README.md

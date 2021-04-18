@@ -7,7 +7,7 @@ output: html_notebook
 
 # Description
 
-This script
+In this section we will retrieve information from the SEC EDGAR database.
 
 ```{r global_options}
 knitr::opts_chunk$set(fig.path='Figs/')
@@ -306,4 +306,15 @@ cat(paste0(
 write_rds(tab_download_htm, "2_output/01_get_edgar_data/htm_download.rds")
 write_rds(tab_download_txt, "2_output/01_get_edgar_data/txt_download.rds")
 write_rds(tab_download_xxx, "2_output/01_get_edgar_data/xxx_download.rds")
+```
+
+# Own Function Calls
+```{r}
+lsf.str()
+```
+
+
+# Session Info
+```{r}
+sessioninfo::session_info()
 ```
