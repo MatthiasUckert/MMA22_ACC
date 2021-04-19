@@ -69,22 +69,30 @@ pdf_read_and_tokenize <- function(.path, .dir) {
   
 }
 
-sec_read_and_tokenize <- function(.path, .dir) {
+sec_read_and_tokenize <- function(.path, .dir = NULL) {
   tab_ <- try(readtext::readtext(.path))
   if (inherits(tab_, "try-error")) {
     return(NULL)
   } else {
     
-    tab_ %>%
+    tab_ <- tab_ %>%
       dplyr::select(-doc_id) %>%
       dplyr::mutate(text = remove_html_tags(text)) %>%
-      tidytext::unnest_tokens(word, text) %>%
-      fst::write_fst(file.path(.dir, gsub("\\.zip$", ".fst", basename(.path))))
+      tidytext::unnest_tokens(word, text)
+  }
+  
+  if (!is.null(.dir)) {
+    fst::write_fst(tab_, file.path(.dir, gsub("\\.zip$", ".fst", basename(.path))))
+    return(NULL)
+  } else {
+    return(tab_)
   }
 }
 
 get_ngrams <- function(.path, .ngram, .stop = tibble(word = "", .rows = 0), .rm_num = TRUE) {
   tab_ <- fst::read_fst(.path) %>%
+    dplyr::filter(nchar(word) > 4) %>%
+    dplyr::filter(!stringi::stri_detect_regex(word, "[[:punct:]]")) %>%
     dplyr::anti_join(dplyr::mutate(.stop, word = tolower(word)), by = "word")
   
   if (.rm_num) {

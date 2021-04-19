@@ -1,15 +1,10 @@
 name: "Accounting Class"
-navbar:
-  title: "HOME"
-  left:
-    - text: "Getting Data from EDGAR"
-      href: 01_get_edgar_data.html
-    - text: "Getting Data from www.annualreport.com"
-      href: 02_get_arcom_data.html
-    - text: "Ratio Analysis"
-      href: 05_excel_ratio_analysis.html
-output_dir: "."
+output_dir: '.'
 output:
   html_document:
-    theme: journal
-    highlight: textmate
+    theme: cerulean
+    highlight: zenburn
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false

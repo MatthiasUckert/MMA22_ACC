@@ -2,16 +2,19 @@
 title: "Getting Data from SEC's EDGAR"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
+    highlight: zenburn
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false
 ---
 
 # Description
 
-In this section we will retrieve information from the SEC EDGAR database.
-
-```{r global_options}
-knitr::opts_chunk$set(fig.path='Figs/')
-```
+In this section we will retrieve information from the SEC EDGAR database. Getting data from EDGAR is exemplary for getting information from the web, where we have API (Application Programming Interface) access.
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -71,7 +74,8 @@ tab_f500_all <- get_f500() %>%
 tab_f500_t10 <- slice(tab_f500_all, 1:.n_companies)
 
 # Quick look at the companies we use
-select(tab_f500_t10, symbol, name, sector)
+select(tab_f500_t10, symbol, name, sector)[1:10, ] %>%
+  show_table()
 
 ```
 
@@ -116,15 +120,16 @@ tab_filings <- tab_filings %>%
 In total we got 8 errors.
 
 ```{r}
-filter(tab_f500_t10, !symbol %in% read_rds(lst_paths$path_filing)$symbol)
-browseURL("https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&match=&filenum=&State=&Country=&SIC=&myowner=exclude&action=getcompany")
+tab_f500_t10 %>%
+  filter(!symbol %in% read_rds(lst_paths$path_filing)$symbol) %>%
+  show_table(.n = 5)
+# browseURL("https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&match=&filenum=&State=&Country=&SIC=&myowner=exclude&action=getcompany")
 ```
 
 Let's quickly look at the result. (There are several ways to do this. For small Dataframes we can simply use the RStudio build-in viewer)
 
 ```{r}
-glimpse(tab_filings, 100)
-# View(tab_filings)
+show_table(tab_filings, .n = 5)
 ```
 
 ## Get Company Details
@@ -156,24 +161,20 @@ rm(tab_filings_use)
 
 ```
 
+From the **`r comma(nrow(tab_filings))`** index links we retrieved in the last step, we got **`r comma(nrow(tab_details))`** different document links.
 
-From the 2,364 index links we retrieved in the last step, we got 89,302 different document links.
 It's important to notice, that such data retrieval tasks often result in very large datasets.
+
 ```{r}
-glimpse(tab_details, 100)
 # View(tab_details)
 tab_details %>%
   mutate(year = year(period_date)) %>%
-  group_by(type.x, year) %>%
+  rename(type = type.x) %>%
+  group_by(type, year) %>%
   count() %>%
-  pivot_wider(
-    names_from = type.x, 
-    values_from = n, 
-    names_sort = TRUE,
-    values_fill = 0
-    )
+  pivot_wider(names_from = year, values_from = n, names_sort = TRUE, values_fill = 0) %>%
+  show_table()
 ```
-
 
 ## Select Documents for Download
 
@@ -197,20 +198,14 @@ tab_download <- tab_details %>%
   filter(between(year, 2005, 2020))
 ```
 
-
 ```{r}
-glimpse(tab_download, 100)
 tab_download %>%
-  group_by(type1, year) %>%
+  rename(type = type1) %>%
+  group_by(type, year) %>%
   count() %>%
-  pivot_wider(
-    names_from = type1, 
-    values_from = n, 
-    names_sort = TRUE,
-    values_fill = 0
-  )
+  pivot_wider(names_from = year, values_from = n, names_sort = TRUE, values_fill = 0) %>%
+  show_table()
 ```
-
 
 ```{r}
 .tmp <- tab_download %>%
@@ -292,7 +287,6 @@ tab_zip_files <- list_files_tab(.dir_docs, info = TRUE) %>%
   mutate(size = size / 1e6)
 ```
 
-
 ```{r}
 cat(paste0(
   "Docs: ", comma(nrow(tab_zip_files)), "\n",
@@ -309,12 +303,13 @@ write_rds(tab_download_xxx, "2_output/01_get_edgar_data/xxx_download.rds")
 ```
 
 # Own Function Calls
+
 ```{r}
 lsf.str()
 ```
 
-
 # Session Info
+
 ```{r}
 sessioninfo::session_info()
 ```

@@ -1,0 +1,20 @@
+name: "Accounting Class"
+title: "Accounting Class"
+type: inverse
+left:
+  - text: "Day 1 - Getting Data"
+    menu:
+      - text: "Getting Data from the Web: SEC's EDGAR"
+        href: 01_get_edgar_data.html
+      - text: "Getting Data from the Web: AnnualReport.com"
+      - text: "Getting Data from the Web: XBRL"
+  - text: "Day 2 - Analysing Data"
+    menu:
+       - text: "Analysing Data: XBRL Tags"
+       - text: "Analysing Data: Textual Analysis"
+       - text: "Analysing Data: Excel and R"
+  - text: "Contact"
+    href: ./contact.html
+right:
+  - icon: fa-github fa-lg
+    href: https://github.com/githubusername/mywebsite

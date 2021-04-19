@@ -34,32 +34,31 @@ source("1_code/00_functions/f-xbrl.R")
 
 ## Paths
 ```{r}
-.dir_sec <- "2_output/01_get_edgar_data/documents/"
-.path_sec_data <- "2_output/01_get_edgar_data/txt_download.rds"
+lst_paths <- list(
+  dir_main = "2_output/04_xbrl",
+  dir_sec = "2_output/01_get_edgar_data/documents/",
+  path_sec_data = "2_output/01_get_edgar_data/txt_download.rds",
+  dir_tmp = "2_output/04_xbrl/tmp",
+  dir_elements_raw = "2_output/04_xbrl/elements_raw",
+  dir_elements_prc = "2_output/04_xbrl/elements_prc"
+) %>% create_dirs()
 ```
 
 ## List Files
 ```{r}
-tab_files_sec <- list_files_tab(.dir_sec, reg = "zip$") %>%
+tab_files_sec <- list_files_tab(lst_paths$dir_sec, reg = "zip$") %>%
   filter(startsWith(doc_id, "xxx"))
 ```
 
-```{r}
-.dir_tmp <- "2_output/04_xbrl/tmp"
-.dir_elements_raw <- "2_output/04_xbrl/elements_raw"
-if(!dir.exists(.dir_tmp)) dir.create(.dir_tmp, recursive = TRUE)
-if(!dir.exists(.dir_elements_raw)) dir.create(.dir_elements_raw, recursive = TRUE)
-```
-
 
 ```{r}
-.prc <- list_files_tab(.dir_elements_raw)
+.prc <- list_files_tab(lst_paths$dir_elements_raw)
 tab_files_sec_use <- filter(tab_files_sec, !doc_id %in% .prc$doc_id)
 
 plan("multisession", workers = 8)
 future_walk(
   .x = tab_files_sec_use$path, 
-  .f = ~ xbrl_extract_elements(.x, .dir_tmp, .dir_elements_raw),
+  .f = ~ xbrl_extract_elements(.x, lst_paths$dir_tmp, lst_paths$dir_elements_raw),
   .options = furrr_options(seed = TRUE),
   .progress = TRUE
   )
@@ -67,24 +66,21 @@ plan("default")
 
 ```
 
-```{r}
-.dir_elements_prc <- "2_output/04_xbrl/elements_prc"
-if(!dir.exists(.dir_elements_prc)) dir.create(.dir_elements_prc, recursive = TRUE)
-```
-
 
 ```{r}
-tab_files_elements_raw <- list_files_tab(.dir_elements_raw)
-.prc <- list_files_tab(.dir_elements_prc)
+tab_files_elements_raw <- list_files_tab(lst_paths$dir_elements_raw)
+.prc <- list_files_tab(lst_paths$dir_elements_prc)
 tab_files_elements_use <- filter(tab_files_elements_raw, !doc_id %in% .prc$doc_id)
 
-plan("multisession", workers = 4)
+plan("multisession", workers = 8)
 future_walk(
   .x = tab_files_elements_use$path,
   .f = ~ {
     read_rds(.x) %>%
       xbrl_process_elements() %>%
-      write_rds(file.path(.dir_elements_prc, basename(.x)), compress = "gz")
+      enframe() %>%
+      separate(name, c("type", "name"), sep = "_") %>%
+      write_rds(file.path(lst_paths$dir_elements_prc, basename(.x)), compress = "gz")
   },
   .options = furrr_options(seed = TRUE),
   .progress = TRUE
@@ -93,75 +89,38 @@ plan("default")
 
 ```
 
+
+
 ```{r}
-tab_files_elements_prc <- list_files_tab(.dir_elements_prc) %>%
-  separate(doc_id, c("tmp", "symbol", "year"), sep = "_|-", convert = TRUE, remove = FALSE) %>%
-  filter(symbol == "AMZN")
-
-plan("multisession", workers = 4)
-lst_elements <- future_map(
-  .x = set_names(tab_files_elements_prc$path, tab_files_elements_prc$doc_id),
-  .f = read_rds,
-  .options = furrr_options(seed = TRUE),
-  .progress = TRUE
-)
-plan("default")
-
-test <- map_dfr(lst_elements, enframe, .id = "doc_id") %>%
-  left_join(tab_files_elements_prc, by = "doc_id") %>%
-  select(symbol, year, type = name, df = value) %>%
-  separate(type, c("type", "desc_orig"), sep = "_") %>%
-  filter(type == "Statement") %>%
-  mutate(
-    desc_adj = desc_orig %>%
-      tolower() %>%
-      stri_replace_all_regex(., "[[:punct:]]", " ") %>%
-      stri_replace_all_regex(., "([[:blank:]]|[[:space:]])+", " ") %>%
-      trimws(),
-    desc_std = case_when(
-      grepl("financial (position|condition)|balance sheet", desc_adj) ~ "Balance Sheet",
-      grepl("cash flow", desc_adj) ~ "Cash Flow Statement",
-      grepl("comprehensive income", desc_adj) ~ "Statement of Comprehensive Income",
-      grepl("operation|income|earning", desc_adj) ~ "Income Statement",
-      grepl("(shareholder|stockholder).*equity", desc_adj) ~ "Shareholder Equity"
-    ),
-    desc_std = if_else(grepl("parenthetical", desc_adj, fixed = TRUE), paste(desc_std, "(P)"), desc_std)
-  ) %>%
-  filter(desc_std == "Income Statement") %>%
-  unnest(df) %>%
-  mutate(
-    time = as.integer(difftime(endDate, startDate, units = "days")),
-    amount = as.numeric(amount) / 1e9
-    ) %>%
-  group_by(year, tag) %>%
-  filter(time == max(time)) %>%
-  ungroup() %>%
-  select(symbol, year, tag, amount) %>%
-  distinct(year, tag, amount, .keep_all = TRUE) %>%
-  pivot_wider(names_from = year, values_from = amount, names_sort = TRUE)
-  
-
-
-tab_names <- tibble(
-  names = unlist(map(lst_elements, names))
-) %>%
-  separate(names, c("type", "element"), sep = "_") %>%
-  distinct()
-
-tab_names_statement <- tab_names %>%
-  filter(type == "Statement") %>%
-  mutate(
-    desc_adj = element %>%
-      tolower() %>%
-      stri_replace_all_regex(., "[[:punct:]]", " ") %>%
-      stri_replace_all_regex(., "([[:blank:]]|[[:space:]])+", " ") %>%
-      trimws(),
-    desc_std = case_when(
-      grepl("financial (position|condition)|balance sheet", desc_adj) ~ "Balance Sheet",
-      grepl("cash flow", desc_adj) ~ "Cash Flow Statement",
-      grepl("comprehensive income", desc_adj) ~ "Statement of Comprehensive Income",
-      grepl("operation|income|earbibf", desc_adj) ~ "Income Statement"
-    )
-      )
+tab_files_elements_prc <- list_files_tab(lst_paths$dir_elements_prc) %>%
+  separate(doc_id, c("tmp", "symbol", "year"), sep = "_|-", convert = TRUE, remove = FALSE)
 ```
 
+
+```{r}
+plan("multisession", workers = 4)
+tab_elements0 <- future_map_dfr(
+  .x = set_names(tab_files_elements_prc$path, tab_files_elements_prc$doc_id),
+  .f = ~ mutate(read_rds(.x), value = as.list(value)),
+  .options = furrr_options(seed = TRUE),
+  .progress = TRUE,
+  .id = "doc_id"
+) %>%
+  separate(doc_id, c("tmp", "symbol", "year"), sep = "_|-", convert = TRUE, remove = FALSE) %>%
+  select(-tmp)
+plan("default")
+
+tab_lu <- openxlsx::read.xlsx("0_data/xbrl_lookup_table.xlsx")
+tab_elements1 <- tab_elements0 %>%
+  mutate(
+    name_adj = name %>%
+      stri_replace_all_regex(., "[[:punct:]]", " ") %>%
+      stri_replace_all_regex(., "([[:blank:]]|[[:space:]])+", " ") %>%
+      trimws() %>%
+      tolower()
+    ) %>%
+  left_join(tab_lu, by = c("type", "name_adj")) %>%
+  filter(desc == "Significant Accounting Policies")
+
+write.table(tab_elements1, "clipboard", sep="\t", row.names = FALSE)
+```

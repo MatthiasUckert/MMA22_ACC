@@ -2,7 +2,7 @@
 title: "Getting Data AnnualReport.com"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: rmdformats::downcute
 ---
 
     # github_document:
@@ -11,7 +11,7 @@ output: html_document
 
 # Description
 
-In this section we will download information and documents from **https://www.annualreports.com**.
+In this section we will download information and documents from [**https://www.annualreports.com**](https://www.annualreports.com){.uri}.
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -30,7 +30,6 @@ source("1_code/00_functions/f-get_arcom_data.R")
 .workers <- min(availableCores() / 2, 16)
 ```
 
-
 # Code
 
 ## Paths
@@ -42,13 +41,16 @@ lst_paths <- list(
   path_firm_links = "2_output/02_get_arcom_data/arcom_firm_links.rds",
   dir_html = "2_output/02_get_arcom_data/html",
   path_report_links = "2_output/02_get_arcom_data/arcom_report_links.rds",
-  path_matched_firms = "2_output/02_get_arcom_data/arcom_matched_firms.rds"
+  path_matched_firms = "2_output/02_get_arcom_data/arcom_matched_firms.rds",
+  dir_ar = "2_output/02_get_arcom_data/documents",
+  path_firm_data = "2_output/02_get_arcom_data/arcom_firm_data.rds"
 ) %>% create_dirs()
 ```
 
-
 ## Read Orbis Firms
-We use European large firm data retrieved from Orbis to match companies.
+
+As a starting point, we use European large firm data retrieved from Orbis to match companies.
+
 ```{r}
 tab_orbis <- read.xlsx(lst_paths$path_orbis, 2) %>%
   rename(Alpha_2 = Country.ISO.code) %>%
@@ -61,21 +63,19 @@ tab_orbis <- read.xlsx(lst_paths$path_orbis, 2) %>%
     country_code, country
   ) %>%
   filter(!is.na(company))
+show_table(tab_orbis, 5)
 
 ```
 
-
 ## Get Annual Report Firms
-We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com.
-In contrast to the custom functions we used in 01_get_edgar_data, we don't explicitly make this function error proof, but wrap it into another function (purrr::safely()) that catches any error.
-Again we use simple caching to not re-run results we already obtained.
+
+We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com. In contrast to the custom functions we used in 01_get_edgar_data, we don't explicitly make this function error proof, but wrap it into another function (purrr::safely()) that catches any error. Again we use simple caching to not re-run results we already obtained.
 
 ```{r}
 # View(get_company_table)
 ```
 
-
-```{r}
+```{r message=FALSE, warning=FALSE}
 if (!file.exists(lst_paths$path_firm_links)) {
   .prc <- tibble(id = character(), .rows = 0)
 } else {
@@ -95,8 +95,7 @@ if (length(urls_use) > 0) {
   lst_firm_links <- future_map(
     .x = urls_use,
     .f = safe_get_company_table,
-    .options = furrr_options(seed = TRUE),
-    .progress = TRUE
+    .options = furrr_options(seed = TRUE)
   ) %>% transpose()
   plan("default")
   err <- compact(lst_firm_links$error)
@@ -111,13 +110,13 @@ rm(urls_use)
 ```
 
 ```{r}
-glimpse(tab_firm_links, 100)
+show_table(tab_firm_links, 10)
 # View(tab_filings)
 ```
 
-
 ## Get Annual Report HTMLs
-Before we download annual reports in PDF format, we first scrape the complete website. For most datasets it is best practice to have intermediate files (in this case .html files) locally, which can be scarped in exact the same manner as any other website, without the need of an active connection to the server. 
+
+Before we download annual reports in PDF format, we first scrape the complete website. For most datasets it is best practice to have intermediate files (in this case .html files) locally, which can be scarped in exact the same manner as any other website, without the need of an active connection to the server.
 
 Here we don't write a custom function explicitly. Nonetheless, we implicitly wrap it into our walk function.
 
@@ -144,6 +143,7 @@ rm(tab_links_use)
 ```
 
 ## Get Annual Report Links
+
 After retrieving the all the html files on a firm level, we extract the actual documents links to the PDF we will download in the next step. Here we use the custom function: **get_infos()**
 
 ```{r}
@@ -152,8 +152,7 @@ if (!file.exists(lst_paths$path_report_links)) {
   tab_report_links <- future_map_dfr(
     .x = list_files_tab(.dir_html)[["path"]],
     .f = get_infos,
-    .options = furrr_options(seed = TRUE),
-    .progress = TRUE
+    .options = furrr_options(seed = TRUE)
   )
   plan("default")
   write_rds(tab_report_links, lst_paths$path_report_links)
@@ -161,15 +160,16 @@ if (!file.exists(lst_paths$path_report_links)) {
   tab_report_links <- read_rds(lst_paths$path_report_links)
 }
 
-nrow(tab_report_links)
+show_table(tab_report_links, 10)
+
 ```
 
-
 ## Match Firms
-To not artifically increase the number of PDFs we download, we restrict our set to companies that we can match to the Orbis file. 
-Note: Company name matching between databases is a non-trivial task. For those who are interested, I dedicated a whole package to this task: **https://github.com/MatthiasUckert/RFirmMatch**. We won't use this library here. Rather we restrict our adjustments to a few simple Regular Expressions and functions.
+
+To not artifically increase the number of PDFs we download, we restrict our set to companies that we can match to the Orbis file. Note: Company name matching between databases is a non-trivial task. For those who are interested, I dedicated a whole package to this task: [**https://github.com/MatthiasUckert/RFirmMatch**](https://github.com/MatthiasUckert/RFirmMatch){.uri}. We won't use this library here. Rather we restrict our adjustments to a few simple Regular Expressions and functions.
 
 ### FUll Matches
+
 ```{r}
 tab0 <- mutate(tab_firm_links, match = standardize_name(company)) %>%
   filter(!is.na(match))
@@ -183,6 +183,7 @@ tab1 <- filter(tab1, !match %in% tab_match_full$match)
 ```
 
 ### Fuzzy Matches
+
 ```{r}
 tab_match_fuzzy <- stringdist_inner_join(
   x = tab0,
@@ -197,7 +198,9 @@ tab_match_fuzzy <- stringdist_inner_join(
 
 select(tab_match_fuzzy, sim, company_0, company_1) %>%
   arrange(desc(sim)) %>%
-  mutate(row = row_number())
+  mutate(row = row_number()) %>%
+  select(row, company_0, company_1, sim) %>%
+  show_table()
 ```
 
 ```{r}
@@ -206,8 +209,8 @@ tab_match_fuzzy <- tab_match_fuzzy %>%
   select(-sim)
 ```
 
-
 ## Select Companies
+
 ```{r}
 tab_match <- bind_rows(tab_match_full, tab_match_fuzzy) %>%
   mutate(doc_id = basename(link)) %>%
@@ -217,41 +220,41 @@ tab_match <- bind_rows(tab_match_full, tab_match_fuzzy) %>%
   select(isin, year, company, link) %>%
   mutate(doc_id = gsub("\\.pdf$", "", basename(link)))
 
-write_rds(tab_match, lst_paths$path_matched_firms)
+tab_data <- tab_match %>%
+  left_join(tab_orbis, by = c("isin", "company")) %>%
+  select(doc_id, isin, year, company, country_code, country)
+
+show_table(tab_data, 10)
+
 ```
 
 ## Download Annual Reports
+
 For downloading the annual reports we use a custom function **downlad_ar()**
 
 ```{r message=FALSE, warning=FALSE}
-.dir_ar <- "2_output/02_get_arcom_data/documents"
-if (!dir.exists(.dir_ar)) dir.create(.dir_ar, recursive = TRUE)
-
-.prc <- list_files_tab(.dir_ar)
+.prc <- list_files_tab(lst_paths$dir_ar)
 
 tab_download_use <- filter(tab_match, !doc_id %in% .prc$doc_id)
 
 # walk(tab_download_use$link, ~ downlad_ar(.x, .dir_ar))
 ```
 
-
 ## Save Output
-```{r}
-tab_data <- tab_match %>%
-  left_join(tab_orbis, by = c("isin", "company")) %>%
-  select(doc_id, isin, year, company, country_code, country)
 
-write_rds(tab_data, "2_output/02_get_arcom_data/arcom_firm_data.rds")
+```{r}
+write_rds(tab_data, lst_paths$path_firm_data, compress = "gz")
+write_rds(tab_match, lst_paths$path_matched_firms, compress = "gz")
 ```
 
-
 # Own Function Calls
+
 ```{r}
 lsf.str()
 ```
 
-
 # Session Info
+
 ```{r}
 sessioninfo::session_info()
 ```

@@ -2,7 +2,10 @@
 title: "Textual Analysis"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: 
+  prettydoc::html_pretty:
+      theme: cayman
+      highlight: github
 ---
 
     # github_document:

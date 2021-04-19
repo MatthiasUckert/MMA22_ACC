@@ -24,36 +24,41 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 library(tidyverse); library(tidytext); library(readtext); library(furrr)
 library(fst); library(stringi); library(ISOcodes); library(scales)
 
-.dir_main <- "2_output/03_textual_analysis"
-if(!dir.exists(.dir_main)) dir.create(.dir_main, recursive = TRUE)
-
 source("1_code/00_functions/f-all.R")
 source("1_code/00_functions/f-textual_analysis.R")
+
+.workers <- min(availableCores() / 2, 16)
 ```
 
 # Code
 
 ## Paths
 ```{r}
-.dir_pdf <- "2_output/02_get_arcom_data/documents/"
-.dir_sec <- "2_output/01_get_edgar_data/documents/"
+lst_paths <- list(
+  dir_main = "2_output/03_textual_analysis",
+  dir_pdf = "2_output/02_get_arcom_data/documents/",
+  dir_sec = "2_output/01_get_edgar_data/documents/",
+  path_pdf_data = "2_output/02_get_arcom_data/arcom_firm_data.rds",
+  path_sec_data = "2_output/01_get_edgar_data/txt_download.rds",
+  dir_token = "2_output/03_textual_analysis/token",
+  path_stop = "2_output/03_textual_analysis/lm_stop.rds"
+) %>% create_dirs()
 
-.path_pdf_data <- "2_output/02_get_arcom_data/arcom_firm_data.rds"
-.path_sec_data <- "2_output/01_get_edgar_data/txt_download.rds"
 ```
 
 ## List Files
 ```{r}
-tab_files_pdf <- list_files_tab(.dir_pdf, reg = "pdf$")
-tab_files_sec <- list_files_tab(.dir_sec, reg = "zip$") %>%
+tab_files_pdf <- list_files_tab(lst_paths$dir_pdf, reg = "pdf$")
+tab_files_sec <- list_files_tab(lst_paths$dir_sec, reg = "zip$") %>%
   filter(startsWith(doc_id, "txt"))
 ```
 
 ## Read Tables
 ```{r}
-tab_pdf_data <- read_rds(.path_pdf_data) %>%
+tab_pdf_data <- read_rds(lst_paths$path_pdf_data) %>%
   select(-isin)
-tab_sec_data <- read_rds(.path_sec_data) %>%
+
+tab_sec_data <- read_rds(lst_paths$path_sec_data) %>%
   mutate(doc_id = paste0(file_ext, "_", symbol, "-", year)) %>%
   select(doc_id, year, company = company_name) %>%
   mutate(country_code = "USA") %>%
@@ -66,72 +71,101 @@ rm(tab_pdf_data, tab_sec_data)
 ```
 
 
+```{r}
+set.seed(123)
+tab_files <- bind_rows(tab_files_pdf, tab_files_sec) %>%
+  left_join(select(tab_data, doc_id, country, year, company), by = "doc_id") %>%
+  filter(!is.na(country)) %>%
+  filter(between(year, 2006, 2015)) %>%
+  group_by(company) %>%
+  filter(all(2006:2015 %in% year)) %>%
+  distinct(company, year, .keep_all = TRUE)
+
+
+tab_files %>%
+  group_by(country) %>%
+  summarise(n_firm = n_distinct(company), n_doc = n(), .groups = "drop")
+
+tmp <- distinct(tab_files, country, company) %>%
+  group_by(country) %>%
+  slice_sample(n = 2) %>%
+  ungroup()
+
+tab_files <- inner_join(tab_files, tmp, by = c("country", "company"))
+
+tab_files %>%
+  group_by(country) %>%
+  summarise(n_firm = n_distinct(company), n_doc = n(), .groups = "drop")
+
+tab_files_pdf <- filter(tab_files, country == "Europe")
+tab_files_sec <- filter(tab_files, country == "United States")
+```
+
+
+
+
+
 
 ```{r message=FALSE, warning=FALSE}
-.dir_token <- "2_output/03_textual_analysis/token"
-if (!dir.exists(.dir_token)) dir.create(.dir_token)
-.prc <- list_files_tab(.dir_token)
+.prc <- list_files_tab(lst_paths$dir_token)
 tab_files_pdf_use <- filter(tab_files_pdf, !doc_id %in% .prc$doc_id)
 
+if (nrow(tab_files_pdf_use) > 0) {
+  plan("multisession", workers = .workers)
+  future_walk(
+    .x = tab_files_pdf_use$path,
+    .f = ~ pdf_read_and_tokenize(.x, lst_paths$dir_token),
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  )
+  plan("default")
+}
 
-plan("multisession", workers = 8)
-future_walk(
-  .x = tab_files_pdf_use$path,
-  .f = ~ pdf_read_and_tokenize(.x, .dir_token),
-  .options = furrr_options(seed = TRUE),
-  .progress = TRUE
-)
-plan("default")
+rm(tab_files_pdf_use)
+
 ```
 
 
 ```{r message=FALSE, warning=FALSE}
-.dir_token <- "2_output/03_textual_analysis/token"
-if (!dir.exists(.dir_token)) dir.create(.dir_token)
-.prc <- list_files_tab(.dir_token)
+.prc <- list_files_tab(lst_paths$dir_token)
 tab_files_sec_use <- filter(tab_files_sec, !doc_id %in% .prc$doc_id)
 
 
-plan("multisession", workers = 4)
-future_walk(
-  .x = tab_files_sec_use$path,
-  .f = ~ sec_read_and_tokenize(.x, .dir_token),
-  .options = furrr_options(seed = TRUE),
-  .progress = TRUE
-)
-plan("default")
+if (nrow(tab_files_sec_use) > 0) {
+  plan("multisession", workers = .workers)
+  future_walk(
+    .x = tab_files_sec_use$path,
+    .f = ~ sec_read_and_tokenize(.x, lst_paths$dir_token),
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  )
+  plan("default")
+}
+rm(tab_files_sec_use)
+
+```
+
+
+```{r}
+files_token <- list_files_tab(lst_paths$dir_token) %>%
+  filter(doc_id %in% tab_files$doc_id)
 ```
 
 
 
 ```{r}
 .path_lm_stop <- "2_output/03_textual_analysis/lm_stop.rds"
-if (!file.exists(.path_lm_stop)) {
+if (!file.exists(lst_paths$path_stop)) {
   tab_lm_stop <- get_lm_stop()
-  write_rds(tab_lm_stop, .path_lm_stop)
+  write_rds(tab_lm_stop, lst_paths$path_stop)
 } else {
-  tab_lm_stop <- read_rds(.path_lm_stop)
+  tab_lm_stop <- read_rds(lst_paths$path_stop)
 }
 ```
 
-
-```{r}
-set.seed(123)
-files_token <- list_files_tab(.dir_token) %>%
-  mutate(
-    type = if_else(startsWith(doc_id, "txt_"), "sec", "int")
-  ) %>%
-  left_join(select(tab_data, doc_id, country), by = "doc_id") %>%
-  filter(!is.na(country)) %>%
-  group_by(country) %>%
-  slice_sample(n = 10) %>%
-  ungroup()
-```
-
-
 ## Get Ngrams
 ```{r}
-plan("multisession", workers = 8)
+plan("multisession", workers = .workers)
 tab_1gram <- future_map_dfr(
   .x = set_names(files_token$path, files_token$doc_id),
   .f = ~ get_ngrams(.x, 1, tab_lm_stop, TRUE),
@@ -177,9 +211,9 @@ tab_2gram %>%
   mutate(p = n / sum(n, na.rm = TRUE)) %>%
   ungroup() %>%
   select(-n) %>%
-  filter(p >= .0001) %>%
   pivot_wider(names_from = country, values_from = p) %>%
   filter(!is.na(Europe) & !is.na(`United States`)) %>%
+  filter(Europe > .00001 | `United States` > .00001) %>%
   ggplot(aes(x = `United States`, y = Europe)) +
   geom_abline(color = "gray40", lty = 2) +
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3, color = "blue") +
