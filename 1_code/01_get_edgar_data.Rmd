@@ -1,20 +1,23 @@
 ---
-title: "Getting Data from SEC's EDGAR"
+title: "Getting Data from the Web: SEC's EDGAR"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: 
-  html_document:
-    theme: cerulean
-    highlight: zenburn
-    toc: true
-    toc_depth: 2
-    toc_float:
-      collapsed: false
+output: html_document
 ---
+
+------------------------------------------------------------------------
 
 # Description
 
-In this section we will retrieve information from the SEC EDGAR database. Getting data from EDGAR is exemplary for getting information from the web, where we have API (Application Programming Interface) access.
+In this session we will retrieve information from the SEC EDGAR database. Getting data from EDGAR is exemplary for getting information from the web, where we have API (Application Programming Interface) access.
+
+Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_edgar_data.R**
+
+
+EDGAR is an established source of financial information. But normally companies and researchers start gathering financial information from commercial databases such as **Bureau Van Dijk - Orbis**, **Refinitiv - Datastream** or **Compustat**
+
+Compustat: https://wrds-www.wharton.upenn.edu/
+Orbis: https://orbis4.bvdinfo.com/ip
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -27,7 +30,7 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 library(tidyverse); library(edgarWebR); library(lubridate); library(here)
 library(furrr); library(stringi); library(textstem); library(tidytext)
 library(janitor); library(tools); library(patchwork); library(scales)
-library(summarytools); library(kableExtra)
+library(kableExtra); library(openxlsx)
 
 source("1_code/00_functions/f-all.R")
 source("1_code/00_functions/f-get_edgar_data.R")
@@ -41,7 +44,8 @@ source("1_code/00_functions/f-get_edgar_data.R")
 lst_paths <- list(
   dir_main    = "2_output/01_get_edgar_data/",
   path_filing = "2_output/01_get_edgar_data/edgar_filings.rds",
-  path_detail = "2_output/01_get_edgar_data/edgar_details.rds"
+  path_detail = "2_output/01_get_edgar_data/edgar_details.rds",
+  path_f500   = "2_output/01_get_edgar_data/f500.xlsx"
 ) %>% create_dirs()
 
 ```
@@ -50,19 +54,18 @@ lst_paths <- list(
 
 Her we use an open source data repository 'datahub.io' to retrieve the [**fortune 500 companies**]{.ul} with some financial information. We won't use the complete data set, but filter for the top 100 companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: **.n_companies** in the chunk below.
 
-Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_edgar_data.R**
+We use a custom function: [get_f500]{.ul}**()** to download the Fortune 500 dataset.
 
-**Note:** Look at the function [**get_f500()**]{.ul}
+### Function: [get_f500()]{.ul}
 
-```{r choose-n-companies}
-.n_companies <- 100
+```{r echo=FALSE}
+print(get_f500)
 ```
 
-```{r}
-# View(get_f500)
-```
+### Download Dataset
 
 ```{r get-fortune500-firms, message=FALSE, warning=FALSE}
+.n_companies <- 100
   # browseURL("https://datahub.io/core/s-and-p-500-companies-financials#r")
 tab_f500_all <- get_f500() %>%
   # Function from the janitor package, makes nice column names
@@ -70,24 +73,36 @@ tab_f500_all <- get_f500() %>%
   # Arrange, so that the highest market cap appears first in the dataframe
   arrange(desc(market_cap)) 
 
+write.xlsx(tab_f500_all, lst_paths$path_f500, TRUE)
+
 # Select only the firms with the highest market cap
 tab_f500_t10 <- slice(tab_f500_all, 1:.n_companies)
 
 # Quick look at the companies we use
 select(tab_f500_t10, symbol, name, sector)[1:10, ] %>%
   show_table()
-
 ```
 
 ## Get Company Index-Links
 
-Retrieve EDGAR Index-Links for Fortune 500 company set. The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis
+Before we attempt to download data in bulk, we let us first explore the SEC's EDGAR website:
+```{r}
+# browseURL(tab_f500_all$sec_filings[1])
+```
+
+
+The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis
 
 We use a custom function: **map_company_filings()** to retrieve the Index Links from EDGAR.
 
-```{r}
+### Function: map_company_filings()
+
+```{r echo=FALSE}
 # View(map_company_filings)
+print(map_company_filings)
 ```
+
+### Download Index-Links
 
 Here we use a really simple caching procedure so that we don't have to re-run the whole expression if we already extracted index-links.
 
@@ -102,7 +117,8 @@ tab_f500_use <- filter(tab_f500_t10, !symbol %in% .prc$symbol)
 
 if (nrow(tab_f500_use) > 0) {
   lst_filings <- map_company_filings(
-    .tickers = tab_f500_use$symbol, .type = "10-K", .count = 100, .sleep = .2
+    .tickers = tab_f500_use$symbol, .type = "10-K", .count = 100, 
+    .sleep = .2, .progress = FALSE
     )
   tab_filings <- bind_rows(.prc, bind_rows(lst_filings$result, .id = "symbol"))
   write_rds(tab_filings, lst_paths$path_filing)
@@ -135,6 +151,14 @@ show_table(tab_filings, .n = 5)
 ## Get Company Details
 
 After we got the index links from EDGAR, we proceed by scraping filing details. Again, we use a custom function to do this **map_filing_details()** and use a simple caching algorithm.
+
+### Function: map_filing_details()
+
+```{r echo=FALSE}
+print(map_filing_details)
+```
+
+### Download Details
 
 ```{r}
 if (!file.exists(lst_paths$path_detail)) {
@@ -207,6 +231,10 @@ tab_download %>%
   show_table()
 ```
 
+## Overview: Number and Size of Documents
+
+As you can see in the plot and the prints below, getting data from the web can result in really big data sets. (Keep in mind that we only downloaded data for 100 companies). The **download_edgar_files()** function will alleviate this problem by zipping data before writing to disk.
+
 ```{r}
 .tmp <- tab_download %>%
   group_by(year) %>%
@@ -276,6 +304,14 @@ cat(paste0(
 
 Again we use a custom function **download_edgar_files()** to download the documents.
 
+### Function: download_edgar_files()
+
+```{r echo=FALSE}
+print(download_edgar_files)
+```
+
+### Download Files
+
 ```{r}
 .dir_docs <- "2_output/01_get_edgar_data/documents/"
 tab_xxx <- download_edgar_files(tab_download_xxx, .dir_docs, 10, 2)
@@ -286,6 +322,8 @@ tab_zip_files <- list_files_tab(.dir_docs, info = TRUE) %>%
   select(doc_id, file_ext, path, size) %>%
   mutate(size = size / 1e6)
 ```
+
+Below you can see that we were able to reduce the dataset from more than 40 GB to just 3.7 GB by simply zipping the output.
 
 ```{r}
 cat(paste0(

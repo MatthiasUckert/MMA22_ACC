@@ -1,13 +1,11 @@
 ---
-title: "Getting Data AnnualReport.com"
+title: "Getting Data from the Web: www.AnnualReport.com"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: rmdformats::downcute
+output: html_document
 ---
 
-    # github_document:
-    # toc: true
-    # toc_depth: 2
+------------------------------------------------------------------------
 
 # Description
 
@@ -200,7 +198,7 @@ select(tab_match_fuzzy, sim, company_0, company_1) %>%
   arrange(desc(sim)) %>%
   mutate(row = row_number()) %>%
   select(row, company_0, company_1, sim) %>%
-  show_table()
+  show_table(.n = 10)
 ```
 
 ```{r}

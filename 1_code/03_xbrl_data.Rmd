@@ -1,0 +1,214 @@
+---
+title: "Getting Data from the Web: XBRL"
+author: "Matthias Uckert"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+------------------------------------------------------------------------
+
+# Description
+
+In this session we will extract XBRL elements from the files we downloaded in Day 1 - Session 1.
+
+Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-xbrl.R**
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
+knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
+```
+
+------------------------------------------------------------------------
+
+# Script Setup
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse); library(zip); library(furrr); library(stringi)
+
+source("1_code/00_functions/f-all.R")
+source("1_code/00_functions/f-xbrl.R")
+
+.workers <- min(availableCores() / 2, 16)
+```
+
+# Code
+
+------------------------------------------------------------------------
+
+## Paths
+
+```{r}
+lst_paths <- list(
+  dir_main = "2_output/03_xbrl_data",
+  dir_sec = "2_output/01_get_edgar_data/documents/",
+  path_sec_data = "2_output/01_get_edgar_data/txt_download.rds",
+  dir_tmp = "2_output/03_xbrl_data/tmp",
+  dir_elements_raw = "2_output/03_xbrl_data/elements_raw",
+  dir_elements_prc = "2_output/03_xbrl_data/elements_prc",
+  path_elements0 = "2_output/03_xbrl_data/xbrl_elements0.rds",
+  path_elements1 = "2_output/03_xbrl_data/xbrl_elements1.rds",
+  path_xbrl_lu = "0_data/xbrl_lookup_table.xlsx"
+) %>% create_dirs()
+```
+
+```{r}
+tab_files_sec <- list_files_tab(lst_paths$dir_sec, reg = "zip$") %>%
+  filter(startsWith(doc_id, "xxx"))
+```
+
+------------------------------------------------------------------------
+
+## Extract XBRL Elements
+
+------------------------------------------------------------------------
+
+### Function: xbrl_extract_elements()
+
+```{r echo=FALSE}
+print(xbrl_extract_elements)
+# View(xbrl_extract_elements)
+```
+
+------------------------------------------------------------------------
+
+### Extract
+
+```{r message=FALSE, warning=FALSE}
+.prc <- list_files_tab(lst_paths$dir_elements_raw)
+tab_files_sec_use <- filter(tab_files_sec, !doc_id %in% .prc$doc_id)
+
+plan("multisession", workers = .workers)
+future_walk(
+  .x = tab_files_sec_use$path, 
+  .f = ~ xbrl_extract_elements(.x, lst_paths$dir_tmp, lst_paths$dir_elements_raw),
+  .options = furrr_options(seed = TRUE)
+  )
+plan("default")
+
+```
+
+------------------------------------------------------------------------
+
+## Process XBRL Elements
+
+We use a custom function: **xbrl_process_elements()** to extract elements from the XBRL tagged .xml files. This function is heavily based on the XBRL library. Nonetheless, we implemented some changes to correct for a known bug in the source code, streamline the download process and fit it into our normal workflow.
+
+### Function: xbrl_process_elements()
+
+```{r echo=FALSE}
+print(xbrl_process_elements)
+# View(xbrl_extract_elements)
+```
+
+------------------------------------------------------------------------
+
+### Process Elements
+
+```{r message=FALSE, warning=FALSE}
+tab_files_elements_raw <- list_files_tab(lst_paths$dir_elements_raw)
+.prc <- list_files_tab(lst_paths$dir_elements_prc)
+tab_files_elements_use <- filter(tab_files_elements_raw, !doc_id %in% .prc$doc_id)
+
+plan("multisession", workers = .workers)
+future_walk(
+  .x = tab_files_elements_use$path,
+  .f = ~ {
+    read_rds(.x) %>%
+      xbrl_process_elements() %>%
+      enframe() %>%
+      separate(name, c("type", "name"), sep = "_") %>%
+      write_rds(file.path(lst_paths$dir_elements_prc, basename(.x)), compress = "gz")
+  },
+  .options = furrr_options(seed = TRUE)
+)
+plan("default")
+
+
+
+```
+
+------------------------------------------------------------------------
+
+## Read Elements
+
+Here we read all the elements into a single dataframe which we will use in Day 2, to filter for relevant disclosure and financial statements.
+
+```{r}
+tab_files_elements_prc <- list_files_tab(lst_paths$dir_elements_prc) %>%
+  separate(doc_id, c("tmp", "symbol", "year"), sep = "_|-", convert = TRUE, remove = FALSE)
+```
+
+```{r}
+if (!file.exists(lst_paths$path_elements0)) {
+  plan("multisession", workers = .workers)
+  tab_elements0 <- future_map_dfr(
+    .x = set_names(tab_files_elements_prc$path, tab_files_elements_prc$doc_id),
+    .f = ~ mutate(read_rds(.x), value = as.list(value)),
+    .options = furrr_options(seed = TRUE),
+    .id = "doc_id"
+  ) %>%
+    separate(
+      col = doc_id,
+      into = c("tmp", "symbol", "year"),
+      sep = "_|-",
+      convert = TRUE,
+      remove = FALSE
+    ) %>%
+    select(-tmp)
+  plan("default")
+  write_rds(tab_elements0, lst_paths$path_elements0, compress = "gz")
+} else {
+  tab_elements0 <- read_rds(lst_paths$path_elements0)
+}
+
+show_table(select(tab_elements0, -value), 10)
+```
+
+------------------------------------------------------------------------
+
+## Standardize Names
+
+Even though XBRL is intended to standardize the reporting of financial disclosures, the implementation is still not perfect. Especially the names used for describing a specific element are only partially standradized. To overcome this issue we will use a custom lookup table, that assigns each XBRL name a common and standardized description.
+
+```{r}
+tab_lu <- openxlsx::read.xlsx(lst_paths$path_xbrl_lu)
+show_table(filter(tab_lu, desc == "Balance Sheet"), 10)
+```
+
+------------------------------------------------------------------------
+
+We will just merge our original data with the lookup values to build an standardized table which we can use in further analysis.
+
+```{r}
+tab_elements1 <- tab_elements0 %>%
+  mutate(
+    name_adj = name %>%
+      stri_replace_all_regex(., "[[:punct:]]", " ") %>%
+      stri_replace_all_regex(., "([[:blank:]]|[[:space:]])+", " ") %>%
+      trimws() %>%
+      tolower()
+    ) %>%
+  left_join(tab_lu, by = c("type", "name_adj")) %>%
+  filter(!is.na(desc))
+
+write_rds(tab_elements1, lst_paths$path_elements1, compress = "gz")
+
+show_table(select(tab_elements1, -value), 10)
+# write.table(tab_elements1, "clipboard", sep="\t", row.names = FALSE)
+```
+
+------------------------------------------------------------------------
+
+# Own Function Calls
+
+```{r}
+lsf.str()
+```
+
+------------------------------------------------------------------------
+
+# Session Info
+
+```{r}
+sessioninfo::session_info()
+```

@@ -1,5 +1,7 @@
 get_f500 <- function() {
-
+  
+  # Source: https://datahub.io/core/s-and-p-500-companies-financials#r
+  
   json_file <- 'https://datahub.io/core/s-and-p-500-companies-financials/datapackage.json'
   json_data <- jsonlite::fromJSON(paste(readLines(json_file), collapse=""))
 

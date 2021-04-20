@@ -1,27 +1,53 @@
 ---
-title: "Accounting Class"
-output: 
-  html_document:
-    toc: TRUE
+title: "Mannheim Master in Management Analytics"
+subtitle: Accounting Class
+output: html_document
 ---
 
+# Introduction
 
+Welcome to the practical application sessions of the **Mannheim Master in Management Analytics - Accounting Class.** In the next two days we will learn how to get and analyze data from the web in an automated and reproducible way.
 
+The goal of those sessions is to give you a general overview of how common workflows can be automated using basic knowledge in HTML and Excel.
 
-**Welcome to my website!**
+All sessions are programmed in R and a basic understanding of programming is needed. The code itself applies relatively advanced methods, hence it is not assumed that you follow each single logic. Rather this part of the course is designed to give you a high level understanding of what is possible using common open-source languages such as R.
 
+# Get The Code
 
-# Getting started
+The complete code is hosted on my GitHub page: <https://github.com/MatthiasUckert/MMA22_ACC>
 
-Click the links in the menu above to look around.
+Simply fork the repository into your own GitHub or download the Project.
 
+# Table of Content
 
-# Notes
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Day        | Session        | Description                                                                                                                 |
++:===========+:===============+:============================================================================================================================+
+| Day&nbsp;1 | Session&nbsp;1 | **Getting Data from the Web: SEC's EDGAR**                                                                                  |
+|            |                |                                                                                                                             |
+|            |                | How to extract data from the web, if a Application Programming Interface (API) is provided.                                 |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+|            | Session&nbsp;2 | **Getting Data from the Web: www.AnnualReport.com**                                                                         |
+|            |                |                                                                                                                             |
+|            |                | How to extract data from the web, if [**no**]{.ul} Application Programming Interface (API) is provided.                     |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+|            | Session&nbsp;3 | **Getting Data from the Web: XBRL**                                                                                         |
+|            |                |                                                                                                                             |
+|            |                | Extracting structured information from files that are tagged using eXtensible Business Reporting Language (XBRL) framework. |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+| Day&nbsp;2 | Session&nbsp;1 | **Analyzing Data: XBRL Tags**                                                                                               |
+|            |                |                                                                                                                             |
+|            |                | Simple extraction and transformation of financial data contained in XBRL files.                                             |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+|            | Session&nbsp;2 | **Analyzing Data: Textual Analysis**                                                                                        |
+|            |                |                                                                                                                             |
+|            |                | Common textual analysis application.                                                                                        |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
+|            | Session&nbsp;3 | **Analyzing Data: Excel and R**                                                                                             |
+|            |                |                                                                                                                             |
+|            |                | Move from Excel to R.                                                                                                       |
++------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
 
-This website is a collection of regular (R)Markdown document, so you can use all the usual formatting.
+# Readings
 
-If you are new to R Markdown, you can learn more about it [on the R Markdown website](https://rmarkdown.rstudio.com/). 
-
-I also have a discussion of R Markdown and reproducibility [on one of my course pages](https://andreashandel.github.io/MADAcourse/1e_ToolsforReproducibility.html). You'll find additional links to potentially useful R Markdown (and Github) resources there.
-
-
+-   XXX

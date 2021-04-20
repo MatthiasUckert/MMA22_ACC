@@ -18,23 +18,30 @@ list_files_tab <- function(dirs, reg = "*", id = "doc_id", rec = FALSE, info = F
   return(tab_fil)
 }
 
-
+# .string <- text_
 remove_html_tags <- function(.string, rm_linebreaks = TRUE) {
-  string_ <- .string %>%
+  string_ <- .string
+  
+  if (rm_linebreaks) {
+    string_ <- stringi::stri_replace_all_regex(string_, "([[:blank:]]|[[:space:]])+", " ")  
+  }
+  
+  string_ <- string_ %>%
     stringi::stri_replace_all_regex(., "(?i)<script.*?>.*?</script.*?>", "") %>%
     stringi::stri_replace_all_regex(., "(?i)<xbrl.*?>.*?</xbrl.*?>", "") %>%
     stringi::stri_replace_all_regex(., "(?i)<xml.*?>.*?</xml.*?>", "") %>%
     stringi::stri_replace_all_regex(., "(?i)<link:.*?/>", "") %>%
     stringi::stri_replace_all_regex(., "(?i)<table.*?>.*?</table.*?>", "") %>%
-    stringi::stri_replace_all_regex(., "(?i)<ix.*?>.*?</ix.*?>", "") %>%
+    # stringi::stri_replace_all_regex(., "(?i)<ix.*?>.*?</ix.*?>", "") %>%
     stringi::stri_replace_all_regex(., "(?i)<.*?>|&#.+?;|&lt;.*?&gt;", "") %>%
-    stringi::stri_replace_all_fixed(., "(?i)&nbsp;", " ") %>%
+    stringi::stri_replace_all_regex(., "(?i)&nbsp;", " ") %>%
     stringi::stri_replace_all_regex(., "(?i)&amp;", "&") 
   
   if (rm_linebreaks) {
     string_ <- stringi::stri_replace_all_regex(string_, "([[:blank:]]|[[:space:]])+", " ")  
   }
-  trimws(string_)
+
+  return(trimws(string_))
 }
 
 create_dirs <- function(.dirs) {
@@ -62,11 +69,13 @@ show_table <- function(.tab, .n = Inf) {
     tab_ <-  dplyr::slice(.tab, 1:.n)
   }
   
-  
-  
   tab_ %>%
     kableExtra::kbl() %>%
     kableExtra::kable_paper("hover") %>%
     kableExtra::kable_styling(full_width = FALSE) %>% 
     kableExtra::scroll_box(width = "100%")
 }
+
+# remove_html_tags('<HR SIZE="3" NOSHADE COLOR="#000000" ALIGN="left"> <P STYLE="margin-top:0px;margin-bottom:0px" ALIGN="center"><FONT FACE="Times New Roman" SIZE="5"><B>UNITED STATES </B></FONT></P> <P
+# STYLE="margin-top:0px;margin-bottom:0px" ALIGN="center"><FONT FACE="Times New Roman" SIZE="5"><B>SECURITIES AND EXCHANGE COMMISSION </B></FONT></P> <P STYLE="margin-top:0px;margin-bottom:0px" ALIGN="center"><FONT FACE="Times New Roman"
+# SIZE="3">')

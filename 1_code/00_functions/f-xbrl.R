@@ -10,7 +10,7 @@ own_XBRL <- function() {
   dname.inst <- NULL
   verbose <- FALSE
   inst.lnkb <- NULL
-
+  
   fixFileName <- function(dname, file.name) {
     if (!(substr(file.name, 1, 5) %in% c("http:", "https"))) {
       if (substr(file.name, 1, 5) == "../..") {
@@ -31,8 +31,8 @@ own_XBRL <- function() {
     }
     file.name
   }
-
-
+  
+  
   setVerbose <- function(newVerbose) {
     oldVerbose <- verbose
     verbose <<- newVerbose
@@ -46,21 +46,21 @@ own_XBRL <- function() {
   }
   fileFromCache <- function(file) {
     if (!(gsub("^(http|https|ftp)://.*$", "\\1", file) %in%
-      c("http", "https", "ftp"))) {
+          c("http", "https", "ftp"))) {
       return(file)
     }
     bname <- basename(file)
     cached.file <- paste0(cache.dir, "/", bname)
-
+    
     if (!file.exists(cached.file)) {
       if (verbose) {
         cat("Downloading to cache dir...")
       }
       status <- try(download.file(file, cached.file, quiet = !verbose),
-        silent = TRUE
+                    silent = TRUE
       )
       if (class(status)[1] == "try-error" || status ==
-        1) {
+          1) {
         unlink(cached.file)
         stop(status, "\n")
       }
@@ -92,10 +92,10 @@ own_XBRL <- function() {
   }
   getSchemaName <- function() {
     fixFileName(dname.inst, .Call("xbrlGetSchemaName", doc.inst,
-      PACKAGE = "XBRL"
+                                  PACKAGE = "XBRL"
     ))
   }
-
+  
   processSchema <- function(file, level = 1) {
     if (verbose) {
       cat("Schema: ", file, "\n")
@@ -106,7 +106,7 @@ own_XBRL <- function() {
       }
       return(NULL)
     }
-
+    
     discovered.files <<- c(discovered.files, file)
     dname <- dirname(file)
     if (level >= 1 && !is.null(cache.dir)) {
@@ -124,7 +124,7 @@ own_XBRL <- function() {
     }
     processElements(doc)
     linkbaseNames <- .Call("xbrlGetLinkbaseNames", doc,
-      PACKAGE = "XBRL"
+                           PACKAGE = "XBRL"
     )
     importNames <- .Call("xbrlGetImportNames", doc, PACKAGE = "XBRL")
     .Call("xbrlFree", doc, PACKAGE = "XBRL")
@@ -148,8 +148,8 @@ own_XBRL <- function() {
       cat("Roles\n")
     }
     self$role <<- rbind(self$role, .Call("xbrlProcessRoles",
-      doc,
-      PACKAGE = "XBRL"
+                                         doc,
+                                         PACKAGE = "XBRL"
     ))
   }
   processElements <- function(doc) {
@@ -157,8 +157,8 @@ own_XBRL <- function() {
       cat("Elements\n")
     }
     self$element <<- rbind(self$element, .Call("xbrlProcessElements",
-      doc,
-      PACKAGE = "XBRL"
+                                               doc,
+                                               PACKAGE = "XBRL"
     ))
   }
   processLinkbase <- function(file, level) {
@@ -192,8 +192,8 @@ own_XBRL <- function() {
   processLabels <- function(doc) {
     pre.length <- length(self$label)
     self$label <<- rbind(self$label, ans <- .Call("xbrlProcessLabels",
-      doc,
-      PACKAGE = "XBRL"
+                                                  doc,
+                                                  PACKAGE = "XBRL"
     ))
     if (!is.null(ans)) {
       if (verbose) {
@@ -206,8 +206,8 @@ own_XBRL <- function() {
   processPresentations <- function(doc) {
     pre.length <- length(self$presentation)
     self$presentation <<- rbind(self$presentation, ans <- .Call("xbrlProcessArcs",
-      doc, "presentation",
-      PACKAGE = "XBRL"
+                                                                doc, "presentation",
+                                                                PACKAGE = "XBRL"
     ))
     if (!is.null(ans)) {
       if (verbose) {
@@ -220,8 +220,8 @@ own_XBRL <- function() {
   processDefinitions <- function(doc) {
     pre.length <- length(self$definition)
     self$definition <<- rbind(self$definition, ans <- .Call("xbrlProcessArcs",
-      doc, "definition",
-      PACKAGE = "XBRL"
+                                                            doc, "definition",
+                                                            PACKAGE = "XBRL"
     ))
     if (!is.null(ans)) {
       if (verbose) {
@@ -234,8 +234,8 @@ own_XBRL <- function() {
   processCalculations <- function(doc) {
     pre.length <- length(self$calculation)
     self$calculation <<- rbind(self$calculation, ans <- .Call("xbrlProcessArcs",
-      doc, "calculation",
-      PACKAGE = "XBRL"
+                                                              doc, "calculation",
+                                                              PACKAGE = "XBRL"
     ))
     if (!is.null(ans)) {
       if (verbose) {
@@ -250,7 +250,7 @@ own_XBRL <- function() {
       cat("Contexts\n")
     }
     self$context <<- .Call("xbrlProcessContexts", doc.inst,
-      PACKAGE = "XBRL"
+                           PACKAGE = "XBRL"
     )
   }
   processFacts <- function() {
@@ -270,7 +270,7 @@ own_XBRL <- function() {
       cat("Footnotes\n")
     }
     self$footnote <<- .Call("xbrlProcessFootnotes", doc.inst,
-      PACKAGE = "XBRL"
+                            PACKAGE = "XBRL"
     )
   }
   closeInstance <- function() {
@@ -290,7 +290,7 @@ own_XBRL <- function() {
   )
 }
 
-# file.inst <- "E:/R/R_projects/MMA22_ACC/2_output/04_xbrl/tmp/aapl-20090926.xml"
+# file.inst <- file.path(.dir_tmp, inst_file_)
 # cache.dir <- .dir_tmp
 # prefix.out = NULL
 # verbose = TRUE
@@ -304,8 +304,8 @@ own_xbrlDoAll <- function(file.inst, cache.dir = "xbrl.Cache", prefix.out = NULL
     xbrl$setCacheDir(cache.dir)
   }
   xbrl$openInstance(file.inst)
-  file_schema <- xbrl$getSchemaName()
-  xbrl$processSchema(xbrl$getSchemaName())
+  file_schema <- suppressWarnings(xbrl$getSchemaName())[1]
+  xbrl$processSchema(file_schema)
   xbrl$processContexts()
   xbrl$processFacts()
   xbrl$processUnits()
@@ -334,7 +334,9 @@ own_xbrlDoAll <- function(file.inst, cache.dir = "xbrl.Cache", prefix.out = NULL
 }
 
 
-
+# .zip <- tab_files_sec$path[i]
+# .dir_tmp <- .dir_tmp
+# .dir_out <- .dir_elements_raw
 xbrl_extract_elements <- function(.zip, .dir_tmp, .dir_out) {
   zip::unzip(.zip, exdir = .dir_tmp)
   
@@ -370,20 +372,17 @@ xbrl_process_elements <- function(.inst) {
     return(NULL)
   }
   
-  .type = chr_type_[28]
-  .desc = chr_desc_[28]
-  
   names(chr_desc_) <- names(chr_type_) <- paste0(chr_type_, "_", chr_desc_)
-
+  
   get_statements <- function(.type, .desc) {
     tab_role_ <- dplyr::filter(.inst$role, description == .desc)
-
-
+    
+    
     tab_skeleton_ <- .inst$presentation %>%
       dplyr::filter(roleId == tab_role_$roleId) %>%
       dplyr::mutate(row_id = dplyr::row_number()) %>%
       tibble::as_tibble()
-
+    
     tab_element_ <- tab_skeleton_ %>%
       dplyr::left_join(.inst$label, by = c("toElementId" = "elementId")) %>%
       dplyr::left_join(.inst$fact, by = c("toElementId" = "elementId")) %>%
@@ -392,7 +391,7 @@ xbrl_process_elements <- function(.inst) {
       dplyr::filter(!is.na(fact)) %>%
       dplyr::arrange(row_id, startDate, endDate) %>%
       tibble::as_tibble()
-
+    
     if (.type == "Statement") {
       tab_element_ %>%
         dplyr::select(
@@ -401,7 +400,7 @@ xbrl_process_elements <- function(.inst) {
         )
     } else if (.type %in% c("Disclosure", "Document", "Schedule")) {
       tab_element_ %>%
-      dplyr::mutate(fact = remove_html_tags(fact)) %>%
+        dplyr::mutate(fact = remove_html_tags(fact)) %>%
         dplyr::select(
           tag = toElementId, line_item = labelString,
           text = fact, contextId, startDate, endDate
@@ -410,7 +409,7 @@ xbrl_process_elements <- function(.inst) {
       stop(paste0("Type not found: ", .type), call. = FALSE)
     }
   }
-
+  
   test <- purrr::map2(chr_type_, chr_desc_, get_statements)
 }
 
@@ -440,6 +439,6 @@ own_get_fs <- function(.path, .dir_cache) {
       "CONSOLIDATED STATEMENT OF CASH FLOW"
     )
   )
-
+  
   purrr::map(lst_fs, ~ own_GetFInancial(inst_, .x))
 }

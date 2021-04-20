@@ -1,0 +1,44 @@
+---
+title: "Analyzing Data: XBRL Elements"
+author: "Matthias Uckert"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+------------------------------------------------------------------------
+
+# Description
+
+xxx
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
+knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
+```
+
+# Script Setup
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+
+source("1_code/00_functions/f-all.R")
+source("1_code/00_functions/f-xbrl_analyze.R")
+```
+
+# Code
+
+## Paths
+
+```{r paths}
+lst_paths <- list(
+  dir_main    = "2_output/04_xbrl_analyze/",
+  path_xbrl_input = "2_output/03_xbrl/xbrl_elements1.rds"
+) %>% create_dirs()
+
+```
+
+```{r}
+tab_xbrl <- read_rds(lst_paths$path_xbrl_input) %>%
+  filter(desc == "Balance Sheet")
+```
+
