@@ -27,7 +27,7 @@ library(tidyverse); library(rvest); library(xml2); library(janitor); library(fur
 library(openxlsx); library(fuzzyjoin); library(stringdist); library(ISOcodes)
 
 source("1_code/00_functions/f-all.R")
-source("00_download_data.R")
+source("1_code/00_download_data.R")
 source("1_code/00_functions/f-get_arcom_data.R")
 
 .workers <- min(availableCores() / 2, 16)
@@ -59,6 +59,7 @@ lst_paths <- list(
 ## Read Orbis Firms
 
 As a starting point, we use European large firm data retrieved from Orbis to match companies.
+(The dataset is available on google-drive and automatically downloaded when you execute any script)
 
 ```{r}
 tab_orbis <- read.xlsx(lst_paths$path_orbis, 2) %>%
@@ -83,7 +84,7 @@ show_table(tab_orbis, 5)
 We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com. In contrast to the custom functions we used in 01_get_edgar_data, we don't explicitly make this function error proof, but wrap it into another function (purrr::safely()) that catches any error. Again we use simple caching to not re-run results we already obtained.
 
 ```{r}
-# View(get_company_table)
+print(get_company_table)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -156,9 +157,16 @@ rm(tab_links_use)
 
 ```
 
+------------------------------------------------------------------------
+
 ## Get Annual Report Links
 
 After retrieving the all the html files on a firm level, we extract the actual documents links to the PDF we will download in the next step. Here we use the custom function: **get_infos()**
+
+```{r}
+print(get_infos)
+```
+
 
 ```{r}
 if (!file.exists(lst_paths$path_report_links)) {

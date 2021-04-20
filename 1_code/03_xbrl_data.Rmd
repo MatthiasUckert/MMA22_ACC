@@ -26,7 +26,7 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 library(tidyverse); library(zip); library(furrr); library(stringi)
 
 source("1_code/00_functions/f-all.R")
-source("00_download_data.R")
+source("1_code/00_download_data.R")
 source("1_code/00_functions/f-xbrl.R")
 
 .workers <- min(availableCores() / 2, 16)
@@ -65,14 +65,19 @@ tab_files_sec <- list_files_tab(lst_paths$dir_sec, reg = "zip$") %>%
 
 ### Function: xbrl_extract_elements()
 
+To extract the relevant items from the XBRL tagges xml/xsd files we downloaded, we need a more advanced set of functions. Eventually, we achieve this by using a custom function **xbrl_extract_elements()**, which is heavily based on the XBRL library. We had to implement some changes to the original source coude due to a know error in the package (see: https://stackoverflow.com/questions/53651481/schema-file-does-not-exist-in-xbrl-parse-file). Since we already had to change the source code, we implemented some procedures to make the download and the extraction process more efficient.
+
+
 ```{r echo=FALSE}
 print(xbrl_extract_elements)
 # View(xbrl_extract_elements)
 ```
 
+
 ------------------------------------------------------------------------
 
 ### Extract
+
 
 ```{r message=FALSE, warning=FALSE}
 .prc <- list_files_tab(lst_paths$dir_elements_raw)
@@ -92,7 +97,7 @@ plan("default")
 
 ## Process XBRL Elements
 
-We use a custom function: **xbrl_process_elements()** to extract elements from the XBRL tagged .xml files. This function is heavily based on the XBRL library. Nonetheless, we implemented some changes to correct for a known bug in the source code, streamline the download process and fit it into our normal workflow.
+We use a custom function: **xbrl_process_elements()** to extract elements from the XBRL tagged .xml files. 
 
 ### Function: xbrl_process_elements()
 

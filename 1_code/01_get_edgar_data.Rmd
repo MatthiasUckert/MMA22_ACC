@@ -13,11 +13,11 @@ In this session we will retrieve information from the SEC EDGAR database. Gettin
 
 Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_edgar_data.R**
 
-
 EDGAR is an established source of financial information. But normally companies and researchers start gathering financial information from commercial databases such as **Bureau Van Dijk - Orbis**, **Refinitiv - Datastream** or **Compustat**
 
-Compustat: https://wrds-www.wharton.upenn.edu/
-Orbis: https://orbis4.bvdinfo.com/ip
+-   Compustat: <https://wrds-www.wharton.upenn.edu/>
+
+-   Orbis: <https://orbis4.bvdinfo.com/ip>
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -35,7 +35,7 @@ library(janitor); library(tools); library(patchwork); library(scales)
 library(kableExtra); library(openxlsx)
 
 source("1_code/00_functions/f-all.R")
-source("00_download_data.R")
+source("1_code/00_download_data.R")
 source("1_code/00_functions/f-get_edgar_data.R")
 ```
 
@@ -61,7 +61,7 @@ lst_paths <- list(
 
 ## Get Fortune 500 Companies
 
-Her we use an open source data repository 'datahub.io' to retrieve the [**fortune 500 companies**]{.ul} with some financial information. We won't use the complete data set, but filter for the top 100 companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: **.n_companies** in the chunk below.
+To get our initial sample, we use an open source data repository 'datahub.io' to retrieve the [**fortune 500 companies**]{.ul} with some financial information. We won't use the complete data set, but filter for the [**top 100**]{.ul} companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: **.n_companies** in the chunk below.
 
 We use a custom function: [get_f500]{.ul}**()** to download the Fortune 500 dataset.
 
@@ -100,11 +100,11 @@ select(tab_f500_t10, symbol, name, sector)[1:10, ] %>%
 
 ## Get Company Index-Links
 
-Before we attempt to download data in bulk, we let us first explore the SEC's EDGAR website:
+Before we download data in bulk, let us first explore the SEC's EDGAR website:
+
 ```{r}
 # browseURL(tab_f500_all$sec_filings[1])
 ```
-
 
 The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis
 
@@ -123,7 +123,7 @@ print(map_company_filings)
 
 ### Download Index-Links
 
-Here we use a really simple caching procedure so that we don't have to re-run the whole expression if we already extracted index-links.
+In addition to our custom function, we use a really simple caching procedure so that we don't have to re-run the whole expression if we already extracted index-links (throughout the session you will see such easy caching, if you use code in production you can also switch to already published libraries auch as R.cache).
 
 ```{r}
 if (!file.exists(lst_paths$path_filing)) {
@@ -152,7 +152,7 @@ tab_filings <- tab_filings %>%
 
 ```
 
-In total we got 8 errors.
+In total we got 8 errors. Let us look at an example error case.
 
 ```{r}
 tab_f500_t10 %>%
@@ -161,7 +161,7 @@ tab_f500_t10 %>%
 # browseURL("https://www.sec.gov/cgi-bin/browse-edgar?company=BRK.B&match=&filenum=&State=&Country=&SIC=&myowner=exclude&action=getcompany")
 ```
 
-Let's quickly look at the result. (There are several ways to do this. For small Dataframes we can simply use the RStudio build-in viewer)
+Let's quickly look at the result. (There are several ways to do this. For small Dataframes we can simply use the RStudio build-in viewer. Here, we wrote a simple function show_table() that formats the output nicely in HTML format)
 
 ```{r}
 show_table(tab_filings, .n = 5)

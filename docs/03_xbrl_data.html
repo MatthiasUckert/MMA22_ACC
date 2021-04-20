@@ -473,9 +473,10 @@ div.tocify {
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse); <span class="fu">library</span>(zip); <span class="fu">library</span>(furrr); <span class="fu">library</span>(stringi)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-all.R&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-xbrl.R&quot;</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>.workers <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">availableCores</span>() <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">16</span>)</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_download_data.R&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-xbrl.R&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>.workers <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">availableCores</span>() <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">16</span>)</span></code></pre></div>
 </div>
 <div id="code" class="section level1">
 <h1>Code</h1>
@@ -502,6 +503,7 @@ div.tocify {
 <hr />
 <div id="function-xbrl_extract_elements" class="section level3">
 <h3>Function: xbrl_extract_elements()</h3>
+<p>To extract the relevant items from the XBRL tagges xml/xsd files we downloaded, we need a more advanced set of functions. Eventually, we achieve this by using a custom function <strong>xbrl_extract_elements()</strong>, which is heavily based on the XBRL library. We had to implement some changes to the original source coude due to a know error in the package (see: <a href="https://stackoverflow.com/questions/53651481/schema-file-does-not-exist-in-xbrl-parse-file" class="uri">https://stackoverflow.com/questions/53651481/schema-file-does-not-exist-in-xbrl-parse-file</a>). Since we already had to change the source code, we implemented some procedures to make the download and the extraction process more efficient.</p>
 <pre><code>## function(.zip, .dir_tmp, .dir_out) {
 ##   zip::unzip(.zip, exdir = .dir_tmp)
 ##   
@@ -546,7 +548,7 @@ div.tocify {
 </div>
 <div id="process-xbrl-elements" class="section level2">
 <h2>Process XBRL Elements</h2>
-<p>We use a custom function: <strong>xbrl_process_elements()</strong> to extract elements from the XBRL tagged .xml files. This function is heavily based on the XBRL library. Nonetheless, we implemented some changes to correct for a known bug in the source code, streamline the download process and fit it into our normal workflow.</p>
+<p>We use a custom function: <strong>xbrl_process_elements()</strong> to extract elements from the XBRL tagged .xml files.</p>
 <div id="function-xbrl_process_elements" class="section level3">
 <h3>Function: xbrl_process_elements()</h3>
 <pre><code>## function(.inst) {
@@ -1333,6 +1335,7 @@ NA
 <pre><code>## create_dirs : function (.dirs)  
 ## downlad_ar : function (.url, .dir)  
 ## download_edgar_files : function (.tab, .dir, .retry = 5, .sleep = 1)  
+## download_google_drive : function (.id, .dir = NULL, .read_fun = NULL, .overwrite = FALSE)  
 ## get_company_table : function (.url)  
 ## get_f500 : function ()  
 ## get_infos : function (.path)  
@@ -1391,13 +1394,16 @@ NA
 ##  P farver           2.1.0      2021-02-28 [?] CRAN (R 4.0.4)
 ##  P forcats        * 0.5.1      2021-01-27 [?] CRAN (R 4.0.4)
 ##  P fs               1.5.0      2020-07-31 [?] CRAN (R 4.0.2)
+##  P fst              0.9.4      2020-08-27 [?] CRAN (R 4.0.2)
 ##  P furrr          * 0.2.2      2021-01-29 [?] CRAN (R 4.0.4)
 ##  P future         * 1.21.0     2020-12-10 [?] CRAN (R 4.0.3)
 ##  P fuzzyjoin      * 0.1.6      2020-05-15 [?] CRAN (R 4.0.2)
+##  P gargle           1.1.0      2021-04-02 [?] CRAN (R 4.0.5)
 ##  P generics         0.1.0      2020-10-31 [?] CRAN (R 4.0.3)
 ##  P ggplot2        * 3.3.3      2020-12-30 [?] CRAN (R 4.0.3)
 ##  P globals          0.14.0     2020-11-22 [?] CRAN (R 4.0.3)
 ##  P glue             1.4.2      2020-08-27 [?] CRAN (R 4.0.2)
+##  P googledrive      1.0.1      2020-05-05 [?] CRAN (R 4.0.0)
 ##  P gtable           0.3.0      2019-03-25 [?] CRAN (R 4.0.0)
 ##  P haven            2.3.1      2020-06-01 [?] CRAN (R 4.0.0)
 ##  P here           * 1.0.1      2020-12-13 [?] CRAN (R 4.0.3)
