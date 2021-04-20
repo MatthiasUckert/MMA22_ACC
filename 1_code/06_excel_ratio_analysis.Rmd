@@ -1,0 +1,119 @@
+---
+title: "Textual Analysis"
+author: "Matthias Uckert"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  prettydoc::html_pretty:
+      theme: cayman
+      highlight: github
+---
+
+    # github_document:
+    # toc: true
+    # toc_depth: 2
+
+# Description
+
+xxx
+
+```{r setup, include=FALSE, purl=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
+knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
+```
+
+# Script Setup
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse); library(tidytext); library(readtext); library(furrr)
+library(fst); library(stringi); library(ISOcodes); library(scales); library(openxlsx);
+library(janitor)
+
+source("1_code/00_functions/f-all.R")
+source("1_code/00_functions/f-excel_ratio_analysis.R")
+```
+
+## Paths
+
+```{r}
+lst_paths <- list(
+  dir_main = "2_output/05_excel_ratio_analysis",
+  dir_fs = "E:/R/R_projects/MMA22_ACC/0_data/financial_statements",
+  path_map_to_stand = "E:/R/R_projects/MMA22_ACC/0_data/map_name_to_name_stand.xlsx",
+  path_map_to_id = "E:/R/R_projects/MMA22_ACC/0_data/map_name_stand_to_id.xlsx",
+  dir_excel = "2_output/05_excel_ratio_analysis/excel_sheets",
+  path_template = "0_data/ratio_template.xlsx",
+  path_info = "0_data/orbis_firm_infos.xlsx",
+  path_ratios = "2_output/05_excel_ratio_analysis/firm_ratios.rds",
+  path_shiny_data = "1_code/shiny/data/firm_ratios.rds",
+  path_fs_tables = "2_output/05_excel_ratio_analysis/fs_tables.rds"
+) %>% create_dirs()
+```
+
+## Files
+```{r}
+tab_files <- list_files_tab(lst_paths$dir_fs, "xlsx") %>%
+  mutate(
+    year = stri_extract_last_regex(doc_id, "\\d{4}"),
+    firm = stri_replace_last_fixed(doc_id, paste0(".", year), "")
+  ) 
+lst_files <- split(tab_files$path, tab_files$firm)
+
+
+tab_orbis <- read.xlsx(lst_paths$path_info, 2) %>%
+  clean_names() %>%
+  select(doc_id = company_name_latin_alphabet, industry = us_sic_core_code_description)
+```
+
+
+```{r}
+plan("multisession", workers = 8)
+
+if (!file.exists(lst_paths$path_fs_tables)) {
+  lst_fs <- future_map(
+    .x = lst_files,
+    .f = ~ get_stand_statement(.x, lst_paths$path_map_to_stand, lst_paths$path_map_to_id),
+    .options = furrr_options(seed = TRUE),
+    .progress = TRUE
+  )
+  write_rds(lst_fs, lst_paths$path_fs_tables)
+} else {
+  lst_fs <- read_rds(lst_paths$path_fs_tables)
+}
+
+
+```
+
+
+```{r}
+.prc <- list_files_tab(lst_paths$dir_excel)
+lst_fs_use <- lst_fs[!names(lst_fs) %in% .prc$doc_id]
+
+future_iwalk(
+  .x = lst_fs_use, 
+  .f = ~ write_to_excel(.x, .y,  lst_paths$dir_excel, lst_paths$path_template),
+  .options = furrr_options(seed = TRUE),
+  .progress = TRUE
+  )
+
+plan("default")
+```
+
+
+
+```{r}
+tab_files <- list_files_tab(lst_paths$dir_excel)
+tab <- map_dfr(
+  .x = set_names(tab_files$path, tab_files$doc_id),
+  .f = ~ openxlsx::read.xlsx(.x, colNames = FALSE, sheet = 3),
+  .id = "doc_id"
+) %>%
+  `colnames<-`(c("doc_id", "Ratio", 2019:2011)) %>%
+  filter(!is.na(Ratio), !startsWith(Ratio, "Ratio"), !is.na(`2019`)) %>%
+  pivot_longer(matches("\\d{4}"), names_to = "year") %>%
+  left_join(tab_orbis, by = "doc_id")
+
+write_rds(tab, lst_paths$path_ratios)
+write_rds(tab, lst_paths$path_shiny_data, compress = "gz")
+```
+`
+

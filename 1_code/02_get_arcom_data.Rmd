@@ -9,7 +9,11 @@ output: html_document
 
 # Description
 
+
 In this section we will download information and documents from [**https://www.annualreports.com**](https://www.annualreports.com){.uri}.
+Getting data from this website is exemplary for getting information from the web, where we don't have an API (Application Programming Interface) access.
+
+Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_arcom_data.R**
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -23,12 +27,17 @@ library(tidyverse); library(rvest); library(xml2); library(janitor); library(fur
 library(openxlsx); library(fuzzyjoin); library(stringdist); library(ISOcodes)
 
 source("1_code/00_functions/f-all.R")
+source("00_download_data.R")
 source("1_code/00_functions/f-get_arcom_data.R")
 
 .workers <- min(availableCores() / 2, 16)
 ```
 
+------------------------------------------------------------------------
+
 # Code
+
+------------------------------------------------------------------------
 
 ## Paths
 
@@ -44,6 +53,8 @@ lst_paths <- list(
   path_firm_data = "2_output/02_get_arcom_data/arcom_firm_data.rds"
 ) %>% create_dirs()
 ```
+
+------------------------------------------------------------------------
 
 ## Read Orbis Firms
 
@@ -64,6 +75,8 @@ tab_orbis <- read.xlsx(lst_paths$path_orbis, 2) %>%
 show_table(tab_orbis, 5)
 
 ```
+
+------------------------------------------------------------------------
 
 ## Get Annual Report Firms
 
@@ -107,10 +120,13 @@ if (length(urls_use) > 0) {
 rm(urls_use)
 ```
 
+------------------------------------------------------------------------
+
 ```{r}
 show_table(tab_firm_links, 10)
 # View(tab_filings)
 ```
+------------------------------------------------------------------------
 
 ## Get Annual Report HTMLs
 
@@ -162,9 +178,13 @@ show_table(tab_report_links, 10)
 
 ```
 
+------------------------------------------------------------------------
+
 ## Match Firms
 
 To not artifically increase the number of PDFs we download, we restrict our set to companies that we can match to the Orbis file. Note: Company name matching between databases is a non-trivial task. For those who are interested, I dedicated a whole package to this task: [**https://github.com/MatthiasUckert/RFirmMatch**](https://github.com/MatthiasUckert/RFirmMatch){.uri}. We won't use this library here. Rather we restrict our adjustments to a few simple Regular Expressions and functions.
+
+------------------------------------------------------------------------
 
 ### FUll Matches
 
@@ -179,6 +199,8 @@ tab_match_full <- inner_join(tab0, tab1, by = "match", suffix = c("_0", "_1"))
 tab0 <- filter(tab0, !match %in% tab_match_full$match)
 tab1 <- filter(tab1, !match %in% tab_match_full$match)
 ```
+
+------------------------------------------------------------------------
 
 ### Fuzzy Matches
 
@@ -207,6 +229,8 @@ tab_match_fuzzy <- tab_match_fuzzy %>%
   select(-sim)
 ```
 
+------------------------------------------------------------------------
+
 ## Select Companies
 
 ```{r}
@@ -226,6 +250,8 @@ show_table(tab_data, 10)
 
 ```
 
+------------------------------------------------------------------------
+
 ## Download Annual Reports
 
 For downloading the annual reports we use a custom function **downlad_ar()**
@@ -238,6 +264,8 @@ tab_download_use <- filter(tab_match, !doc_id %in% .prc$doc_id)
 # walk(tab_download_use$link, ~ downlad_ar(.x, .dir_ar))
 ```
 
+------------------------------------------------------------------------
+
 ## Save Output
 
 ```{r}
@@ -245,11 +273,14 @@ write_rds(tab_data, lst_paths$path_firm_data, compress = "gz")
 write_rds(tab_match, lst_paths$path_matched_firms, compress = "gz")
 ```
 
+------------------------------------------------------------------------
+
 # Own Function Calls
 
 ```{r}
 lsf.str()
 ```
+------------------------------------------------------------------------
 
 # Session Info
 

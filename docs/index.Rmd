@@ -10,7 +10,7 @@ Welcome to the practical application sessions of the **Mannheim Master in Manage
 
 The goal of those sessions is to give you a general overview of how common workflows can be automated using basic knowledge in HTML and Excel.
 
-All sessions are programmed in R and a basic understanding of programming is needed. The code itself applies relatively advanced methods, hence it is not assumed that you follow each single logic. Rather this part of the course is designed to give you a high level understanding of what is possible using common open-source languages such as R.
+All sessions are programmed in R and a basic understanding of programming is needed. The code itself applies relatively advanced methods, hence it is not assumed that you follow each single logical step. Rather this part of the course is designed to give you a high level understanding of what is possible using common open-source languages such as R.
 
 # Get The Code
 
@@ -20,34 +20,35 @@ Simply fork the repository into your own GitHub or download the Project.
 
 # Table of Content
 
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Day        | Session        | Description                                                                                                                 |
-+:===========+:===============+:============================================================================================================================+
-| Day&nbsp;1 | Session&nbsp;1 | **Getting Data from the Web: SEC's EDGAR**                                                                                  |
-|            |                |                                                                                                                             |
-|            |                | How to extract data from the web, if a Application Programming Interface (API) is provided.                                 |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-|            | Session&nbsp;2 | **Getting Data from the Web: www.AnnualReport.com**                                                                         |
-|            |                |                                                                                                                             |
-|            |                | How to extract data from the web, if [**no**]{.ul} Application Programming Interface (API) is provided.                     |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-|            | Session&nbsp;3 | **Getting Data from the Web: XBRL**                                                                                         |
-|            |                |                                                                                                                             |
-|            |                | Extracting structured information from files that are tagged using eXtensible Business Reporting Language (XBRL) framework. |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Day&nbsp;2 | Session&nbsp;1 | **Analyzing Data: XBRL Tags**                                                                                               |
-|            |                |                                                                                                                             |
-|            |                | Simple extraction and transformation of financial data contained in XBRL files.                                             |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-|            | Session&nbsp;2 | **Analyzing Data: Textual Analysis**                                                                                        |
-|            |                |                                                                                                                             |
-|            |                | Common textual analysis application.                                                                                        |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
-|            | Session&nbsp;3 | **Analyzing Data: Excel and R**                                                                                             |
-|            |                |                                                                                                                             |
-|            |                | Move from Excel to R.                                                                                                       |
-+------------+----------------+-----------------------------------------------------------------------------------------------------------------------------+
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+| Day   | Session   | Description                                                                                                                 |
++:======+:==========+:============================================================================================================================+
+| Day 1 | Session 1 | **Getting Data from the Web: SEC's EDGAR**                                                                                  |
+|       |           |                                                                                                                             |
+|       |           | How to extract data from the web, if a Application Programming Interface (API) is provided.                                 |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+|       | Session 2 | **Getting Data from the Web: www.AnnualReport.com**                                                                         |
+|       |           |                                                                                                                             |
+|       |           | How to extract data from the web, if [**no**]{.ul} Application Programming Interface (API) is provided.                     |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+|       | Session 3 | **Getting Data from the Web: XBRL**                                                                                         |
+|       |           |                                                                                                                             |
+|       |           | Extracting structured information from files that are tagged using eXtensible Business Reporting Language (XBRL) framework. |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+| Day 2 | Session 1 | **Analyzing Data: XBRL Tags**                                                                                               |
+|       |           |                                                                                                                             |
+|       |           | Simple extraction and transformation of financial data contained in XBRL files.                                             |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+|       | Session 2 | **Analyzing Data: Textual Analysis**                                                                                        |
+|       |           |                                                                                                                             |
+|       |           | Common textual analysis application.                                                                                        |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+|       | Session 3 | **Analyzing Data: Excel and R**                                                                                             |
+|       |           |                                                                                                                             |
+|       |           | Move from Excel to R.                                                                                                       |
++-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
 
-# Readings
+# Intersting Readings
 
--   XXX
+-   **Advanced R: <https://adv-r.hadley.nz/>**
+-   **R for Data Science: <https://r4ds.had.co.nz/>**

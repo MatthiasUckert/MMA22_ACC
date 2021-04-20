@@ -36,8 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -423,7 +421,7 @@ div.tocify {
       <a href="./02_get_arcom_data.html">Session 2 - Getting Data from the Web: www.AnnualReport.com</a>
     </li>
     <li>
-      <a href="./03_xbrl.html">Session 3 - Getting Data from the Web: XBRL</a>
+      <a href="./03_xbrl_data.html">Session 3 - Getting Data from the Web: XBRL</a>
     </li>
   </ul>
 </li>
@@ -439,16 +437,13 @@ div.tocify {
     <li class="dropdown-header">Session 3 - Analysing Data: Excel and R</li>
   </ul>
 </li>
-<li>
-  <a href="./contact.html">Contact</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/githubusername/mywebsite">
-    <span class="fas fa-github fa-lg"></span>
-     
-  </a>
+  <a href="./contact.html">Contact</a>
+</li>
+<li>
+  <a href="https://github.com/MatthiasUckert">GitHub</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -480,9 +475,11 @@ div.tocify {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-get_arcom_data.R&quot;</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>.workers <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">availableCores</span>() <span class="sc">/</span> <span class="dv">2</span>, <span class="dv">16</span>)</span></code></pre></div>
+<hr />
 </div>
 <div id="code" class="section level1">
 <h1>Code</h1>
+<hr />
 <div id="paths" class="section level2">
 <h2>Paths</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lst_paths <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
@@ -495,6 +492,7 @@ div.tocify {
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_ar =</span> <span class="st">&quot;2_output/02_get_arcom_data/documents&quot;</span>,</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_firm_data =</span> <span class="st">&quot;2_output/02_get_arcom_data/arcom_firm_data.rds&quot;</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">create_dirs</span>()</span></code></pre></div>
+<hr />
 </div>
 <div id="read-orbis-firms" class="section level2">
 <h2>Read Orbis Firms</h2>
@@ -603,6 +601,7 @@ Austria
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 <div id="get-annual-report-firms" class="section level2">
 <h2>Get Annual Report Firms</h2>
@@ -639,6 +638,7 @@ Austria
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># browseURL(urls_use[1])</span></span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(urls_use)</span></code></pre></div>
+<hr />
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_table</span>(tab_firm_links, <span class="dv">10</span>)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper lightable-hover table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -894,6 +894,7 @@ Basic Materials
 </table>
 </div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_filings)</span></span></code></pre></div>
+<hr />
 </div>
 <div id="get-annual-report-htmls" class="section level2">
 <h2>Get Annual Report HTMLs</h2>
@@ -1097,10 +1098,12 @@ FLWS
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 <div id="match-firms" class="section level2">
 <h2>Match Firms</h2>
 <p>To not artifically increase the number of PDFs we download, we restrict our set to companies that we can match to the Orbis file. Note: Company name matching between databases is a non-trivial task. For those who are interested, I dedicated a whole package to this task: <a href="https://github.com/MatthiasUckert/RFirmMatch" class="uri"><strong>https://github.com/MatthiasUckert/RFirmMatch</strong></a>. We won’t use this library here. Rather we restrict our adjustments to a few simple Regular Expressions and functions.</p>
+<hr />
 <div id="full-matches" class="section level3">
 <h3>FUll Matches</h3>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tab0 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(tab_firm_links, <span class="at">match =</span> <span class="fu">standardize_name</span>(company)) <span class="sc">%&gt;%</span></span>
@@ -1112,6 +1115,7 @@ FLWS
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>tab0 <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab0, <span class="sc">!</span>match <span class="sc">%in%</span> tab_match_full<span class="sc">$</span>match)</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>tab1 <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab1, <span class="sc">!</span>match <span class="sc">%in%</span> tab_match_full<span class="sc">$</span>match)</span></code></pre></div>
+<hr />
 </div>
 <div id="fuzzy-matches" class="section level3">
 <h3>Fuzzy Matches</h3>
@@ -1296,6 +1300,7 @@ INTELSAT S.A.
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tab_match_fuzzy <span class="ot">&lt;-</span> tab_match_fuzzy <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">14</span>,<span class="dv">15</span>,<span class="dv">18</span>,<span class="dv">21</span>,<span class="dv">24</span>,<span class="dv">29</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sim)</span></code></pre></div>
+<hr />
 </div>
 </div>
 <div id="select-companies" class="section level2">
@@ -1541,6 +1546,7 @@ United Kingdom
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 <div id="download-annual-reports" class="section level2">
 <h2>Download Annual Reports</h2>
@@ -1550,11 +1556,13 @@ United Kingdom
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>tab_download_use <span class="ot">&lt;-</span> <span class="fu">filter</span>(tab_match, <span class="sc">!</span>doc_id <span class="sc">%in%</span> .prc<span class="sc">$</span>doc_id)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># walk(tab_download_use$link, ~ downlad_ar(.x, .dir_ar))</span></span></code></pre></div>
+<hr />
 </div>
 <div id="save-output" class="section level2">
 <h2>Save Output</h2>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_data, lst_paths<span class="sc">$</span>path_firm_data, <span class="at">compress =</span> <span class="st">&quot;gz&quot;</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_match, lst_paths<span class="sc">$</span>path_matched_firms, <span class="at">compress =</span> <span class="st">&quot;gz&quot;</span>)</span></code></pre></div>
+<hr />
 </div>
 </div>
 <div id="own-function-calls" class="section level1">
@@ -1570,16 +1578,11 @@ United Kingdom
 ## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, 
 ##     .page = 1, .progress = TRUE, .sleep = 0, .retry = 5)  
 ## map_filing_details : function (.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5)  
-## own_get_fs : function (.path, .dir_cache)  
-## own_XBRL : function ()  
-## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, 
-##     delete.cached.inst = TRUE)  
 ## remove_html_tags : function (.string, rm_linebreaks = TRUE)  
 ## safe_get_company_table : function (...)  
 ## show_table : function (.tab, .n = Inf)  
-## standardize_name : function (.name)  
-## xbrl_extract_elements : function (.zip, .dir_tmp, .dir_out)  
-## xbrl_process_elements : function (.inst)</code></pre>
+## standardize_name : function (.name)</code></pre>
+<hr />
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
@@ -1657,9 +1660,14 @@ United Kingdom
 ##  P patchwork      * 1.1.1      2020-12-17 [?] CRAN (R 4.0.3)
 ##  P pillar           1.5.1      2021-03-05 [?] CRAN (R 4.0.4)
 ##  P pkgconfig        2.0.3      2019-09-22 [?] CRAN (R 4.0.0)
+##  P prettydoc        0.4.1      2021-01-10 [?] CRAN (R 4.0.5)
 ##  P prettyunits      1.1.1      2020-01-24 [?] CRAN (R 4.0.0)
 ##  P progress         1.2.2      2019-05-16 [?] CRAN (R 4.0.0)
 ##  P purrr          * 0.3.4      2020-04-17 [?] CRAN (R 4.0.0)
+##  P R.cache          0.14.0     2019-12-06 [?] CRAN (R 4.0.0)
+##  P R.methodsS3      1.8.1      2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.oo             1.24.0     2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.utils          2.10.1     2020-08-26 [?] CRAN (R 4.0.2)
 ##  P R6               2.5.0      2020-10-28 [?] CRAN (R 4.0.3)
 ##  P Rcpp             1.0.6      2021-01-15 [?] CRAN (R 4.0.3)
 ##  P readr          * 1.4.0      2020-10-05 [?] CRAN (R 4.0.3)
@@ -1679,6 +1687,7 @@ United Kingdom
 ##  P stringdist     * 0.9.6.3    2020-10-09 [?] CRAN (R 4.0.3)
 ##  P stringi        * 1.5.3      2020-09-09 [?] CRAN (R 4.0.2)
 ##  P stringr        * 1.4.0      2019-02-10 [?] CRAN (R 4.0.2)
+##  P styler           1.4.1      2021-03-30 [?] CRAN (R 4.0.5)
 ##  P svglite          2.0.0      2021-02-20 [?] CRAN (R 4.0.4)
 ##  P sylly          * 0.1-6      2020-09-20 [?] CRAN (R 4.0.5)
 ##  P sylly.en         0.1-3      2018-03-19 [?] CRAN (R 4.0.5)
@@ -1698,10 +1707,10 @@ United Kingdom
 ##  P xfun             0.22       2021-03-11 [?] CRAN (R 4.0.4)
 ##  P xml2           * 1.3.2      2020-04-23 [?] CRAN (R 4.0.0)
 ##  P yaml             2.2.1      2020-02-01 [?] CRAN (R 4.0.0)
-##  P zip            * 2.1.1      2020-08-27 [?] CRAN (R 4.0.2)
+##  P zip              2.1.1      2020-08-27 [?] CRAN (R 4.0.2)
 ## 
 ## [1] E:/R/R_projects/MMA22_ACC/renv/library/R-4.0/x86_64-w64-mingw32
-## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpyYGwQM/renv-system-library
+## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpcznxQl/renv-system-library
 ## 
 ##  P -- Loaded and on-disk path mismatch.</code></pre>
 </div>

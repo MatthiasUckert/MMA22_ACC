@@ -2,7 +2,7 @@
 title: "Getting Data from the Web: XBRL"
 author: "Matthias Uckert"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_notebook
+output: html_document
 ---
 
 ------------------------------------------------------------------------
@@ -26,6 +26,7 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 library(tidyverse); library(zip); library(furrr); library(stringi)
 
 source("1_code/00_functions/f-all.R")
+source("00_download_data.R")
 source("1_code/00_functions/f-xbrl.R")
 
 .workers <- min(availableCores() / 2, 16)

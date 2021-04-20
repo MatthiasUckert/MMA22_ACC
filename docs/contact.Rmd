@@ -1,0 +1,9 @@
+---
+title: "Contact"
+output: html_document
+---
+
+For contact information, please visit the following website: 
+
+https://www.bwl.uni-mannheim.de/daske/team/wissenschaftliche-mitarbeiterinnen/matthias-uckert-msc/
+

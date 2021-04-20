@@ -22,6 +22,7 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 library(tidyverse)
 
 source("1_code/00_functions/f-all.R")
+source("00_download_data.R")
 source("1_code/00_functions/f-xbrl_analyze.R")
 ```
 
@@ -32,13 +33,86 @@ source("1_code/00_functions/f-xbrl_analyze.R")
 ```{r paths}
 lst_paths <- list(
   dir_main    = "2_output/04_xbrl_analyze/",
-  path_xbrl_input = "2_output/03_xbrl/xbrl_elements1.rds"
+  path_xbrl_input = "2_output/03_xbrl_data/xbrl_elements1.rds"
 ) %>% create_dirs()
+
+test <- select(tab_xbrl, -value)
 
 ```
 
 ```{r}
-tab_xbrl <- read_rds(lst_paths$path_xbrl_input) %>%
+tab_xbrl <- read_rds(lst_paths$path_xbrl_input) 
+tab_bs <- tab_xbrl %>%
   filter(desc == "Balance Sheet")
+
+xbrl_extract_line_items <- function(.tab, .tags) {
+  tab_ <- filter(.tab, tag %in% .tags) 
+  
+  if (nrow(tab_) == 0 | !"amount" %in% colnames(.tab)) {
+    return(tibble(.rows = 0))
+  }
+  
+  tab_ %>%
+    filter(tag %in% .tags) %>%
+    mutate(
+      year = lubridate::year(endDate),
+      amount = as.numeric(amount)
+    ) %>%
+    group_by(year, tag) %>%
+    filter(amount == max(amount)) %>%
+    ungroup() %>%
+    distinct(tag, year, amount) %>%
+    mutate(tag = tolower(stringi::stri_replace_first_regex(tag, ".+?_", ""))) %>%
+    pivot_wider(names_from = tag, values_from = amount, values_fill = 0)
+}
+```
+
+
+```{r}
+tab_bs$value[[2]]
+
+tab_bs1 <- tab_bs %>%
+  select(doc_id, symbol, value) %>%
+  mutate(value = map(value, ~ xbrl_extract_line_items(.x, c("us-gaap_Goodwill", "us-gaap_Assets")))) %>%
+  unnest(value) %>%
+  distinct(symbol, year, .keep_all = TRUE) %>%
+  mutate(goodwill = if_else(is.na(goodwill), 0, goodwill)) %>%
+  filter(assets > 0) %>%
+  mutate(goodwill_to_asset = goodwill / assets) %>%
+  group_by(symbol) %>%
+  filter(all(2010:2019 %in% year)) %>%
+  ungroup()
+
+```
+
+
+```{r}
+tab_bs1 %>%
+  group_by(symbol) %>%
+  filter(mean(goodwill_to_asset) > .25) %>%
+  ungroup() %>%
+  ggplot(aes(year, goodwill_to_asset, color = symbol)) +
+  geom_line() + 
+  geom_point() + 
+  scale_x_continuous(breaks = scales::pretty_breaks()) + 
+  scale_y_continuous(labels = scales::percent) + 
+  facet_wrap(~ symbol) + 
+  labs(x = NULL, y = NULL) + 
+  theme_bw() + 
+  theme(legend.position = "none")
+```
+
+```{r}
+tab_gw <- filter(tab_xbrl, desc == "Goodwill")
+```
+
+
+```{r}
+test <- tab_gw$value[[1]][["text"]]
+test <- unlist(stringi::stri_split_boundaries(test))
+test <- map_chr(test, ~ ifelse(grepl("$", .x, fixed = TRUE), crayon::bgYellow(.x), .x))
+test <- paste(test, collapse = "")
+cat(test)
+
 ```
 

@@ -36,8 +36,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -423,7 +421,7 @@ div.tocify {
       <a href="./02_get_arcom_data.html">Session 2 - Getting Data from the Web: www.AnnualReport.com</a>
     </li>
     <li>
-      <a href="./03_xbrl.html">Session 3 - Getting Data from the Web: XBRL</a>
+      <a href="./03_xbrl_data.html">Session 3 - Getting Data from the Web: XBRL</a>
     </li>
   </ul>
 </li>
@@ -439,16 +437,13 @@ div.tocify {
     <li class="dropdown-header">Session 3 - Analysing Data: Excel and R</li>
   </ul>
 </li>
-<li>
-  <a href="./contact.html">Contact</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/githubusername/mywebsite">
-    <span class="fas fa-github fa-lg"></span>
-     
-  </a>
+  <a href="./contact.html">Contact</a>
+</li>
+<li>
+  <a href="https://github.com/MatthiasUckert">GitHub</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -473,6 +468,7 @@ div.tocify {
 <p>Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: <strong>1_code/00_functions/f-get_edgar_data.R</strong></p>
 <p>EDGAR is an established source of financial information. But normally companies and researchers start gathering financial information from commercial databases such as <strong>Bureau Van Dijk - Orbis</strong>, <strong>Refinitiv - Datastream</strong> or <strong>Compustat</strong></p>
 <p>Compustat: <a href="https://wrds-www.wharton.upenn.edu/" class="uri">https://wrds-www.wharton.upenn.edu/</a> Orbis: <a href="https://orbis4.bvdinfo.com/ip" class="uri">https://orbis4.bvdinfo.com/ip</a></p>
+<hr />
 </div>
 <div id="script-setup" class="section level1">
 <h1>Script Setup</h1>
@@ -483,9 +479,11 @@ div.tocify {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-all.R&quot;</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;1_code/00_functions/f-get_edgar_data.R&quot;</span>)</span></code></pre></div>
+<hr />
 </div>
 <div id="code" class="section level1">
 <h1>Code</h1>
+<hr />
 <div id="paths" class="section level2">
 <h2>Paths</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lst_paths <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
@@ -494,11 +492,13 @@ div.tocify {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_detail =</span> <span class="st">&quot;2_output/01_get_edgar_data/edgar_details.rds&quot;</span>,</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_f500   =</span> <span class="st">&quot;2_output/01_get_edgar_data/f500.xlsx&quot;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">create_dirs</span>()</span></code></pre></div>
+<hr />
 </div>
 <div id="get-fortune-500-companies" class="section level2">
 <h2>Get Fortune 500 Companies</h2>
 <p>Her we use an open source data repository ‘datahub.io’ to retrieve the <u><strong>fortune 500 companies</strong></u> with some financial information. We won’t use the complete data set, but filter for the top 100 companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: <strong>.n_companies</strong> in the chunk below.</p>
 <p>We use a custom function: <u>get_f500</u><strong>()</strong> to download the Fortune 500 dataset.</p>
+<hr />
 <div id="function-get_f500" class="section level3">
 <h3>Function: <u>get_f500()</u></h3>
 <pre><code>## function() {
@@ -517,6 +517,7 @@ div.tocify {
 ##   
 ##   return(data)
 ## }</code></pre>
+<hr />
 </div>
 <div id="download-dataset" class="section level3">
 <h3>Download Dataset</h3>
@@ -665,6 +666,7 @@ Financials
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 </div>
 <div id="get-company-index-links" class="section level2">
@@ -673,6 +675,7 @@ Financials
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># browseURL(tab_f500_all$sec_filings[1])</span></span></code></pre></div>
 <p>The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis</p>
 <p>We use a custom function: <strong>map_company_filings()</strong> to retrieve the Index Links from EDGAR.</p>
+<hr />
 <div id="function-map_company_filings" class="section level3">
 <h3>Function: map_company_filings()</h3>
 <pre><code>## function(.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;,
@@ -709,6 +712,7 @@ Financials
 ##   
 ##   return(lst)
 ## }</code></pre>
+<hr />
 </div>
 <div id="download-index-links" class="section level3">
 <h3>Download Index-Links</h3>
@@ -1270,11 +1274,13 @@ NA
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 </div>
 <div id="get-company-details" class="section level2">
 <h2>Get Company Details</h2>
 <p>After we got the index links from EDGAR, we proceed by scraping filing details. Again, we use a custom function to do this <strong>map_filing_details()</strong> and use a simple caching algorithm.</p>
+<hr />
 <div id="function-map_filing_details" class="section level3">
 <h3>Function: map_filing_details()</h3>
 <pre><code>## function(.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5) {
@@ -1308,6 +1314,7 @@ NA
 ##   
 ##   return(lst)
 ## }</code></pre>
+<hr />
 </div>
 <div id="download-details" class="section level3">
 <h3>Download Details</h3>
@@ -1334,6 +1341,7 @@ NA
 <span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tab_filings_use)</span></code></pre></div>
 <p>From the <strong>2,364</strong> index links we retrieved in the last step, we got <strong>89,302</strong> different document links.</p>
 <p>It’s important to notice, that such data retrieval tasks often result in very large datasets.</p>
+<hr />
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_details)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tab_details <span class="sc">%&gt;%</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(period_date)) <span class="sc">%&gt;%</span></span>
@@ -1810,6 +1818,7 @@ type
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 </div>
 <div id="select-documents-for-download" class="section level2">
@@ -2003,6 +2012,7 @@ type
 </tbody>
 </table>
 </div>
+<hr />
 </div>
 <div id="overview-number-and-size-of-documents" class="section level2">
 <h2>Overview: Number and Size of Documents</h2>
@@ -2030,7 +2040,7 @@ type
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Number of Documents per year&quot;</span>)</span>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="sc">/</span> .geom_n</span></code></pre></div>
-<p><img src="01_get_edgar_data_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="01_get_edgar_data_files/figure-html/unnamed-chunk-140-1.png" width="672" /></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tab_download_txt <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span>, desc <span class="sc">==</span> <span class="st">&quot;Complete submission text file&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
@@ -2066,10 +2076,12 @@ type
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 6,049
 ## Size: 9,511 MB</code></pre>
+<hr />
 </div>
 <div id="download-documents" class="section level2">
 <h2>Download Documents</h2>
 <p>Again we use a custom function <strong>download_edgar_files()</strong> to download the documents.</p>
+<hr />
 <div id="function-download_edgar_files" class="section level3">
 <h3>Function: download_edgar_files()</h3>
 <pre><code>## function(.tab, .dir, .retry = 5, .sleep = 1) {
@@ -2155,6 +2167,7 @@ type
 ##   
 ##   
 ## }</code></pre>
+<hr />
 </div>
 <div id="download-files" class="section level3">
 <h3>Download Files</h3>
@@ -2173,6 +2186,7 @@ type
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 3,298
 ## Size: 3,768 MB</code></pre>
+<hr />
 </div>
 </div>
 <div id="save-files" class="section level2">
@@ -2180,6 +2194,7 @@ type
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_htm, <span class="st">&quot;2_output/01_get_edgar_data/htm_download.rds&quot;</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_txt, <span class="st">&quot;2_output/01_get_edgar_data/txt_download.rds&quot;</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_xxx, <span class="st">&quot;2_output/01_get_edgar_data/xxx_download.rds&quot;</span>)</span></code></pre></div>
+<hr />
 </div>
 </div>
 <div id="own-function-calls" class="section level1">
@@ -2192,14 +2207,9 @@ type
 ## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, 
 ##     .page = 1, .progress = TRUE, .sleep = 0, .retry = 5)  
 ## map_filing_details : function (.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5)  
-## own_get_fs : function (.path, .dir_cache)  
-## own_XBRL : function ()  
-## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, 
-##     delete.cached.inst = TRUE)  
 ## remove_html_tags : function (.string, rm_linebreaks = TRUE)  
-## show_table : function (.tab, .n = Inf)  
-## xbrl_extract_elements : function (.zip, .dir_tmp, .dir_out)  
-## xbrl_process_elements : function (.inst)</code></pre>
+## show_table : function (.tab, .n = Inf)</code></pre>
+<hr />
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
@@ -2275,9 +2285,14 @@ type
 ##  P patchwork      * 1.1.1   2020-12-17 [?] CRAN (R 4.0.3)
 ##  P pillar           1.5.1   2021-03-05 [?] CRAN (R 4.0.4)
 ##  P pkgconfig        2.0.3   2019-09-22 [?] CRAN (R 4.0.0)
+##  P prettydoc        0.4.1   2021-01-10 [?] CRAN (R 4.0.5)
 ##  P prettyunits      1.1.1   2020-01-24 [?] CRAN (R 4.0.0)
 ##  P progress         1.2.2   2019-05-16 [?] CRAN (R 4.0.0)
 ##  P purrr          * 0.3.4   2020-04-17 [?] CRAN (R 4.0.0)
+##  P R.cache          0.14.0  2019-12-06 [?] CRAN (R 4.0.0)
+##  P R.methodsS3      1.8.1   2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.oo             1.24.0  2020-08-26 [?] CRAN (R 4.0.2)
+##  P R.utils          2.10.1  2020-08-26 [?] CRAN (R 4.0.2)
 ##  P R6               2.5.0   2020-10-28 [?] CRAN (R 4.0.3)
 ##  P Rcpp             1.0.6   2021-01-15 [?] CRAN (R 4.0.3)
 ##  P readr          * 1.4.0   2020-10-05 [?] CRAN (R 4.0.3)
@@ -2296,6 +2311,7 @@ type
 ##  P SnowballC        0.7.0   2020-04-01 [?] CRAN (R 4.0.0)
 ##  P stringi        * 1.5.3   2020-09-09 [?] CRAN (R 4.0.2)
 ##  P stringr        * 1.4.0   2019-02-10 [?] CRAN (R 4.0.2)
+##  P styler           1.4.1   2021-03-30 [?] CRAN (R 4.0.5)
 ##  P svglite          2.0.0   2021-02-20 [?] CRAN (R 4.0.4)
 ##  P sylly          * 0.1-6   2020-09-20 [?] CRAN (R 4.0.5)
 ##  P sylly.en         0.1-3   2018-03-19 [?] CRAN (R 4.0.5)
@@ -2315,10 +2331,10 @@ type
 ##  P xfun             0.22    2021-03-11 [?] CRAN (R 4.0.4)
 ##  P xml2             1.3.2   2020-04-23 [?] CRAN (R 4.0.0)
 ##  P yaml             2.2.1   2020-02-01 [?] CRAN (R 4.0.0)
-##  P zip            * 2.1.1   2020-08-27 [?] CRAN (R 4.0.2)
+##  P zip              2.1.1   2020-08-27 [?] CRAN (R 4.0.2)
 ## 
 ## [1] E:/R/R_projects/MMA22_ACC/renv/library/R-4.0/x86_64-w64-mingw32
-## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpyYGwQM/renv-system-library
+## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpcznxQl/renv-system-library
 ## 
 ##  P -- Loaded and on-disk path mismatch.</code></pre>
 </div>

@@ -281,7 +281,7 @@ In the next step we move to a more insightful analysis and compare the word freq
 ```{r}
 if (!file.exists(lst_paths$path_com_1gram)) {
   com_1gram <- compare_word_frequqncies(tab_1gram, tab_data)
-  write_rds(com_1gram, lst_paths$path_com_1gram)
+  write_rds(com_1gram, lst_paths$path_com_1gram, compress = "gz")
 } else {
   com_1gram <- read_rds(lst_paths$path_com_1gram)
 }
@@ -292,7 +292,7 @@ com_1gram
 ```{r}
 if (!file.exists(lst_paths$path_com_2gram)) {
   com_2gram <- compare_word_frequqncies(tab_2gram, tab_data)
-  write_rds(com_2gram, lst_paths$path_com_2gram)
+  write_rds(com_2gram, lst_paths$path_com_2gram, compress = "gz")
 } else {
   com_2gram <- read_rds(lst_paths$path_com_2gram)
 }
@@ -303,7 +303,16 @@ We can see that in in our setting US and European firms have relatively comparab
 
 ```{r}
 if (!file.exists(lst_paths$path_lda)) {
-  lda <- LDA(cast_dtm(tab_1gram, doc_id, word, n), k = 10, control = list(seed = 1234))
+  set.seed(123)
+  tmp <- distinct(tab_files, country, company) %>%
+    group_by(country) %>%
+    slice_sample(n = 10) %>%
+    ungroup()
+  tmp <- filter(tab_files, company %in% tmp$company)
+  tab <- filter(tab_1gram, doc_id %in% tmp$doc_id)
+
+  dtm <- cast_dtm(tab, doc_id, word, n)
+  lda <- LDA(dtm, k = 8, control = list(seed = 1234))
   write_rds(lda, lst_paths$path_lda)
 } else {
   lda <- read_rds(lst_paths$path_lda)
@@ -312,28 +321,30 @@ if (!file.exists(lst_paths$path_lda)) {
 
 
 ```{r}
-chapters_lda <- LDA(cast_dtm(tab_1gram, doc_id, word, n), k = 10, control = list(seed = 1234))
-chapters_lda
-
-chapter_topics <- tidy(chapters_lda, matrix = "beta")
-chapter_topics
-```
-
-```{r}
-top_terms <- chapter_topics %>%
+tab_lda_beta <- tidy(lda, matrix = "beta")
+tab_lda_beta %>%
   group_by(topic) %>%
   slice_max(beta, n = 5) %>% 
   ungroup() %>%
-  arrange(topic, -beta)
-
-top_terms
-
-top_terms %>%
+  arrange(topic, -beta) %>%
   mutate(term = reorder_within(term, beta, topic)) %>%
   ggplot(aes(beta, term, fill = factor(topic))) +
   geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = NULL) + 
   facet_wrap(~ topic, scales = "free") +
   scale_y_reordered()
+```
+
+```{r}
+tab_lda_beta <- tidy(lda, matrix = "gamma")
+tab_lda_beta %>%
+  left_join(tab_data, by = c("document" = "doc_id")) %>%
+  mutate(country = reorder(country, gamma * topic)) %>%
+  ggplot(aes(factor(topic), gamma)) +
+  geom_boxplot() +
+  facet_wrap(~ country) +
+  labs(x = "topic", y = expression(gamma)) + 
+  theme_bw()
 ```
 
 ```{r}

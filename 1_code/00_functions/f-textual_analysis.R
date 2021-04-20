@@ -1,30 +1,5 @@
 source("1_code/00_functions/f-all.R")
 
-download_google_drive <- function(.id, .dir = NULL, .read_fun = NULL, .overwrite = FALSE) {
-  suppressMessages(googledrive::drive_deauth())
-  suppressMessages(googledrive::drive_user())
-  pub_fil_ <- googledrive::drive_get(googledrive::as_id(.id))
-
-
-  if (!is.null(.dir)) {
-    dir.create(.dir, recursive = TRUE, showWarnings = FALSE)
-    path_ <- file.path(.dir, pub_fil_$name)
-  } else {
-    path_ <- file.path(tempdir(), pub_fil_$name)
-  }
-
-  if (!file.exists(path_) | .overwrite) {
-    googledrive::drive_download(pub_fil_, path_, NULL, .overwrite, FALSE)
-  }
-
-
-  if (is.null(.read_fun)) {
-    return(NULL)
-  } else {
-    return(.read_fun(path_))
-  }
-}
-
 get_lm_stop <- function() {
   urls <- c(
     "https://drive.google.com/file/d/0B4niqV00F3mseWZrUk1YMGxpVzQ/view?usp=sharing",

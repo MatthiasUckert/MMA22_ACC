@@ -24,6 +24,8 @@ knitr::opts_knit$set(root.dir = normalizePath(here::here()))
 knitr::opts_chunk$set(root.dir = normalizePath(here::here())) 
 ```
 
+------------------------------------------------------------------------
+
 # Script Setup
 
 ```{r message=FALSE, warning=FALSE}
@@ -33,10 +35,15 @@ library(janitor); library(tools); library(patchwork); library(scales)
 library(kableExtra); library(openxlsx)
 
 source("1_code/00_functions/f-all.R")
+source("00_download_data.R")
 source("1_code/00_functions/f-get_edgar_data.R")
 ```
 
+------------------------------------------------------------------------
+
 # Code
+
+------------------------------------------------------------------------
 
 ## Paths
 
@@ -50,17 +57,23 @@ lst_paths <- list(
 
 ```
 
+------------------------------------------------------------------------
+
 ## Get Fortune 500 Companies
 
 Her we use an open source data repository 'datahub.io' to retrieve the [**fortune 500 companies**]{.ul} with some financial information. We won't use the complete data set, but filter for the top 100 companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: **.n_companies** in the chunk below.
 
 We use a custom function: [get_f500]{.ul}**()** to download the Fortune 500 dataset.
 
+------------------------------------------------------------------------
+
 ### Function: [get_f500()]{.ul}
 
 ```{r echo=FALSE}
 print(get_f500)
 ```
+
+------------------------------------------------------------------------
 
 ### Download Dataset
 
@@ -83,6 +96,8 @@ select(tab_f500_t10, symbol, name, sector)[1:10, ] %>%
   show_table()
 ```
 
+------------------------------------------------------------------------
+
 ## Get Company Index-Links
 
 Before we attempt to download data in bulk, we let us first explore the SEC's EDGAR website:
@@ -95,12 +110,16 @@ The first step is to retrieve the index-links for the fortune 500 companies we s
 
 We use a custom function: **map_company_filings()** to retrieve the Index Links from EDGAR.
 
+------------------------------------------------------------------------
+
 ### Function: map_company_filings()
 
 ```{r echo=FALSE}
 # View(map_company_filings)
 print(map_company_filings)
 ```
+
+------------------------------------------------------------------------
 
 ### Download Index-Links
 
@@ -148,15 +167,21 @@ Let's quickly look at the result. (There are several ways to do this. For small 
 show_table(tab_filings, .n = 5)
 ```
 
+------------------------------------------------------------------------
+
 ## Get Company Details
 
 After we got the index links from EDGAR, we proceed by scraping filing details. Again, we use a custom function to do this **map_filing_details()** and use a simple caching algorithm.
+
+------------------------------------------------------------------------
 
 ### Function: map_filing_details()
 
 ```{r echo=FALSE}
 print(map_filing_details)
 ```
+
+------------------------------------------------------------------------
 
 ### Download Details
 
@@ -189,6 +214,8 @@ From the **`r comma(nrow(tab_filings))`** index links we retrieved in the last s
 
 It's important to notice, that such data retrieval tasks often result in very large datasets.
 
+------------------------------------------------------------------------
+
 ```{r}
 # View(tab_details)
 tab_details %>%
@@ -199,6 +226,8 @@ tab_details %>%
   pivot_wider(names_from = year, values_from = n, names_sort = TRUE, values_fill = 0) %>%
   show_table()
 ```
+
+------------------------------------------------------------------------
 
 ## Select Documents for Download
 
@@ -230,6 +259,8 @@ tab_download %>%
   pivot_wider(names_from = year, values_from = n, names_sort = TRUE, values_fill = 0) %>%
   show_table()
 ```
+
+------------------------------------------------------------------------
 
 ## Overview: Number and Size of Documents
 
@@ -300,15 +331,21 @@ cat(paste0(
   )
 ```
 
+------------------------------------------------------------------------
+
 ## Download Documents
 
 Again we use a custom function **download_edgar_files()** to download the documents.
+
+------------------------------------------------------------------------
 
 ### Function: download_edgar_files()
 
 ```{r echo=FALSE}
 print(download_edgar_files)
 ```
+
+------------------------------------------------------------------------
 
 ### Download Files
 
@@ -332,6 +369,8 @@ cat(paste0(
   )
 ```
 
+------------------------------------------------------------------------
+
 ## Save Files
 
 ```{r}
@@ -340,11 +379,15 @@ write_rds(tab_download_txt, "2_output/01_get_edgar_data/txt_download.rds")
 write_rds(tab_download_xxx, "2_output/01_get_edgar_data/xxx_download.rds")
 ```
 
+------------------------------------------------------------------------
+
 # Own Function Calls
 
 ```{r}
 lsf.str()
 ```
+
+------------------------------------------------------------------------
 
 # Session Info
 

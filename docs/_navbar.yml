@@ -9,14 +9,14 @@ left:
       - text: "Session 2 - Getting Data from the Web: www.AnnualReport.com"
         href: ./02_get_arcom_data.html
       - text: "Session 3 - Getting Data from the Web: XBRL"
-        href: ./03_xbrl.html
+        href: ./03_xbrl_data.html
   - text: "Day 2 - Analysing Data"
     menu:
        - text: "Session 1 - Analysing Data: XBRL Tags"
        - text: "Session 2 - Analysing Data: Textual Analysis"
        - text: "Session 3 - Analysing Data: Excel and R"
+right:
   - text: "Contact"
     href: ./contact.html
-right:
-  - icon: fa-github fa-lg
-    href: https://github.com/githubusername/mywebsite
+  - text: "GitHub"
+    href: https://github.com/MatthiasUckert
