@@ -4,6 +4,8 @@ subtitle: Accounting Class
 output: html_document
 ---
 
+------------------------------------------------------------------------
+
 # Introduction
 
 Welcome to the practical application sessions of the **Mannheim Master in Management Analytics - Accounting Class.** In the next two days we will learn how to get and analyze data from the web in an automated and reproducible way.
@@ -12,11 +14,15 @@ The goal of those sessions is to give you a general overview of how common workf
 
 All sessions are programmed in R and a basic understanding of programming is needed. The code itself applies relatively advanced methods, hence it is not assumed that you follow each single logical step. Rather this part of the course is designed to give you a high level understanding of what is possible using common open-source languages such as R.
 
+------------------------------------------------------------------------
+
 # Get The Code
 
 The complete code is hosted on my GitHub page: <https://github.com/MatthiasUckert/MMA22_ACC>
 
 Simply fork the repository into your own GitHub or download the Project.
+
+------------------------------------------------------------------------
 
 # Table of Content
 
@@ -49,6 +55,8 @@ You can navigate to the individual sessions by either following the link in the 
 |       |           |                                                                                                                             |
 |       |           | A combination of R programming and Excel analysis.                                                                          |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
+
+------------------------------------------------------------------------
 
 # Intersting Readings
 
