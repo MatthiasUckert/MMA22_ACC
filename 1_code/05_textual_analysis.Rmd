@@ -335,12 +335,12 @@ if (!file.exists(lst_paths$path_2gram)) {
 First, we have a quick look at the top 20 unigrams and bigrams for European and US companies
 
 ```{r show-frq-1gram, cache=TRUE, cache.path=lst_paths$dir_cache}
-frq_1gram <- prep_top_n_by(tab_1gram, tab_data, country, 20) %>%
+frq_1gram <- prep_top_n_by(tab_1gram, tab_data, country, 10) %>%
   display_top_n_by(country)
 ```
 
 ```{r show-frq-2gram, cache=TRUE, cache.path = lst_paths$dir_cache}
-frq_2gram <- prep_top_n_by(tab_2gram, tab_data, country, 20) %>%
+frq_2gram <- prep_top_n_by(tab_2gram, tab_data, country, 10) %>%
   display_top_n_by(country)
 ```
 
