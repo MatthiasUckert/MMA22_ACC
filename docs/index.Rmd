@@ -20,32 +20,34 @@ Simply fork the repository into your own GitHub or download the Project.
 
 # Table of Content
 
+You can navigate to the individual sessions by either following the link in the table of contents, or by navigating through the drop-down menus at the top of the page.
+
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
 | Day   | Session   | Description                                                                                                                 |
 +:======+:==========+:============================================================================================================================+
-| Day 1 | Session 1 | **Getting Data from the Web: SEC's EDGAR**                                                                                  |
+| Day 1 | Session 1 | [**Getting Data from the Web: SEC's EDGAR**](01_get_edgar_data.html "Day 1 - Session 1")                                    |
 |       |           |                                                                                                                             |
 |       |           | How to extract data from the web, if a Application Programming Interface (API) is provided.                                 |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
-|       | Session 2 | **Getting Data from the Web: www.AnnualReport.com**                                                                         |
+|       | Session 2 | [**Getting Data from the Web: www.AnnualReport.com**](02_get_arcom_data.html "Day 1 - Session 2")                           |
 |       |           |                                                                                                                             |
 |       |           | How to extract data from the web, if [**no**]{.ul} Application Programming Interface (API) is provided.                     |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
-|       | Session 3 | **Getting Data from the Web: XBRL**                                                                                         |
+|       | Session 3 | [**Getting Data from the Web: XBRL**](03_xbrl_data.html "Day 1 - Session 3")                                                |
 |       |           |                                                                                                                             |
 |       |           | Extracting structured information from files that are tagged using eXtensible Business Reporting Language (XBRL) framework. |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
-| Day 2 | Session 1 | **Analyzing Data: XBRL Tags**                                                                                               |
+| Day 2 | Session 1 | [**Analyzing Data: XBRL Tags**](04_xbrl_analyze.html "Day 2 - Session 1")                                                   |
 |       |           |                                                                                                                             |
 |       |           | Simple extraction and transformation of financial data contained in XBRL files.                                             |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
-|       | Session 2 | **Analyzing Data: Textual Analysis**                                                                                        |
+|       | Session 2 | [**Analyzing Data: Textual Analysis**](05_textual_analysis.html "Day 2 - Session 2")                                        |
 |       |           |                                                                                                                             |
-|       |           | Common textual analysis application.                                                                                        |
+|       |           | Simple textual analysis applications on a set of 10-Ks and European annual reports.                                         |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
-|       | Session 3 | **Analyzing Data: Excel and R**                                                                                             |
+|       | Session 3 | [**Analyzing Data: Excel and R**](06_excel_ratio_analysis.html "Day 2 - Session 3")                                         |
 |       |           |                                                                                                                             |
-|       |           | Move from Excel to R.                                                                                                       |
+|       |           | A combination of R programming and Excel analysis.                                                                          |
 +-------+-----------+-----------------------------------------------------------------------------------------------------------------------------+
 
 # Intersting Readings
