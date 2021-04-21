@@ -13,7 +13,7 @@ output: html_document
 In this section we will download information and documents from [**https://www.annualreports.com**](https://www.annualreports.com){.uri}.
 Getting data from this website is exemplary for getting information from the web, where we don't have an API (Application Programming Interface) access.
 
-Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_arcom_data.R**
+Throughout this script we will use custom functions. All the script specific functions are stored in this folder: **1_code/00_functions/f-get_arcom_data.R** (As a reference I also put the important functions in the script)
 
 ```{r setup, include=FALSE, purl=FALSE}
 knitr::opts_knit$set(root.dir = normalizePath(here::here())) 
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(root.dir = normalizePath(here::here()))
 
 # Script Setup
 
-```{r message=FALSE, warning=FALSE}
+```{r script-setup, message=FALSE, warning=FALSE}
 library(tidyverse); library(rvest); library(xml2); library(janitor); library(furrr)
 library(openxlsx); library(fuzzyjoin); library(stringdist); library(ISOcodes)
 
@@ -41,7 +41,7 @@ source("1_code/00_functions/f-get_arcom_data.R")
 
 ## Paths
 
-```{r}
+```{r paths}
 lst_paths <- list(
   dir_main    = "2_output/02_get_arcom_data",
   path_orbis  = "0_data/orbis_listed.xlsx",
@@ -50,7 +50,8 @@ lst_paths <- list(
   path_report_links = "2_output/02_get_arcom_data/arcom_report_links.rds",
   path_matched_firms = "2_output/02_get_arcom_data/arcom_matched_firms.rds",
   dir_ar = "2_output/02_get_arcom_data/documents",
-  path_firm_data = "2_output/02_get_arcom_data/arcom_firm_data.rds"
+  path_firm_data = "2_output/02_get_arcom_data/arcom_firm_data.rds",
+  dir_cache = "2_output/02_get_arcom_data/cache/cache_"
 ) %>% create_dirs()
 ```
 
@@ -61,7 +62,7 @@ lst_paths <- list(
 As a starting point, we use European large firm data retrieved from Orbis to match companies.
 (The dataset is available on google-drive and automatically downloaded when you execute any script)
 
-```{r}
+```{r read-orbis}
 tab_orbis <- read.xlsx(lst_paths$path_orbis, 2) %>%
   rename(Alpha_2 = Country.ISO.code) %>%
   left_join(
@@ -81,13 +82,43 @@ show_table(tab_orbis, 5)
 
 ## Get Annual Report Firms
 
-We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com. In contrast to the custom functions we used in 01_get_edgar_data, we don't explicitly make this function error proof, but wrap it into another function (purrr::safely()) that catches any error. Again we use simple caching to not re-run results we already obtained.
-
-```{r}
-print(get_company_table)
+<details>
+<summary>
+We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com ***(click on arrow to show)***.
+</summary>
+```{r function: get_company_table()}
+get_company_table <- function(.url) {
+  html_ <- read_html(.url) %>%
+    html_elements(xpath = "/html/body/div[1]/section[1]/div[2]/ul") %>%
+    html_nodes("li")
+  
+  html_ <- html_[-1]
+  headers_ <- c("company", "industry", "sector", "premium", "request")
+  
+  f_get_table <- function(.node) {
+    spans_ <- html_elements(.node, "span")
+    links_ <- url_absolute(html_attr(html_elements(spans_, "a"), "href"), "https://www.annualreports.com/Company/")[1]
+    
+    vals_ <- map_chr(spans_, html_text2)
+    vals_[4] <- html_attr(html_elements(spans_, "img"), "src")
+    
+    names(vals_) <- headers_
+    
+    mutate(pivot_wider(enframe(vals_)), link = links_)
+  }
+  
+  
+  map_dfr(seq_len(length(html_)), ~ f_get_table(html_[[.x]]))
+  
+}
 ```
+</details>
 
-```{r message=FALSE, warning=FALSE}
+We use a custom function: **get_company_table()** to retrieve company information from www.annualreport.com. 
+
+In contrast to the custom functions we used in 01_get_edgar_data, we don't explicitly make this function error proof, but wrap it into another function (purrr::safely()) that catches any error. Again we use simple caching to not re-run results we already obtained.
+
+```{r get-company-table, message=FALSE, warning=FALSE}
 if (!file.exists(lst_paths$path_firm_links)) {
   .prc <- tibble(id = character(), .rows = 0)
 } else {
@@ -116,17 +147,15 @@ if (length(urls_use) > 0) {
 } else {
   tab_firm_links <- .prc
 }
-
-# browseURL(urls_use[1])
 rm(urls_use)
 ```
 
 ------------------------------------------------------------------------
 
-```{r}
+```{r show-firm-links, echo=FALSE}
 show_table(tab_firm_links, 10)
-# View(tab_filings)
 ```
+
 ------------------------------------------------------------------------
 
 ## Get Annual Report HTMLs
@@ -135,7 +164,7 @@ Before we download annual reports in PDF format, we first scrape the complete we
 
 Here we don't write a custom function explicitly. Nonetheless, we implicitly wrap it into our walk function.
 
-```{r}
+```{r download-htmls}
 .prc <- list_files_tab(lst_paths$dir_html)
 tab_firm_links <- mutate(tab_firm_links, doc_id = basename(link))
 tab_links_use  <- filter(tab_firm_links, !doc_id %in% .prc$doc_id)
@@ -160,15 +189,42 @@ rm(tab_links_use)
 ------------------------------------------------------------------------
 
 ## Get Annual Report Links
+After retrieving the all the html files on a firm level, we extract the documents links which we will download in the next step.
+
+<details>
+<summary>
+We use a custom function: **get_infos()** to retrieve extract the actual documents links to the PDF files ***(click on arrow to show)***.
+</summary>
+```{r function: get_infos()}
+get_infos <- function(.path) {
+  
+  html_ <- read_html(.path)
+  ticker_ <- html_text2(html_elements(html_, ".ticker_name"))
+  ticker_ <- ifelse(length(ticker_) != 1, NA_character_, ticker_)
+  
+  
+  
+  links_ <- html_ %>%
+    rvest::html_elements("a") %>%
+    rvest::html_attr("href") %>%
+    tibble::enframe(value = "link") %>%
+    dplyr::filter(grepl("pdf$", link, ignore.case = TRUE)) %>%
+    dplyr::distinct(link) %>%
+    dplyr::mutate(
+      ticker = ticker_,
+      year = as.integer(stringi::stri_extract_last_regex(link, "\\d{4}")),
+      doc_id = gsub("\\.html$", "", basename(.path)),
+      link = url_absolute(link, "https://www.annualreports.com/Company/")
+    ) %>%
+    dplyr::select(doc_id, ticker, year, link)
+  
+}
+```
+</details>
 
 After retrieving the all the html files on a firm level, we extract the actual documents links to the PDF we will download in the next step. Here we use the custom function: **get_infos()**
 
-```{r}
-print(get_infos)
-```
-
-
-```{r}
+```{r extract-report-links}
 if (!file.exists(lst_paths$path_report_links)) {
   plan("multisession", workers = .workers)
   tab_report_links <- future_map_dfr(
@@ -181,9 +237,11 @@ if (!file.exists(lst_paths$path_report_links)) {
 } else {
   tab_report_links <- read_rds(lst_paths$path_report_links)
 }
+```
 
+
+```{r show-report-links}
 show_table(tab_report_links, 10)
-
 ```
 
 ------------------------------------------------------------------------
@@ -194,9 +252,9 @@ To not artifically increase the number of PDFs we download, we restrict our set 
 
 ------------------------------------------------------------------------
 
-### FUll Matches
+### Full Matches
 
-```{r}
+```{r full-matches}
 tab0 <- mutate(tab_firm_links, match = standardize_name(company)) %>%
   filter(!is.na(match))
 tab1 <- mutate(tab_orbis, match = standardize_name(company)) %>%
@@ -212,7 +270,7 @@ tab1 <- filter(tab1, !match %in% tab_match_full$match)
 
 ### Fuzzy Matches
 
-```{r}
+```{r fuzzy-matches, cache = TRUE, cache.path = lst_paths$dir_cache}
 tab_match_fuzzy <- stringdist_inner_join(
   x = tab0,
   y = tab1,
@@ -231,7 +289,7 @@ select(tab_match_fuzzy, sim, company_0, company_1) %>%
   show_table(.n = 10)
 ```
 
-```{r}
+```{r select-fuzzy-matches}
 tab_match_fuzzy <- tab_match_fuzzy %>%
   slice(c(1,2,3,4,5,6,7,9,10,11,12,14,15,18,21,24,29)) %>%
   select(-sim)
@@ -241,7 +299,7 @@ tab_match_fuzzy <- tab_match_fuzzy %>%
 
 ## Select Companies
 
-```{r}
+```{r combine-matches}
 tab_match <- bind_rows(tab_match_full, tab_match_fuzzy) %>%
   mutate(doc_id = basename(link)) %>%
   select(doc_id, isin, company = company_1) %>%
@@ -253,22 +311,37 @@ tab_match <- bind_rows(tab_match_full, tab_match_fuzzy) %>%
 tab_data <- tab_match %>%
   left_join(tab_orbis, by = c("isin", "company")) %>%
   select(doc_id, isin, year, company, country_code, country)
+```
 
+
+```{r show-matches}
 show_table(tab_data, 10)
-
 ```
 
 ------------------------------------------------------------------------
 
 ## Download Annual Reports
 
-For downloading the annual reports we use a custom function **downlad_ar()**
+<details>
+<summary>
+We use a custom function: **get_infos()** to download the annual reports ***(click on arrow to show)***.
+</summary>
+```{r function: download_ar()}
+downlad_ar <- function(.url, .dir) {
+  try(download.file(
+    url = .url,
+    destfile = file.path(.dir, basename(.url)),
+    mode = "wb",
+    quiet = TRUE
+  ))
+}
+```
+</details>
 
-```{r message=FALSE, warning=FALSE}
+
+```{r download-reports, message=FALSE, warning=FALSE}
 .prc <- list_files_tab(lst_paths$dir_ar)
-
 tab_download_use <- filter(tab_match, !doc_id %in% .prc$doc_id)
-
 # walk(tab_download_use$link, ~ downlad_ar(.x, .dir_ar))
 ```
 
@@ -276,7 +349,7 @@ tab_download_use <- filter(tab_match, !doc_id %in% .prc$doc_id)
 
 ## Save Output
 
-```{r}
+```{r save-output}
 write_rds(tab_data, lst_paths$path_firm_data, compress = "gz")
 write_rds(tab_match, lst_paths$path_matched_firms, compress = "gz")
 ```
@@ -285,13 +358,14 @@ write_rds(tab_match, lst_paths$path_matched_firms, compress = "gz")
 
 # Own Function Calls
 
-```{r}
+```{r function-calls}
 lsf.str()
 ```
+
 ------------------------------------------------------------------------
 
 # Session Info
 
-```{r}
+```{r session-info}
 sessioninfo::session_info()
 ```

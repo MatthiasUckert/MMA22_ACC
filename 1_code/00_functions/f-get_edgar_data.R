@@ -105,11 +105,7 @@ download_edgar_files <- function(.tab, .dir, .retry = 5, .sleep = 1) {
   
   if (nrow(tab_) == 0) return(NULL)
   
-  
   lst_ <- group_split(tab_, symbol, year)
-  
-  
-  
   
   f_try <- function(.url, .path) {
     try(download.file(.url, .path, quiet = TRUE, mode = "wb"), silent = TRUE)

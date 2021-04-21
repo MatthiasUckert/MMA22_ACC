@@ -142,7 +142,6 @@ compare_word_frequqncies <- function(.tab, .tab_data) {
     select(-n) %>%
     pivot_wider(names_from = country, values_from = p) %>%
     filter(!is.na(Europe) & !is.na(`United States`)) %>%
-    # filter(Europe > .00001 | `United States` > .00001) %>%
     ggplot(aes(x = `United States`, y = Europe)) +
     geom_abline(color = "gray40", lty = 2) +
     geom_jitter(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3, color = "blue") +

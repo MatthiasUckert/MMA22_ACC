@@ -357,10 +357,6 @@ xbrl_extract_elements <- function(.zip, .dir_tmp, .dir_out) {
   } else {
     write_rds(elements_, file.path(.dir_out, gsub("zip$", "rds", basename(.zip))), compress = "gz")
   }
-  
-  
-  
-  
 }
 
 # .inst <- read_rds(tab_files_elements_use$path[1])

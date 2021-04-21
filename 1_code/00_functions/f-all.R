@@ -82,9 +82,12 @@ create_dirs <- function(.dirs) {
       }
     }
   )
-  return(.dirs)
+  
+  purrr::map(.dirs, normalizePath)
+  
   
 }
+
 
 
 show_table <- function(.tab, .n = Inf) {

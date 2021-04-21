@@ -89,8 +89,6 @@ get_stand_statement <- function(.paths, .path_map1, .path_map2) {
   
 }
 
-
-
 calculate_wb_fn <- function(.dir, .name) {
   dir_ <- normalizePath(.dir)
   hash_ <- digest::digest(.name, algo = "xxhash32")

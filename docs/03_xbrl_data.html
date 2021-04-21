@@ -432,9 +432,15 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Session 1 - Analysing Data: XBRL Tags</li>
-    <li class="dropdown-header">Session 2 - Analysing Data: Textual Analysis</li>
-    <li class="dropdown-header">Session 3 - Analysing Data: Excel and R</li>
+    <li>
+      <a href="./04_xbrl_analyze.html">Session 1 - Analysing Data: XBRL Tags</a>
+    </li>
+    <li>
+      <a href="./05_textual_analysis.html">Session 2 - Analysing Data: Textual Analysis</a>
+    </li>
+    <li>
+      <a href="./06_excel_ratio_analysis.html">Session 3 - Analysing Data: Excel and R</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -456,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Getting Data from the Web: XBRL</h1>
 <h4 class="author">Matthias Uckert</h4>
-<h4 class="date">20 April, 2021</h4>
+<h4 class="date">21 April, 2021</h4>
 
 </div>
 
@@ -465,7 +471,7 @@ div.tocify {
 <div id="description" class="section level1">
 <h1>Description</h1>
 <p>In this session we will extract XBRL elements from the files we downloaded in Day 1 - Session 1.</p>
-<p>Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: <strong>1_code/00_functions/f-xbrl.R</strong></p>
+<p>Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: <strong>1_code/00_functions/f-xbrl.R</strong> (As a reference I also put the important functions in the script)</p>
 <hr />
 </div>
 <div id="script-setup" class="section level1">
@@ -492,8 +498,9 @@ div.tocify {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_elements_prc =</span> <span class="st">&quot;2_output/03_xbrl_data/elements_prc&quot;</span>,</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_elements0 =</span> <span class="st">&quot;2_output/03_xbrl_data/xbrl_elements0.rds&quot;</span>,</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_elements1 =</span> <span class="st">&quot;2_output/03_xbrl_data/xbrl_elements1.rds&quot;</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_xbrl_lu =</span> <span class="st">&quot;0_data/xbrl_lookup_table.xlsx&quot;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">create_dirs</span>()</span></code></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">path_xbrl_lu =</span> <span class="st">&quot;0_data/xbrl_lookup_table.xlsx&quot;</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir_cache =</span> <span class="st">&quot;2_output/03_xbrl_data/cache/cache_&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">create_dirs</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tab_files_sec <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(lst_paths<span class="sc">$</span>dir_sec, <span class="at">reg =</span> <span class="st">&quot;zip$&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(doc_id, <span class="st">&quot;xxx&quot;</span>))</span></code></pre></div>
 <hr />
@@ -504,31 +511,322 @@ div.tocify {
 <div id="function-xbrl_extract_elements" class="section level3">
 <h3>Function: xbrl_extract_elements()</h3>
 <p>To extract the relevant items from the XBRL tagges xml/xsd files we downloaded, we need a more advanced set of functions. Eventually, we achieve this by using a custom function <strong>xbrl_extract_elements()</strong>, which is heavily based on the XBRL library. We had to implement some changes to the original source coude due to a know error in the package (see: <a href="https://stackoverflow.com/questions/53651481/schema-file-does-not-exist-in-xbrl-parse-file" class="uri">https://stackoverflow.com/questions/53651481/schema-file-does-not-exist-in-xbrl-parse-file</a>). Since we already had to change the source code, we implemented some procedures to make the download and the extraction process more efficient.</p>
-<pre><code>## function(.zip, .dir_tmp, .dir_out) {
-##   zip::unzip(.zip, exdir = .dir_tmp)
-##   
-##   
-##   files_ &lt;- zip_list(.zip)[[&quot;filename&quot;]]
-##   inst_file_ &lt;- files_[endsWith(files_, &quot;.xml&quot;)]
-##   inst_file_ &lt;- inst_file_[!grepl(&quot;_lab|_cal|_pre|_def&quot;, inst_file_)]
-##   
-##   if (length(inst_file_) != 1) {
-##     return(NULL)
-##   }
-##   
-##   elements_ &lt;- try(own_xbrlDoAll(file.path(.dir_tmp, inst_file_), .dir_tmp, delete.cached.inst = FALSE), silent = TRUE)
-##   invisible(file.remove(file.path(.dir_tmp, files_)))
-##   
-##   if (inherits(elements_, &quot;try-error&quot;)) {
-##     NULL
-##   } else {
-##     write_rds(elements_, file.path(.dir_out, gsub(&quot;zip$&quot;, &quot;rds&quot;, basename(.zip))), compress = &quot;gz&quot;)
-##   }
-##   
-##   
-##   
-##   
-## }</code></pre>
+<details>
+<summary>
+We use a custom function: <strong>xbrl_extract_elements()</strong> to extract elements <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>xbrl_extract_elements <span class="ot">&lt;-</span> <span class="cf">function</span>(.zip, .dir_tmp, .dir_out) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  zip<span class="sc">::</span><span class="fu">unzip</span>(.zip, <span class="at">exdir =</span> .dir_tmp)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  files_ <span class="ot">&lt;-</span> <span class="fu">zip_list</span>(.zip)[[<span class="st">&quot;filename&quot;</span>]]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  inst_file_ <span class="ot">&lt;-</span> files_[<span class="fu">endsWith</span>(files_, <span class="st">&quot;.xml&quot;</span>)]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  inst_file_ <span class="ot">&lt;-</span> inst_file_[<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;_lab|_cal|_pre|_def&quot;</span>, inst_file_)]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(inst_file_) <span class="sc">!=</span> <span class="dv">1</span>) {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  elements_ <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">own_xbrlDoAll</span>(<span class="fu">file.path</span>(.dir_tmp, inst_file_), .dir_tmp, <span class="at">delete.cached.inst =</span> <span class="cn">FALSE</span>), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">file.remove</span>(<span class="fu">file.path</span>(.dir_tmp, files_)))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">inherits</span>(elements_, <span class="st">&quot;try-error&quot;</span>)) {</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NULL</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write_rds</span>(elements_, <span class="fu">file.path</span>(.dir_out, <span class="fu">gsub</span>(<span class="st">&quot;zip$&quot;</span>, <span class="st">&quot;rds&quot;</span>, <span class="fu">basename</span>(.zip))), <span class="at">compress =</span> <span class="st">&quot;gz&quot;</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>own_xbrlDoAll <span class="ot">&lt;-</span> <span class="cf">function</span>(file.inst, <span class="at">cache.dir =</span> <span class="st">&quot;xbrl.Cache&quot;</span>, <span class="at">prefix.out =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                          <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">delete.cached.inst =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  xbrl <span class="ot">&lt;-</span> <span class="fu">own_XBRL</span>()</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">setVerbose</span>(verbose)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(cache.dir)) {</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    xbrl<span class="sc">$</span><span class="fu">setCacheDir</span>(cache.dir)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">openInstance</span>(file.inst)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  file_schema <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(xbrl<span class="sc">$</span><span class="fu">getSchemaName</span>())[<span class="dv">1</span>]</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">processSchema</span>(file_schema)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">processContexts</span>()</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">processFacts</span>()</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">processUnits</span>()</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">processFootnotes</span>()</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  xbrl<span class="sc">$</span><span class="fu">closeInstance</span>()</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (delete.cached.inst <span class="sc">&amp;&amp;</span> <span class="fu">gsub</span>(<span class="st">&quot;^(http|https|ftp)://.*$&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, file.inst) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;http&quot;</span>, <span class="st">&quot;https&quot;</span>, <span class="st">&quot;ftp&quot;</span>)) {</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    xbrl<span class="sc">$</span><span class="fu">deleteCachedInstance</span>()</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  xbrl.vars <span class="ot">&lt;-</span> xbrl<span class="sc">$</span><span class="fu">getResults</span>()</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(prefix.out)) {</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">&quot;Saving data</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>role, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_roles.csv&quot;</span>))</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>element, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_elements.csv&quot;</span>))</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>label, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_labels.csv&quot;</span>))</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>presentation, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_presentations.csv&quot;</span>))</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>definition, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_definitions.csv&quot;</span>))</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>calculation, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_calculations.csv&quot;</span>))</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>context, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_contexts.csv&quot;</span>))</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>fact, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_facts.csv&quot;</span>))</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>unit, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_units.csv&quot;</span>))</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write.csv</span>(xbrl.vars<span class="sc">$</span>footnote, <span class="at">file =</span> <span class="fu">paste0</span>(prefix.out, <span class="st">&quot;_footnotes.csv&quot;</span>))</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(xbrl.vars)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>own_XBRL <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  self <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">element =</span> <span class="cn">NULL</span>, <span class="at">role =</span> <span class="cn">NULL</span>, <span class="at">label =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">presentation =</span> <span class="cn">NULL</span>, <span class="at">definition =</span> <span class="cn">NULL</span>, <span class="at">calculation =</span> <span class="cn">NULL</span>,</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">context =</span> <span class="cn">NULL</span>, <span class="at">unit =</span> <span class="cn">NULL</span>, <span class="at">fact =</span> <span class="cn">NULL</span>, <span class="at">footnote =</span> <span class="cn">NULL</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  cache.dir <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  discovered.files <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  doc.inst <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  dname.inst <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  verbose <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  inst.lnkb <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  fixFileName <span class="ot">&lt;-</span> <span class="cf">function</span>(dname, file.name) {</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">substr</span>(file.name, <span class="dv">1</span>, <span class="dv">5</span>) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;http:&quot;</span>, <span class="st">&quot;https&quot;</span>))) {</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">substr</span>(file.name, <span class="dv">1</span>, <span class="dv">5</span>) <span class="sc">==</span> <span class="st">&quot;../..&quot;</span>) {</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        file.name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>          <span class="fu">dirname</span>(<span class="fu">dirname</span>(dname)),</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;/&quot;</span>, <span class="fu">substr</span>(file.name, <span class="dv">7</span>, <span class="fu">nchar</span>(file.name))</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">substr</span>(file.name, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">==</span> <span class="st">&quot;..&quot;</span>) {</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>        file.name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">dirname</span>(dname), <span class="st">&quot;/&quot;</span>, <span class="fu">substr</span>(</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>          file.name,</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>          <span class="dv">4</span>, <span class="fu">nchar</span>(file.name)</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>        ))</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span> {</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>        file.name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dname, <span class="st">&quot;/&quot;</span>, file.name)</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    file.name</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>  setVerbose <span class="ot">&lt;-</span> <span class="cf">function</span>(newVerbose) {</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    oldVerbose <span class="ot">&lt;-</span> verbose</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    verbose <span class="ot">&lt;&lt;-</span> newVerbose</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    oldVerbose</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>  setCacheDir <span class="ot">&lt;-</span> <span class="cf">function</span>(new.cache.dir) {</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(new.cache.dir)) {</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dir.create</span>(new.cache.dir)</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>    cache.dir <span class="ot">&lt;&lt;-</span> new.cache.dir</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  fileFromCache <span class="ot">&lt;-</span> <span class="cf">function</span>(file) {</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>(<span class="fu">gsub</span>(<span class="st">&quot;^(http|https|ftp)://.*$&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, file) <span class="sc">%in%</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>          <span class="fu">c</span>(<span class="st">&quot;http&quot;</span>, <span class="st">&quot;https&quot;</span>, <span class="st">&quot;ftp&quot;</span>))) {</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(file)</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    bname <span class="ot">&lt;-</span> <span class="fu">basename</span>(file)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    cached.file <span class="ot">&lt;-</span> <span class="fu">paste0</span>(cache.dir, <span class="st">&quot;/&quot;</span>, bname)</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(cached.file)) {</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;Downloading to cache dir...&quot;</span>)</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>      status <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">download.file</span>(file, cached.file, <span class="at">quiet =</span> <span class="sc">!</span>verbose),</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>                    <span class="at">silent =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">class</span>(status)[<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;try-error&quot;</span> <span class="sc">||</span> status <span class="sc">==</span></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>          <span class="dv">1</span>) {</span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>        <span class="fu">unlink</span>(cached.file)</span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(status, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> {</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;Using file from cache dir...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    cached.file</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>  openInstance <span class="ot">&lt;-</span> <span class="cf">function</span>(file.inst) {</span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>    dname.inst <span class="ot">&lt;&lt;-</span> <span class="fu">dirname</span>(file.inst)</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(cache.dir)) {</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>      file.inst <span class="ot">&lt;-</span> <span class="fu">fileFromCache</span>(file.inst)</span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>      inst.lnkb <span class="ot">&lt;&lt;-</span> file.inst</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>    doc.inst <span class="ot">&lt;&lt;-</span> XBRL<span class="sc">::</span><span class="fu">xbrlParse</span>(file.inst)</span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>  deleteCachedInstance <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">&quot;Deleting the following downloaded and/or cached files...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>      <span class="fu">print</span>(inst.lnkb)</span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unlink</span>(inst.lnkb)</span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">&quot;Done...</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>  getSchemaName <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fixFileName</span>(dname.inst, <span class="fu">.Call</span>(<span class="st">&quot;xbrlGetSchemaName&quot;</span>, doc.inst,</span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span></span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a>  processSchema <span class="ot">&lt;-</span> <span class="cf">function</span>(file, <span class="at">level =</span> <span class="dv">1</span>) {</span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">&quot;Schema: &quot;</span>, file, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">which</span>(discovered.files <span class="sc">==</span> file)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;Already discovered. Skipping</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a>    discovered.files <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(discovered.files, file)</span>
+<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a>    dname <span class="ot">&lt;-</span> <span class="fu">dirname</span>(file)</span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (level <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(cache.dir)) {</span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(<span class="st">&quot;Level:&quot;</span>, level, <span class="st">&quot;==&gt;&quot;</span>, file, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a>      file <span class="ot">&lt;-</span> <span class="fu">fileFromCache</span>(file)</span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (level <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a>        inst.lnkb <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(inst.lnkb, file)</span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>    doc <span class="ot">&lt;-</span> XBRL<span class="sc">::</span><span class="fu">xbrlParse</span>(file)</span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (level <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>      <span class="fu">processRoles</span>(doc)</span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a>    <span class="fu">processElements</span>(doc)</span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a>    linkbaseNames <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlGetLinkbaseNames&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a>    importNames <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlGetImportNames&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.Call</span>(<span class="st">&quot;xbrlFree&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (linkbaseName <span class="cf">in</span> linkbaseNames) {</span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a>      linkbaseName <span class="ot">&lt;-</span> <span class="fu">fixFileName</span>(dname, linkbaseName)</span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(file, <span class="st">&quot; ==&gt; Linkbase: &quot;</span>, linkbaseName, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>      <span class="fu">processLinkbase</span>(linkbaseName, level <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (importName <span class="cf">in</span> importNames) {</span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a>      importName <span class="ot">&lt;-</span> <span class="fu">fixFileName</span>(dname, importName)</span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) {</span>
+<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(file, <span class="st">&quot; ==&gt; Schema: &quot;</span>, importName, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a>      <span class="fu">processSchema</span>(importName, level <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a>  processRoles <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Roles</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>role <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-204"><a href="#cb4-204" aria-hidden="true" tabindex="-1"></a>      self<span class="sc">$</span>role, <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessRoles&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-205"><a href="#cb4-205" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-206"><a href="#cb4-206" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-207"><a href="#cb4-207" aria-hidden="true" tabindex="-1"></a>  processElements <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-208"><a href="#cb4-208" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Elements</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-209"><a href="#cb4-209" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>element <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(self<span class="sc">$</span>element, <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessElements&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>))</span>
+<span id="cb4-210"><a href="#cb4-210" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-211"><a href="#cb4-211" aria-hidden="true" tabindex="-1"></a>  processLinkbase <span class="ot">&lt;-</span> <span class="cf">function</span>(file, level) {</span>
+<span id="cb4-212"><a href="#cb4-212" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Linkbase: &quot;</span>, file, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-213"><a href="#cb4-213" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">which</span>(discovered.files <span class="sc">==</span> file)) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-214"><a href="#cb4-214" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Already discovered. Skipping</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-215"><a href="#cb4-215" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-216"><a href="#cb4-216" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-217"><a href="#cb4-217" aria-hidden="true" tabindex="-1"></a>    discovered.files <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(discovered.files, file)</span>
+<span id="cb4-218"><a href="#cb4-218" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (level <span class="sc">&gt;=</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.null</span>(cache.dir)) {</span>
+<span id="cb4-219"><a href="#cb4-219" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Level:&quot;</span>, level, <span class="st">&quot;==&gt;&quot;</span>, file, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-220"><a href="#cb4-220" aria-hidden="true" tabindex="-1"></a>      file <span class="ot">&lt;-</span> <span class="fu">fileFromCache</span>(file)</span>
+<span id="cb4-221"><a href="#cb4-221" aria-hidden="true" tabindex="-1"></a>      inst.lnkb <span class="ot">&lt;&lt;-</span> <span class="fu">c</span>(inst.lnkb, file)</span>
+<span id="cb4-222"><a href="#cb4-222" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-223"><a href="#cb4-223" aria-hidden="true" tabindex="-1"></a>    doc <span class="ot">&lt;-</span> XBRL<span class="sc">::</span><span class="fu">xbrlParse</span>(file)</span>
+<span id="cb4-224"><a href="#cb4-224" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">processLabels</span>(doc)) {</span>
+<span id="cb4-225"><a href="#cb4-225" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="sc">!</span><span class="fu">processPresentations</span>(doc)) {</span>
+<span id="cb4-226"><a href="#cb4-226" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="sc">!</span><span class="fu">processDefinitions</span>(doc)) {</span>
+<span id="cb4-227"><a href="#cb4-227" aria-hidden="true" tabindex="-1"></a>          <span class="fu">processCalculations</span>(doc)</span>
+<span id="cb4-228"><a href="#cb4-228" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-229"><a href="#cb4-229" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-230"><a href="#cb4-230" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-231"><a href="#cb4-231" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.Call</span>(<span class="st">&quot;xbrlFree&quot;</span>, doc, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-232"><a href="#cb4-232" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-233"><a href="#cb4-233" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-234"><a href="#cb4-234" aria-hidden="true" tabindex="-1"></a>  processLabels <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-235"><a href="#cb4-235" aria-hidden="true" tabindex="-1"></a>    pre.length <span class="ot">&lt;-</span> <span class="fu">length</span>(self<span class="sc">$</span>label)</span>
+<span id="cb4-236"><a href="#cb4-236" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>label <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-237"><a href="#cb4-237" aria-hidden="true" tabindex="-1"></a>      self<span class="sc">$</span>label, ans <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessLabels&quot;</span>,doc,<span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-238"><a href="#cb4-238" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-239"><a href="#cb4-239" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(ans)) {</span>
+<span id="cb4-240"><a href="#cb4-240" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Labels.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-241"><a href="#cb4-241" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb4-242"><a href="#cb4-242" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-243"><a href="#cb4-243" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span></span>
+<span id="cb4-244"><a href="#cb4-244" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-245"><a href="#cb4-245" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-246"><a href="#cb4-246" aria-hidden="true" tabindex="-1"></a>  processPresentations <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-247"><a href="#cb4-247" aria-hidden="true" tabindex="-1"></a>    pre.length <span class="ot">&lt;-</span> <span class="fu">length</span>(self<span class="sc">$</span>presentation)</span>
+<span id="cb4-248"><a href="#cb4-248" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>presentation <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-249"><a href="#cb4-249" aria-hidden="true" tabindex="-1"></a>      self<span class="sc">$</span>presentation, ans <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessArcs&quot;</span>,doc, <span class="st">&quot;presentation&quot;</span>,<span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-250"><a href="#cb4-250" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-251"><a href="#cb4-251" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-252"><a href="#cb4-252" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(ans)) {</span>
+<span id="cb4-253"><a href="#cb4-253" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Presentations.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-254"><a href="#cb4-254" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb4-255"><a href="#cb4-255" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-256"><a href="#cb4-256" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span></span>
+<span id="cb4-257"><a href="#cb4-257" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-258"><a href="#cb4-258" aria-hidden="true" tabindex="-1"></a>  processDefinitions <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-259"><a href="#cb4-259" aria-hidden="true" tabindex="-1"></a>    pre.length <span class="ot">&lt;-</span> <span class="fu">length</span>(self<span class="sc">$</span>definition)</span>
+<span id="cb4-260"><a href="#cb4-260" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>definition <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-261"><a href="#cb4-261" aria-hidden="true" tabindex="-1"></a>      self<span class="sc">$</span>definition, ans <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessArcs&quot;</span>,doc, <span class="st">&quot;definition&quot;</span>, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-262"><a href="#cb4-262" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-263"><a href="#cb4-263" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(ans)) {</span>
+<span id="cb4-264"><a href="#cb4-264" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Definitions.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-265"><a href="#cb4-265" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb4-266"><a href="#cb4-266" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-267"><a href="#cb4-267" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span></span>
+<span id="cb4-268"><a href="#cb4-268" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-269"><a href="#cb4-269" aria-hidden="true" tabindex="-1"></a>  processCalculations <span class="ot">&lt;-</span> <span class="cf">function</span>(doc) {</span>
+<span id="cb4-270"><a href="#cb4-270" aria-hidden="true" tabindex="-1"></a>    pre.length <span class="ot">&lt;-</span> <span class="fu">length</span>(self<span class="sc">$</span>calculation)</span>
+<span id="cb4-271"><a href="#cb4-271" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>calculation <span class="ot">&lt;&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb4-272"><a href="#cb4-272" aria-hidden="true" tabindex="-1"></a>      self<span class="sc">$</span>calculation, ans <span class="ot">&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessArcs&quot;</span>, doc, <span class="st">&quot;calculation&quot;</span>, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-273"><a href="#cb4-273" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-274"><a href="#cb4-274" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(ans)) {</span>
+<span id="cb4-275"><a href="#cb4-275" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Calculations.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-276"><a href="#cb4-276" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb4-277"><a href="#cb4-277" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-278"><a href="#cb4-278" aria-hidden="true" tabindex="-1"></a>    <span class="cn">FALSE</span></span>
+<span id="cb4-279"><a href="#cb4-279" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-280"><a href="#cb4-280" aria-hidden="true" tabindex="-1"></a>  processContexts <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-281"><a href="#cb4-281" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Contexts</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-282"><a href="#cb4-282" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>context <span class="ot">&lt;&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessContexts&quot;</span>, doc.inst, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-283"><a href="#cb4-283" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-284"><a href="#cb4-284" aria-hidden="true" tabindex="-1"></a>  processFacts <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-285"><a href="#cb4-285" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Facts</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-286"><a href="#cb4-286" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>fact <span class="ot">&lt;&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessFacts&quot;</span>, doc.inst, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-287"><a href="#cb4-287" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-288"><a href="#cb4-288" aria-hidden="true" tabindex="-1"></a>  processUnits <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-289"><a href="#cb4-289" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Units</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-290"><a href="#cb4-290" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>unit <span class="ot">&lt;&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessUnits&quot;</span>, doc.inst, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-291"><a href="#cb4-291" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-292"><a href="#cb4-292" aria-hidden="true" tabindex="-1"></a>  processFootnotes <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-293"><a href="#cb4-293" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) <span class="fu">cat</span>(<span class="st">&quot;Footnotes</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-294"><a href="#cb4-294" aria-hidden="true" tabindex="-1"></a>    self<span class="sc">$</span>footnote <span class="ot">&lt;&lt;-</span> <span class="fu">.Call</span>(<span class="st">&quot;xbrlProcessFootnotes&quot;</span>, doc.inst, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-295"><a href="#cb4-295" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-296"><a href="#cb4-296" aria-hidden="true" tabindex="-1"></a>  closeInstance <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-297"><a href="#cb4-297" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.Call</span>(<span class="st">&quot;xbrlFree&quot;</span>, doc.inst, <span class="at">PACKAGE =</span> <span class="st">&quot;XBRL&quot;</span>)</span>
+<span id="cb4-298"><a href="#cb4-298" aria-hidden="true" tabindex="-1"></a>    doc.inst <span class="ot">&lt;&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-299"><a href="#cb4-299" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-300"><a href="#cb4-300" aria-hidden="true" tabindex="-1"></a>  getResults <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb4-301"><a href="#cb4-301" aria-hidden="true" tabindex="-1"></a>    self</span>
+<span id="cb4-302"><a href="#cb4-302" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-303"><a href="#cb4-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb4-304"><a href="#cb4-304" aria-hidden="true" tabindex="-1"></a>    <span class="at">setVerbose =</span> setVerbose, <span class="at">setCacheDir =</span> setCacheDir,</span>
+<span id="cb4-305"><a href="#cb4-305" aria-hidden="true" tabindex="-1"></a>    <span class="at">openInstance =</span> openInstance, <span class="at">deleteCachedInstance =</span> deleteCachedInstance,</span>
+<span id="cb4-306"><a href="#cb4-306" aria-hidden="true" tabindex="-1"></a>    <span class="at">getSchemaName =</span> getSchemaName, <span class="at">processSchema =</span> processSchema,</span>
+<span id="cb4-307"><a href="#cb4-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">processContexts =</span> processContexts, <span class="at">processFacts =</span> processFacts,</span>
+<span id="cb4-308"><a href="#cb4-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">processUnits =</span> processUnits, <span class="at">processFootnotes =</span> processFootnotes,</span>
+<span id="cb4-309"><a href="#cb4-309" aria-hidden="true" tabindex="-1"></a>    <span class="at">closeInstance =</span> closeInstance, <span class="at">getResults =</span> getResults</span>
+<span id="cb4-310"><a href="#cb4-310" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-311"><a href="#cb4-311" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
 </div>
 <div id="extract" class="section level3">
@@ -548,59 +846,60 @@ div.tocify {
 </div>
 <div id="process-xbrl-elements" class="section level2">
 <h2>Process XBRL Elements</h2>
-<p>We use a custom function: <strong>xbrl_process_elements()</strong> to extract elements from the XBRL tagged .xml files.</p>
-<div id="function-xbrl_process_elements" class="section level3">
-<h3>Function: xbrl_process_elements()</h3>
-<pre><code>## function(.inst) {
-##   chr_desc_ &lt;- .inst$role[[&quot;description&quot;]]
-##   chr_type_ &lt;- .inst$role[[&quot;type&quot;]]
-##   
-##   if (length(chr_type_) == 0 | length(chr_desc_) == 0) {
-##     return(NULL)
-##   }
-##   
-##   names(chr_desc_) &lt;- names(chr_type_) &lt;- paste0(chr_type_, &quot;_&quot;, chr_desc_)
-##   
-##   get_statements &lt;- function(.type, .desc) {
-##     tab_role_ &lt;- dplyr::filter(.inst$role, description == .desc)
-##     
-##     
-##     tab_skeleton_ &lt;- .inst$presentation %&gt;%
-##       dplyr::filter(roleId == tab_role_$roleId) %&gt;%
-##       dplyr::mutate(row_id = dplyr::row_number()) %&gt;%
-##       tibble::as_tibble()
-##     
-##     tab_element_ &lt;- tab_skeleton_ %&gt;%
-##       dplyr::left_join(.inst$label, by = c(&quot;toElementId&quot; = &quot;elementId&quot;)) %&gt;%
-##       dplyr::left_join(.inst$fact, by = c(&quot;toElementId&quot; = &quot;elementId&quot;)) %&gt;%
-##       dplyr::left_join(.inst$context, by = c(&quot;contextId&quot;)) %&gt;%
-##       dplyr::filter(labelRole == &quot;http://www.xbrl.org/2003/role/label&quot;) %&gt;%
-##       dplyr::filter(!is.na(fact)) %&gt;%
-##       dplyr::arrange(row_id, startDate, endDate) %&gt;%
-##       tibble::as_tibble()
-##     
-##     if (.type == &quot;Statement&quot;) {
-##       tab_element_ %&gt;%
-##         dplyr::select(
-##           tag = toElementId, line_item = labelString,
-##           unit = unitId, amount = fact, contextId, startDate, endDate
-##         )
-##     } else if (.type %in% c(&quot;Disclosure&quot;, &quot;Document&quot;, &quot;Schedule&quot;)) {
-##       tab_element_ %&gt;%
-##         dplyr::mutate(fact = remove_html_tags(fact)) %&gt;%
-##         dplyr::select(
-##           tag = toElementId, line_item = labelString,
-##           text = fact, contextId, startDate, endDate
-##         )
-##     } else {
-##       stop(paste0(&quot;Type not found: &quot;, .type), call. = FALSE)
-##     }
-##   }
-##   
-##   test &lt;- purrr::map2(chr_type_, chr_desc_, get_statements)
-## }</code></pre>
+<details>
+<summary>
+We use a custom function: <strong>xbrl_process_elements()</strong> to extract elements from the XBRL tagged .xml files <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>xbrl_process_elements <span class="ot">&lt;-</span> <span class="cf">function</span>(.inst) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  chr_desc_ <span class="ot">&lt;-</span> .inst<span class="sc">$</span>role[[<span class="st">&quot;description&quot;</span>]]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  chr_type_ <span class="ot">&lt;-</span> .inst<span class="sc">$</span>role[[<span class="st">&quot;type&quot;</span>]]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(chr_type_) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">|</span> <span class="fu">length</span>(chr_desc_) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(chr_desc_) <span class="ot">&lt;-</span> <span class="fu">names</span>(chr_type_) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(chr_type_, <span class="st">&quot;_&quot;</span>, chr_desc_)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  get_statements <span class="ot">&lt;-</span> <span class="cf">function</span>(.type, .desc) {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    tab_role_ <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(.inst<span class="sc">$</span>role, description <span class="sc">==</span> .desc)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    tab_skeleton_ <span class="ot">&lt;-</span> .inst<span class="sc">$</span>presentation <span class="sc">%&gt;%</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(roleId <span class="sc">==</span> tab_role_<span class="sc">$</span>roleId) <span class="sc">%&gt;%</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">row_id =</span> dplyr<span class="sc">::</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">as_tibble</span>()</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    tab_element_ <span class="ot">&lt;-</span> tab_skeleton_ <span class="sc">%&gt;%</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">left_join</span>(.inst<span class="sc">$</span>label, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;toElementId&quot;</span> <span class="ot">=</span> <span class="st">&quot;elementId&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">left_join</span>(.inst<span class="sc">$</span>fact, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;toElementId&quot;</span> <span class="ot">=</span> <span class="st">&quot;elementId&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">left_join</span>(.inst<span class="sc">$</span>context, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;contextId&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(labelRole <span class="sc">==</span> <span class="st">&quot;http://www.xbrl.org/2003/role/label&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(fact)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">arrange</span>(row_id, startDate, endDate) <span class="sc">%&gt;%</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>      tibble<span class="sc">::</span><span class="fu">as_tibble</span>()</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (.type <span class="sc">==</span> <span class="st">&quot;Statement&quot;</span>) {</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      tab_element_ <span class="sc">%&gt;%</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>          <span class="at">tag =</span> toElementId, <span class="at">line_item =</span> labelString,</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>          <span class="at">unit =</span> unitId, <span class="at">amount =</span> fact, contextId, startDate, endDate</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (.type <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Disclosure&quot;</span>, <span class="st">&quot;Document&quot;</span>, <span class="st">&quot;Schedule&quot;</span>)) {</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>      tab_element_ <span class="sc">%&gt;%</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">fact =</span> <span class="fu">remove_html_tags</span>(fact)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>          <span class="at">tag =</span> toElementId, <span class="at">line_item =</span> labelString,</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>          <span class="at">text =</span> fact, contextId, startDate, endDate</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="fu">paste0</span>(<span class="st">&quot;Type not found: &quot;</span>, .type), <span class="at">call. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>  test <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map2</span>(chr_type_, chr_desc_, get_statements)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
-</div>
 <div id="process-elements" class="section level3">
 <h3>Process Elements</h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tab_files_elements_raw <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(lst_paths<span class="sc">$</span>dir_elements_raw)</span>
@@ -1332,33 +1631,45 @@ NA
 <div id="own-function-calls" class="section level1">
 <h1>Own Function Calls</h1>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lsf.str</span>()</span></code></pre></div>
-<pre><code>## create_dirs : function (.dirs)  
+<pre><code>## calculate_formula : function (.tab)  
+## calculate_wb_fn : function (.dir, .name)  
+## compare_word_frequqncies : function (.tab, .tab_data)  
+## create_dirs : function (.dirs)  
+## display_top_n_by : function (.tab, .col)  
 ## downlad_ar : function (.url, .dir)  
 ## download_edgar_files : function (.tab, .dir, .retry = 5, .sleep = 1)  
 ## download_google_drive : function (.id, .dir = NULL, .read_fun = NULL, .overwrite = FALSE)  
 ## get_company_table : function (.url)  
 ## get_f500 : function ()  
 ## get_infos : function (.path)  
+## get_lm_stop : function ()  
+## get_ngrams : function (.path, .ngram, .stop = tibble(word = &quot;&quot;, .rows = 0), .rm_num = TRUE)  
+## get_stand_statement : function (.paths, .path_map1, .path_map2)  
 ## list_files_tab : function (dirs, reg = &quot;*&quot;, id = &quot;doc_id&quot;, rec = FALSE, info = FALSE)  
-## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, 
-##     .page = 1, .progress = TRUE, .sleep = 0, .retry = 5)  
+## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, .page = 1, 
+##     .progress = TRUE, .sleep = 0, .retry = 5)  
 ## map_filing_details : function (.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5)  
 ## own_get_fs : function (.path, .dir_cache)  
 ## own_XBRL : function ()  
-## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, 
-##     delete.cached.inst = TRUE)  
+## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, delete.cached.inst = TRUE)  
+## pdf_read_and_tokenize : function (.path, .dir)  
+## prep_top_n_by : function (.tab_word, .tab_data, .col, .n = 10)  
 ## remove_html_tags : function (.string, rm_linebreaks = TRUE)  
 ## safe_get_company_table : function (...)  
+## sec_read_and_tokenize : function (.path, .dir = NULL)  
+## show_sentiment : function (.tab, .type = c(&quot;pos/neg&quot;, &quot;uncertainty&quot;, &quot;litigious&quot;, &quot;constraining&quot;, &quot;superfluous&quot;))  
 ## show_table : function (.tab, .n = Inf)  
 ## standardize_name : function (.name)  
+## write_to_excel : function (.tab, .name, .dir, .template)  
 ## xbrl_extract_elements : function (.zip, .dir_tmp, .dir_out)  
+## xbrl_extract_line_items : function (.tab, .tags)  
 ## xbrl_process_elements : function (.inst)</code></pre>
 <hr />
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
-<pre><code>## - Session info ------------------------------------------------------------------
+<pre><code>## - Session info ---------------------------------------------------------------------------------
 ##  setting  value                       
 ##  version  R version 4.0.3 (2020-10-10)
 ##  os       Windows 10 x64              
@@ -1368,14 +1679,15 @@ NA
 ##  collate  English_Germany.1252        
 ##  ctype    English_Germany.1252        
 ##  tz       Europe/Berlin               
-##  date     2021-04-20                  
+##  date     2021-04-21                  
 ## 
-## - Packages ----------------------------------------------------------------------
+## - Packages -------------------------------------------------------------------------------------
 ##  ! package        * version    date       lib source        
 ##  P assertthat       0.2.1      2019-03-21 [?] CRAN (R 4.0.0)
 ##  P backports        1.2.1      2020-12-09 [?] CRAN (R 4.0.3)
 ##  P broom            0.7.6      2021-04-05 [?] CRAN (R 4.0.3)
 ##  P bslib            0.2.4      2021-01-25 [?] CRAN (R 4.0.4)
+##  P cachem           1.0.4      2021-02-13 [?] CRAN (R 4.0.4)
 ##  P cellranger       1.1.0      2016-07-27 [?] CRAN (R 4.0.0)
 ##  P cli              2.4.0      2021-04-05 [?] CRAN (R 4.0.3)
 ##  P codetools        0.2-16     2018-12-24 [?] CRAN (R 4.0.3)
@@ -1392,24 +1704,24 @@ NA
 ##  P evaluate         0.14       2019-05-28 [?] CRAN (R 4.0.0)
 ##  P fansi            0.4.2      2021-01-15 [?] CRAN (R 4.0.3)
 ##  P farver           2.1.0      2021-02-28 [?] CRAN (R 4.0.4)
+##  P fastmap          1.1.0      2021-01-25 [?] CRAN (R 4.0.4)
 ##  P forcats        * 0.5.1      2021-01-27 [?] CRAN (R 4.0.4)
 ##  P fs               1.5.0      2020-07-31 [?] CRAN (R 4.0.2)
-##  P fst              0.9.4      2020-08-27 [?] CRAN (R 4.0.2)
+##  P fst            * 0.9.4      2020-08-27 [?] CRAN (R 4.0.2)
 ##  P furrr          * 0.2.2      2021-01-29 [?] CRAN (R 4.0.4)
 ##  P future         * 1.21.0     2020-12-10 [?] CRAN (R 4.0.3)
 ##  P fuzzyjoin      * 0.1.6      2020-05-15 [?] CRAN (R 4.0.2)
-##  P gargle           1.1.0      2021-04-02 [?] CRAN (R 4.0.5)
 ##  P generics         0.1.0      2020-10-31 [?] CRAN (R 4.0.3)
 ##  P ggplot2        * 3.3.3      2020-12-30 [?] CRAN (R 4.0.3)
 ##  P globals          0.14.0     2020-11-22 [?] CRAN (R 4.0.3)
 ##  P glue             1.4.2      2020-08-27 [?] CRAN (R 4.0.2)
-##  P googledrive      1.0.1      2020-05-05 [?] CRAN (R 4.0.0)
 ##  P gtable           0.3.0      2019-03-25 [?] CRAN (R 4.0.0)
 ##  P haven            2.3.1      2020-06-01 [?] CRAN (R 4.0.0)
 ##  P here           * 1.0.1      2020-12-13 [?] CRAN (R 4.0.3)
 ##  P highr            0.8        2019-03-20 [?] CRAN (R 4.0.0)
 ##  P hms              1.0.0      2021-01-13 [?] CRAN (R 4.0.3)
 ##  P htmltools        0.5.1.1    2021-01-22 [?] CRAN (R 4.0.4)
+##  P httpuv           1.5.5      2021-01-13 [?] CRAN (R 4.0.3)
 ##  P httr             1.4.2      2020-07-20 [?] CRAN (R 4.0.2)
 ##  P ISOcodes       * 2021.02.24 2021-02-24 [?] CRAN (R 4.0.4)
 ##  P janeaustenr      0.1.5      2017-06-10 [?] CRAN (R 4.0.0)
@@ -1421,33 +1733,37 @@ NA
 ##  P koRpus         * 0.13-5     2021-02-02 [?] CRAN (R 4.0.5)
 ##  P koRpus.lang.en * 0.1-4      2020-10-24 [?] CRAN (R 4.0.5)
 ##  P labeling         0.4.2      2020-10-20 [?] CRAN (R 4.0.3)
+##  P later            1.1.0.1    2020-06-05 [?] CRAN (R 4.0.0)
 ##  P lattice          0.20-41    2020-04-02 [?] CRAN (R 4.0.3)
 ##  P lifecycle        1.0.0      2021-02-15 [?] CRAN (R 4.0.4)
 ##  P listenv          0.8.0      2019-12-05 [?] CRAN (R 4.0.0)
 ##  P lubridate      * 1.7.10     2021-02-26 [?] CRAN (R 4.0.4)
 ##  P magrittr         2.0.1      2020-11-17 [?] CRAN (R 4.0.3)
 ##  P Matrix           1.2-18     2019-11-27 [?] CRAN (R 4.0.3)
+##  P mime             0.10       2021-02-13 [?] CRAN (R 4.0.4)
 ##  P modelr           0.1.8      2020-05-19 [?] CRAN (R 4.0.0)
+##  P modeltools       0.2-23     2020-03-05 [?] CRAN (R 4.0.3)
 ##  P munsell          0.5.0      2018-06-12 [?] CRAN (R 4.0.0)
+##  P NLP              0.2-1      2020-10-14 [?] CRAN (R 4.0.3)
 ##  P openxlsx       * 4.2.3      2020-10-27 [?] CRAN (R 4.0.3)
 ##  P parallelly       1.24.0     2021-03-14 [?] CRAN (R 4.0.4)
 ##  P patchwork      * 1.1.1      2020-12-17 [?] CRAN (R 4.0.3)
 ##  P pillar           1.5.1      2021-03-05 [?] CRAN (R 4.0.4)
 ##  P pkgconfig        2.0.3      2019-09-22 [?] CRAN (R 4.0.0)
-##  P prettydoc        0.4.1      2021-01-10 [?] CRAN (R 4.0.5)
+##  P plyr             1.8.6      2020-03-03 [?] CRAN (R 4.0.0)
 ##  P prettyunits      1.1.1      2020-01-24 [?] CRAN (R 4.0.0)
 ##  P progress         1.2.2      2019-05-16 [?] CRAN (R 4.0.0)
+##  P promises         1.2.0.1    2021-02-11 [?] CRAN (R 4.0.4)
 ##  P purrr          * 0.3.4      2020-04-17 [?] CRAN (R 4.0.0)
-##  P R.cache          0.14.0     2019-12-06 [?] CRAN (R 4.0.0)
-##  P R.methodsS3      1.8.1      2020-08-26 [?] CRAN (R 4.0.2)
-##  P R.oo             1.24.0     2020-08-26 [?] CRAN (R 4.0.2)
-##  P R.utils          2.10.1     2020-08-26 [?] CRAN (R 4.0.2)
 ##  P R6               2.5.0      2020-10-28 [?] CRAN (R 4.0.3)
+##  P rappdirs         0.3.3      2021-01-31 [?] CRAN (R 4.0.4)
 ##  P Rcpp             1.0.6      2021-01-15 [?] CRAN (R 4.0.3)
 ##  P readr          * 1.4.0      2020-10-05 [?] CRAN (R 4.0.3)
+##  P readtext       * 0.80       2020-09-22 [?] CRAN (R 4.0.2)
 ##  P readxl           1.3.1      2019-03-13 [?] CRAN (R 4.0.0)
 ##    renv             0.13.1     2021-03-18 [1] CRAN (R 4.0.3)
 ##  P reprex           2.0.0      2021-04-02 [?] CRAN (R 4.0.5)
+##  P reshape2         1.4.4      2020-04-09 [?] CRAN (R 4.0.0)
 ##  P rlang            0.4.10     2020-12-30 [?] CRAN (R 4.0.3)
 ##  P rmarkdown        2.7        2021-02-19 [?] CRAN (R 4.0.4)
 ##  P rprojroot        2.0.2      2020-11-15 [?] CRAN (R 4.0.3)
@@ -1456,35 +1772,42 @@ NA
 ##  P sass             0.3.1      2021-01-24 [?] CRAN (R 4.0.4)
 ##  P scales         * 1.1.1      2020-05-11 [?] CRAN (R 4.0.0)
 ##  P sessioninfo      1.1.1      2018-11-05 [?] CRAN (R 4.0.0)
+##  P shiny          * 1.6.0      2021-01-25 [?] CRAN (R 4.0.4)
+##  P shinyWidgets   * 0.6.0      2021-03-15 [?] CRAN (R 4.0.4)
+##  P slam             0.1-48     2020-12-03 [?] CRAN (R 4.0.3)
 ##  P snakecase        0.11.0     2019-05-25 [?] CRAN (R 4.0.0)
 ##  P SnowballC        0.7.0      2020-04-01 [?] CRAN (R 4.0.0)
 ##  P stringdist     * 0.9.6.3    2020-10-09 [?] CRAN (R 4.0.3)
 ##  P stringi        * 1.5.3      2020-09-09 [?] CRAN (R 4.0.2)
 ##  P stringr        * 1.4.0      2019-02-10 [?] CRAN (R 4.0.2)
-##  P styler           1.4.1      2021-03-30 [?] CRAN (R 4.0.5)
 ##  P svglite          2.0.0      2021-02-20 [?] CRAN (R 4.0.4)
 ##  P sylly          * 0.1-6      2020-09-20 [?] CRAN (R 4.0.5)
 ##  P sylly.en         0.1-3      2018-03-19 [?] CRAN (R 4.0.5)
 ##  P systemfonts      1.0.1      2021-02-09 [?] CRAN (R 4.0.4)
+##  P textdata         0.4.1      2020-05-04 [?] CRAN (R 4.0.5)
 ##  P textstem       * 0.1.4      2018-04-09 [?] CRAN (R 4.0.5)
 ##  P tibble         * 3.1.0      2021-02-25 [?] CRAN (R 4.0.4)
 ##  P tidyr          * 1.1.3      2021-03-03 [?] CRAN (R 4.0.4)
 ##  P tidyselect       1.1.0      2020-05-11 [?] CRAN (R 4.0.0)
 ##  P tidytext       * 0.3.0      2021-01-06 [?] CRAN (R 4.0.3)
 ##  P tidyverse      * 1.3.0      2019-11-21 [?] CRAN (R 4.0.0)
+##  P tm               0.7-8      2020-11-18 [?] CRAN (R 4.0.3)
 ##  P tokenizers       0.2.1      2018-03-29 [?] CRAN (R 4.0.0)
+##  P topicmodels    * 0.2-12     2021-01-29 [?] CRAN (R 4.0.5)
 ##  P utf8             1.2.1      2021-03-12 [?] CRAN (R 4.0.3)
 ##  P vctrs            0.3.7      2021-03-29 [?] CRAN (R 4.0.5)
 ##  P viridisLite      0.3.0      2018-02-01 [?] CRAN (R 4.0.0)
 ##  P webshot          0.5.2      2019-11-22 [?] CRAN (R 4.0.0)
 ##  P withr            2.4.1      2021-01-26 [?] CRAN (R 4.0.4)
+##  P XBRL             0.99.18    2017-03-28 [?] CRAN (R 4.0.5)
 ##  P xfun             0.22       2021-03-11 [?] CRAN (R 4.0.4)
 ##  P xml2           * 1.3.2      2020-04-23 [?] CRAN (R 4.0.0)
+##  P xtable           1.8-4      2019-04-21 [?] CRAN (R 4.0.0)
 ##  P yaml             2.2.1      2020-02-01 [?] CRAN (R 4.0.0)
 ##  P zip            * 2.1.1      2020-08-27 [?] CRAN (R 4.0.2)
 ## 
 ## [1] E:/R/R_projects/MMA22_ACC/renv/library/R-4.0/x86_64-w64-mingw32
-## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpcznxQl/renv-system-library
+## [2] C:/Users/MUcke/AppData/Local/Temp/Rtmpy4W2Au/renv-system-library
 ## 
 ##  P -- Loaded and on-disk path mismatch.</code></pre>
 </div>

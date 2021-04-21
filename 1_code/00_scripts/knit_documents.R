@@ -1,6 +1,8 @@
 files_in  <- list.files("1_code/", "\\.Rmd", full.names = TRUE)
-files_in  <- files_in[grepl("01|02|03", basename(files_in))]
+files_in  <- files_in[grepl("01|02|03|04|05|06", basename(files_in))]
 files_out <- file.path("docs/", basename(files_in)) 
+
+
 file.copy(files_in, files_out)
 
 rmarkdown::render_site("docs/")

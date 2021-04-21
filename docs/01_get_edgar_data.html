@@ -432,9 +432,15 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Session 1 - Analysing Data: XBRL Tags</li>
-    <li class="dropdown-header">Session 2 - Analysing Data: Textual Analysis</li>
-    <li class="dropdown-header">Session 3 - Analysing Data: Excel and R</li>
+    <li>
+      <a href="./04_xbrl_analyze.html">Session 1 - Analysing Data: XBRL Tags</a>
+    </li>
+    <li>
+      <a href="./05_textual_analysis.html">Session 2 - Analysing Data: Textual Analysis</a>
+    </li>
+    <li>
+      <a href="./06_excel_ratio_analysis.html">Session 3 - Analysing Data: Excel and R</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -456,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Getting Data from the Web: SEC’s EDGAR</h1>
 <h4 class="author">Matthias Uckert</h4>
-<h4 class="date">20 April, 2021</h4>
+<h4 class="date">21 April, 2021</h4>
 
 </div>
 
@@ -465,7 +471,7 @@ div.tocify {
 <div id="description" class="section level1">
 <h1>Description</h1>
 <p>In this session we will retrieve information from the SEC EDGAR database. Getting data from EDGAR is exemplary for getting information from the web, where we have API (Application Programming Interface) access.</p>
-<p>Throughout this script we will use custom functions to download and transform data. All the script specific functions are stored in this folder: <strong>1_code/00_functions/f-get_edgar_data.R</strong></p>
+<p>Throughout this script we will use custom functions. All the script specific functions are stored in this folder: <strong>1_code/00_functions/f-get_edgar_data.R</strong> (As a reference I also put the important functions in the script)</p>
 <p>EDGAR is an established source of financial information. But normally companies and researchers start gathering financial information from commercial databases such as <strong>Bureau Van Dijk - Orbis</strong>, <strong>Refinitiv - Datastream</strong> or <strong>Compustat</strong></p>
 <ul>
 <li><p>Compustat: <a href="https://wrds-www.wharton.upenn.edu/" class="uri">https://wrds-www.wharton.upenn.edu/</a></p></li>
@@ -501,28 +507,28 @@ div.tocify {
 <div id="get-fortune-500-companies" class="section level2">
 <h2>Get Fortune 500 Companies</h2>
 <p>To get our initial sample, we use an open source data repository ‘datahub.io’ to retrieve the <u><strong>fortune 500 companies</strong></u> with some financial information. We won’t use the complete data set, but filter for the <u><strong>top 100</strong></u> companies (using less companies will let the code run faster) with the highest market capitalization. You can change the number of companies by changing the integer vector: <strong>.n_companies</strong> in the chunk below.</p>
-<p>We use a custom function: <u>get_f500</u><strong>()</strong> to download the Fortune 500 dataset.</p>
+<details>
+<summary>
+We use a custom function: <strong>get_f500()</strong> to download the Fortune 500 dataset <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>get_f500 <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Source: https://datahub.io/core/s-and-p-500-companies-financials#r</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  json_file <span class="ot">&lt;-</span> <span class="st">&#39;https://datahub.io/core/s-and-p-500-companies-financials/datapackage.json&#39;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  json_data <span class="ot">&lt;-</span> jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>(<span class="fu">paste</span>(<span class="fu">readLines</span>(json_file), <span class="at">collapse=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(json_data<span class="sc">$</span>resources<span class="sc">$</span>datahub<span class="sc">$</span>type)){</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(json_data<span class="sc">$</span>resources<span class="sc">$</span>datahub<span class="sc">$</span>type[i]<span class="sc">==</span><span class="st">&#39;derived/csv&#39;</span>){</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      path_to_file <span class="ot">=</span> json_data<span class="sc">$</span>resources<span class="sc">$</span>path[i]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">url</span>(path_to_file))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(data)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
-<div id="function-get_f500" class="section level3">
-<h3>Function: <u>get_f500()</u></h3>
-<pre><code>## function() {
-##   
-##   # Source: https://datahub.io/core/s-and-p-500-companies-financials#r
-##   
-##   json_file &lt;- &#39;https://datahub.io/core/s-and-p-500-companies-financials/datapackage.json&#39;
-##   json_data &lt;- jsonlite::fromJSON(paste(readLines(json_file), collapse=&quot;&quot;))
-## 
-##   for(i in 1:length(json_data$resources$datahub$type)){
-##     if(json_data$resources$datahub$type[i]==&#39;derived/csv&#39;){
-##       path_to_file = json_data$resources$path[i]
-##       data &lt;- read.csv(url(path_to_file))
-##     }
-##   }
-##   
-##   return(data)
-## }</code></pre>
-<hr />
-</div>
 <div id="download-dataset" class="section level3">
 <h3>Download Dataset</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>.n_companies <span class="ot">&lt;-</span> <span class="dv">100</span></span>
@@ -678,46 +684,47 @@ Financials
 <p>Before we download data in bulk, let us first explore the SEC’s EDGAR website:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># browseURL(tab_f500_all$sec_filings[1])</span></span></code></pre></div>
 <p>The first step is to retrieve the index-links for the fortune 500 companies we selected in the first step. Downloading data from the web is always tricky. We can run into request limits, client or server side issues. So thinking about how to set up a download is crucial in order to make the analysis</p>
-<p>We use a custom function: <strong>map_company_filings()</strong> to retrieve the Index Links from EDGAR.</p>
+<details>
+<summary>
+We use a custom function: <strong>map_company_filings()</strong> to retrieve the Index Links from EDGAR <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>map_company_filings <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  .tickers, <span class="at">.ownership =</span> <span class="cn">FALSE</span>, <span class="at">.type =</span> <span class="st">&quot;&quot;</span>, <span class="at">.before =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.count =</span> <span class="dv">100</span>, <span class="at">.page =</span> <span class="dv">1</span>, <span class="at">.progress =</span> <span class="cn">TRUE</span>, <span class="at">.sleep =</span> <span class="dv">0</span>, <span class="at">.retry =</span> <span class="dv">5</span>) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  sf <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">safely</span>(edgarWebR<span class="sc">::</span>company_filings)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(.tickers) <span class="ot">&lt;-</span> .tickers</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> progress<span class="sc">::</span>progress_bar<span class="sc">$</span><span class="fu">new</span>(<span class="at">total =</span> <span class="fu">length</span>(.tickers))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  lst <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.x =</span> .tickers,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">.f =</span> <span class="sc">~</span> {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.progress) pb<span class="sc">$</span><span class="fu">tick</span>() <span class="co"># Progress bar</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(.sleep) <span class="co"># Optionally, a sleep parameter</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      check <span class="ot">&lt;-</span> <span class="fu">sf</span>(.x, .ownership, .type, .before, .count, .page) <span class="co"># store results</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># check if we run into an error, and repeat as long until it works</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(check<span class="sc">$</span>error)) {</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(.retry)) {</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>          check <span class="ot">&lt;-</span> <span class="fu">sf</span>(.x, .ownership, .type, .before, .count, .page)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> (<span class="fu">is.null</span>(check<span class="sc">$</span>error)) {</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(check)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    purrr<span class="sc">::</span><span class="fu">transpose</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    purrr<span class="sc">::</span><span class="fu">map</span>(., purrr<span class="sc">::</span>compact)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Results: &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(<span class="fu">length</span>(lst<span class="sc">$</span>result))))</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Errors:  &quot;</span>, scales<span class="sc">::</span><span class="fu">comma</span>(<span class="fu">length</span>(lst<span class="sc">$</span>error))))</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(lst)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
-<div id="function-map_company_filings" class="section level3">
-<h3>Function: map_company_filings()</h3>
-<pre><code>## function(.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;,
-##                                 .count = 100, .page = 1, .progress = TRUE, .sleep = 0, .retry = 5) {
-##   sf &lt;- purrr::safely(edgarWebR::company_filings)
-##   names(.tickers) &lt;- .tickers
-##   
-##   
-##   pb &lt;- progress::progress_bar$new(total = length(.tickers))
-##   
-##   lst &lt;- purrr::map(
-##     .x = .tickers,
-##     .f = ~ {
-##       if (.progress) pb$tick() # Progress bar
-##       Sys.sleep(.sleep) # Optionally, a sleep parameter
-##       check &lt;- sf(.x, .ownership, .type, .before, .count, .page) # store results
-##       # check if we run into an error, and repeat as long until it works
-##       if (!is.null(check$error)) {
-##         for (i in seq_len(.retry)) {
-##           check &lt;- sf(.x, .ownership, .type, .before, .count, .page)
-##           if (is.null(check$error)) {
-##             break
-##           }
-##         }
-##       }
-##       return(check)
-##     }
-##   ) %&gt;%
-##     purrr::transpose() %&gt;%
-##     purrr::map(., purrr::compact)
-##   
-##   print(paste0(&quot;Results: &quot;, scales::comma(length(lst$result))))
-##   print(paste0(&quot;Errors:  &quot;, scales::comma(length(lst$error))))
-##   
-##   return(lst)
-## }</code></pre>
-<hr />
-</div>
 <div id="download-index-links" class="section level3">
 <h3>Download Index-Links</h3>
 <p>In addition to our custom function, we use a really simple caching procedure so that we don’t have to re-run the whole expression if we already extracted index-links (throughout the session you will see such easy caching, if you use code in production you can also switch to already published libraries auch as R.cache).</p>
@@ -1283,43 +1290,96 @@ NA
 </div>
 <div id="get-company-details" class="section level2">
 <h2>Get Company Details</h2>
-<p>After we got the index links from EDGAR, we proceed by scraping filing details. Again, we use a custom function to do this <strong>map_filing_details()</strong> and use a simple caching algorithm.</p>
+<p>After we got the index links from EDGAR, we proceed by scraping filing details.</p>
+<details>
+<summary>
+We use a custom function: <strong>map_filing_details()</strong> to retrieve the firm details from EDGAR <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>download_edgar_files <span class="ot">&lt;-</span> <span class="cf">function</span>(.tab, .dir, <span class="at">.retry =</span> <span class="dv">5</span>, <span class="at">.sleep =</span> <span class="dv">1</span>) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(.dir)) <span class="fu">dir.create</span>(.dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  files_zip <span class="ot">&lt;-</span> <span class="fu">list.files</span>(.dir, <span class="at">pattern =</span> <span class="st">&quot;zip$&quot;</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  tab_ <span class="ot">&lt;-</span> .tab <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, symbol, document, href, file_ext) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">file_ext =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span> <span class="sc">~</span> <span class="st">&quot;txt&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>) <span class="sc">~</span> <span class="st">&quot;htm&quot;</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;xxx&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">path_downlod =</span> <span class="fu">file.path</span>(.dir, document),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">path_zip =</span> <span class="fu">file.path</span>(.dir, <span class="fu">paste0</span>(file_ext, <span class="st">&quot;_&quot;</span>, symbol, <span class="st">&quot;-&quot;</span>, year, <span class="st">&quot;.zip&quot;</span>))</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(symbol, year, path_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(document, href, path_downlod), list), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">basename</span>(path_zip) <span class="sc">%in%</span> files_zip)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(tab_) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  lst_ <span class="ot">&lt;-</span> <span class="fu">group_split</span>(tab_, symbol, year)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  f_try <span class="ot">&lt;-</span> <span class="cf">function</span>(.url, .path) {</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">try</span>(<span class="fu">download.file</span>(.url, .path, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">&quot;wb&quot;</span>), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  f_download <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .retry) {</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    urls_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>href)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>path_downlod)</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    lgl_sucess_ <span class="ot">&lt;-</span> <span class="fu">logical</span>(<span class="fu">length</span>(urls_))</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">length</span>(urls_))) {</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>      check_ <span class="ot">&lt;-</span> <span class="fu">f_try</span>(urls_[i], paths_[i])</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>)) {</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>.retry) {</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>          check_ <span class="ot">&lt;-</span> <span class="fu">f_try</span>(urls_[i], paths_[i])</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> (<span class="sc">!</span><span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>)) <span class="cf">break</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>          <span class="fu">Sys.sleep</span>(.sleep)</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>      lgl_sucess_[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>), <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(.sleep)</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>    .row[[<span class="st">&quot;success&quot;</span>]] <span class="ot">&lt;-</span> <span class="fu">list</span>(lgl_sucess_)</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(.row)</span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  f_zip <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .dir) {</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>path_downlod)</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>    zip_ <span class="ot">&lt;-</span> .row<span class="sc">$</span>path_zip</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>    files_ <span class="ot">&lt;-</span> <span class="fu">list.files</span>(.dir)</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> paths_[<span class="fu">basename</span>(paths_) <span class="sc">%in%</span> files_]</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>    zip<span class="sc">::</span><span class="fu">zipr</span>(zip_, paths_, <span class="at">compression_level =</span> <span class="dv">9</span>)</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">file.remove</span>(paths_))</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>  f_all <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .dir, .retry) {</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>    tab_ <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(<span class="fu">suppressWarnings</span>(<span class="fu">invisible</span>(<span class="fu">f_download</span>(.row, .retry))))</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressMessages</span>(<span class="fu">suppressWarnings</span>(<span class="fu">invisible</span>(<span class="fu">f_zip</span>(.row, .dir))))</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(tab_)</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f_all</span>(<span class="at">.row =</span> lst_[[<span class="dv">1</span>]], <span class="at">.dir =</span> .dir, .retry)</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> progress<span class="sc">::</span>progress_bar<span class="sc">$</span><span class="fu">new</span>(<span class="at">total =</span> <span class="fu">length</span>(lst_))</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(lst_, <span class="sc">~</span> {pb<span class="sc">$</span><span class="fu">tick</span>(); <span class="fu">f_all</span>(.x, .dir, .retry)})</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
-<div id="function-map_filing_details" class="section level3">
-<h3>Function: map_filing_details()</h3>
-<pre><code>## function(.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5) {
-##   sf &lt;- purrr::safely(edgarWebR::filing_details)
-##   names(.hrefs) &lt;- .id
-##   pb &lt;- progress::progress_bar$new(total = length(.hrefs))
-##   
-##   lst &lt;- purrr::map(
-##     .x = .hrefs,
-##     .f = ~ {
-##       if (.progress) pb$tick() # Progress bar
-##       Sys.sleep(.sleep) # Optionally, a sleep parameter
-##       check &lt;- sf(.x) # store results
-##       # check if we run into an error, and repeat as long until it works
-##       if (!is.null(check$error)) {
-##         for (i in seq_len(.retry)) {
-##           check &lt;- sf(.x)
-##           if (is.null(check$error)) {
-##             break
-##           }
-##         }
-##       }
-##       return(check)
-##     }
-##   ) %&gt;%
-##     purrr::transpose() %&gt;%
-##     purrr::map(., purrr::compact)
-##   
-##   print(paste0(&quot;Results: &quot;, scales::comma(length(lst$result))))
-##   print(paste0(&quot;Errors:  &quot;, scales::comma(length(lst$error))))
-##   
-##   return(lst)
-## }</code></pre>
-<hr />
-</div>
 <div id="download-details" class="section level3">
 <h3>Download Details</h3>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(lst_paths<span class="sc">$</span>path_detail)) {</span>
@@ -1346,14 +1406,6 @@ NA
 <p>From the <strong>2,364</strong> index links we retrieved in the last step, we got <strong>89,302</strong> different document links.</p>
 <p>It’s important to notice, that such data retrieval tasks often result in very large datasets.</p>
 <hr />
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View(tab_details)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tab_details <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">type =</span> type.x) <span class="sc">%&gt;%</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type, year) <span class="sc">%&gt;%</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> n, <span class="at">names_sort =</span> <span class="cn">TRUE</span>, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show_table</span>()</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper lightable-hover table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1828,27 +1880,21 @@ type
 <div id="select-documents-for-download" class="section level2">
 <h2>Select Documents for Download</h2>
 <p>In order to reduce the amount of documents we download, we pre-select specific documents.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="ot">&lt;-</span> tab_details <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(tab_filings, symbol, id), <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_ext =</span> tools<span class="sc">::</span><span class="fu">file_ext</span>(href),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(period_date),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>,</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">stri_replace_all_regex</span>(., <span class="st">&quot;[[:blank:]]+&quot;</span>, <span class="st">&quot; &quot;</span>)),</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(type.y, description.y), <span class="sc">~</span> <span class="fu">if_else</span>(. <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot; &quot;</span>), <span class="cn">NA_character_</span>, .))</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, document, <span class="at">state =</span> company_incorporation_state, </span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">sic =</span> sic_code, year, symbol, company_name, company_cik, </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">type1 =</span> type.x, <span class="at">type2 =</span> type.y, <span class="at">desc =</span> description.y, </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>         period_date, href, size, file_ext) <span class="sc">%&gt;%</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(year, <span class="dv">2005</span>, <span class="dv">2020</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">type =</span> type1) <span class="sc">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(type, year) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> n, <span class="at">names_sort =</span> <span class="cn">TRUE</span>, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show_table</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tab_download <span class="ot">&lt;-</span> tab_details <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">select</span>(tab_filings, symbol, id), <span class="at">by =</span> <span class="st">&quot;id&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_ext =</span> tools<span class="sc">::</span><span class="fu">file_ext</span>(href),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(period_date),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span> <span class="fu">stri_replace_all_regex</span>(., <span class="st">&quot;[[:blank:]]+&quot;</span>, <span class="st">&quot; &quot;</span>)),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(type.y, description.y), <span class="sc">~</span> <span class="fu">if_else</span>(. <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot; &quot;</span>), <span class="cn">NA_character_</span>, .))</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, document, <span class="at">state =</span> company_incorporation_state, </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">sic =</span> sic_code, year, symbol, company_name, company_cik, </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">type1 =</span> type.x, <span class="at">type2 =</span> type.y, <span class="at">desc =</span> description.y, </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>         period_date, href, size, file_ext) <span class="sc">%&gt;%</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(year, <span class="dv">2005</span>, <span class="dv">2020</span>))</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper lightable-hover table" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -2021,216 +2067,221 @@ type
 <div id="overview-number-and-size-of-documents" class="section level2">
 <h2>Overview: Number and Size of Documents</h2>
 <p>As you can see in the plot and the prints below, getting data from the web can result in really big data sets. (Keep in mind that we only downloaded data for 100 companies). The <strong>download_edgar_files()</strong> function will alleviate this problem by zipping data before writing to disk.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>.tmp <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">sum</span>(size), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> size)) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Size per Year (in MB)&quot;</span>)</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>.geom_n <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Number of Documents per year&quot;</span>)</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="sc">/</span> .geom_n</span></code></pre></div>
-<p><img src="01_get_edgar_data_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tab_download_txt <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span>, desc <span class="sc">==</span> <span class="st">&quot;Complete submission text file&quot;</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>.tmp <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">size =</span> <span class="fu">sum</span>(size), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> size)) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Size per Year (in MB)&quot;</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>.geom_n <span class="ot">&lt;-</span> .tmp <span class="sc">%&gt;%</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> </span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Number of Documents per year&quot;</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>.geom_size <span class="sc">/</span> .geom_n</span></code></pre></div>
+<p><img src="01_get_edgar_data_files/figure-html/plot-size-and-num-1.png" width="672" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tab_download_txt <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span>, desc <span class="sc">==</span> <span class="st">&quot;Complete submission text file&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_txt)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_txt<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## Docs: 1,327
+## Size: 28,347 MB</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tab_download_htm <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>), <span class="fu">grepl</span>(<span class="st">&quot;10-K&quot;</span>, desc)) <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_txt)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_txt<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_htm)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_htm<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<pre><code>## Docs: 1,327
-## Size: 28,347 MB</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tab_download_htm <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>), <span class="fu">grepl</span>(<span class="st">&quot;10-K&quot;</span>, desc)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(symbol, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_htm)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_htm<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 967
 ## Size: 3,728 MB</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tab_download_xxx <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;x&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_xxx)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_xxx<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tab_download_xxx <span class="ot">&lt;-</span> tab_download <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">startsWith</span>(file_ext, <span class="st">&quot;x&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(symbol, <span class="fu">desc</span>(year), <span class="fu">desc</span>(period_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(document, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_download_xxx)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_download_xxx<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 6,049
 ## Size: 9,511 MB</code></pre>
 <hr />
 </div>
 <div id="download-documents" class="section level2">
 <h2>Download Documents</h2>
-<p>Again we use a custom function <strong>download_edgar_files()</strong> to download the documents.</p>
+<details>
+<summary>
+We use a custom function: <strong>download_edgar_files()</strong> to download documents from EDGAR <strong><em>(click on arrow to show)</em></strong>.
+</summary>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>download_edgar_files <span class="ot">&lt;-</span> <span class="cf">function</span>(.tab, .dir, <span class="at">.retry =</span> <span class="dv">5</span>, <span class="at">.sleep =</span> <span class="dv">1</span>) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(.dir)) <span class="fu">dir.create</span>(.dir, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  files_zip <span class="ot">&lt;-</span> <span class="fu">list.files</span>(.dir, <span class="at">pattern =</span> <span class="st">&quot;zip$&quot;</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  tab_ <span class="ot">&lt;-</span> .tab <span class="sc">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(year, symbol, document, href, file_ext) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">file_ext =</span> <span class="fu">case_when</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        file_ext <span class="sc">==</span> <span class="st">&quot;txt&quot;</span> <span class="sc">~</span> <span class="st">&quot;txt&quot;</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">startsWith</span>(file_ext, <span class="st">&quot;htm&quot;</span>) <span class="sc">~</span> <span class="st">&quot;htm&quot;</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;xxx&quot;</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">path_downlod =</span> <span class="fu">file.path</span>(.dir, document),</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">path_zip =</span> <span class="fu">file.path</span>(.dir, <span class="fu">paste0</span>(file_ext, <span class="st">&quot;_&quot;</span>, symbol, <span class="st">&quot;-&quot;</span>, year, <span class="st">&quot;.zip&quot;</span>))</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(symbol, year, path_zip) <span class="sc">%&gt;%</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(document, href, path_downlod), list), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">basename</span>(path_zip) <span class="sc">%in%</span> files_zip)</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(tab_) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  lst_ <span class="ot">&lt;-</span> <span class="fu">group_split</span>(tab_, symbol, year)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  f_try <span class="ot">&lt;-</span> <span class="cf">function</span>(.url, .path) {</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">try</span>(<span class="fu">download.file</span>(.url, .path, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">&quot;wb&quot;</span>), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>  f_download <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .retry) {</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    urls_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>href)</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>path_downlod)</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    lgl_sucess_ <span class="ot">&lt;-</span> <span class="fu">logical</span>(<span class="fu">length</span>(urls_))</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">length</span>(urls_))) {</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>      check_ <span class="ot">&lt;-</span> <span class="fu">f_try</span>(urls_[i], paths_[i])</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>)) {</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>.retry) {</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>          check_ <span class="ot">&lt;-</span> <span class="fu">f_try</span>(urls_[i], paths_[i])</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> (<span class="sc">!</span><span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>)) <span class="cf">break</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>          <span class="fu">Sys.sleep</span>(.sleep)</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>      lgl_sucess_[i] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">inherits</span>(check_, <span class="st">&quot;try-error&quot;</span>), <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>      <span class="fu">Sys.sleep</span>(.sleep)</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    .row[[<span class="st">&quot;success&quot;</span>]] <span class="ot">&lt;-</span> <span class="fu">list</span>(lgl_sucess_)</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(.row)</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>  f_zip <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .dir) {</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> <span class="fu">unlist</span>(.row<span class="sc">$</span>path_downlod)</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    zip_ <span class="ot">&lt;-</span> .row<span class="sc">$</span>path_zip</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>    files_ <span class="ot">&lt;-</span> <span class="fu">list.files</span>(.dir)</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>    paths_ <span class="ot">&lt;-</span> paths_[<span class="fu">basename</span>(paths_) <span class="sc">%in%</span> files_]</span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    zip<span class="sc">::</span><span class="fu">zipr</span>(zip_, paths_, <span class="at">compression_level =</span> <span class="dv">9</span>)</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">file.remove</span>(paths_))</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>  f_all <span class="ot">&lt;-</span> <span class="cf">function</span>(.row, .dir, .retry) {</span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>    tab_ <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(<span class="fu">suppressWarnings</span>(<span class="fu">invisible</span>(<span class="fu">f_download</span>(.row, .retry))))</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressMessages</span>(<span class="fu">suppressWarnings</span>(<span class="fu">invisible</span>(<span class="fu">f_zip</span>(.row, .dir))))</span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(tab_)</span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f_all</span>(<span class="at">.row =</span> lst_[[<span class="dv">1</span>]], <span class="at">.dir =</span> .dir, .retry)</span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> progress<span class="sc">::</span>progress_bar<span class="sc">$</span><span class="fu">new</span>(<span class="at">total =</span> <span class="fu">length</span>(lst_))</span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(lst_, <span class="sc">~</span> {pb<span class="sc">$</span><span class="fu">tick</span>(); <span class="fu">f_all</span>(.x, .dir, .retry)})</span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</details>
 <hr />
-<div id="function-download_edgar_files" class="section level3">
-<h3>Function: download_edgar_files()</h3>
-<pre><code>## function(.tab, .dir, .retry = 5, .sleep = 1) {
-##   if (!dir.exists(.dir)) dir.create(.dir, recursive = TRUE)
-##   files_zip &lt;- list.files(.dir, pattern = &quot;zip$&quot;)
-##   
-##   
-##   tab_ &lt;- .tab %&gt;%
-##     select(year, symbol, document, href, file_ext) %&gt;%
-##     mutate(
-##       file_ext = case_when(
-##         file_ext == &quot;txt&quot; ~ &quot;txt&quot;,
-##         startsWith(file_ext, &quot;htm&quot;) ~ &quot;htm&quot;,
-##         TRUE ~ &quot;xxx&quot;
-##       ),
-##       path_downlod = file.path(.dir, document),
-##       path_zip = file.path(.dir, paste0(file_ext, &quot;_&quot;, symbol, &quot;-&quot;, year, &quot;.zip&quot;))
-##     ) %&gt;%
-##     group_by(symbol, year, path_zip) %&gt;%
-##     summarise(across(c(document, href, path_downlod), list), .groups = &quot;drop&quot;) %&gt;%
-##     filter(!basename(path_zip) %in% files_zip)
-##   
-##   if (nrow(tab_) == 0) return(NULL)
-##   
-##   
-##   lst_ &lt;- group_split(tab_, symbol, year)
-##   
-##   
-##   
-##   
-##   f_try &lt;- function(.url, .path) {
-##     try(download.file(.url, .path, quiet = TRUE, mode = &quot;wb&quot;), silent = TRUE)
-##   }
-##   
-##   f_download &lt;- function(.row, .retry) {
-##     
-##     urls_ &lt;- unlist(.row$href)
-##     paths_ &lt;- unlist(.row$path_downlod)
-##     
-##     lgl_sucess_ &lt;- logical(length(urls_))
-##     
-##     for (i in seq_len(length(urls_))) {
-##       check_ &lt;- f_try(urls_[i], paths_[i])
-##       
-##       if (inherits(check_, &quot;try-error&quot;)) {
-##         for (j in 1:.retry) {
-##           check_ &lt;- f_try(urls_[i], paths_[i])
-##           if (!inherits(check_, &quot;try-error&quot;)) break
-##           Sys.sleep(.sleep)
-##         }
-##       }
-##       
-##       lgl_sucess_[i] &lt;- ifelse(inherits(check_, &quot;try-error&quot;), FALSE, TRUE)
-##       Sys.sleep(.sleep)
-##       
-##     }
-##     .row[[&quot;success&quot;]] &lt;- list(lgl_sucess_)
-##     return(.row)
-##     
-##   }
-##   
-##   f_zip &lt;- function(.row, .dir) {
-##     paths_ &lt;- unlist(.row$path_downlod)
-##     zip_ &lt;- .row$path_zip
-##     files_ &lt;- list.files(.dir)
-##     paths_ &lt;- paths_[basename(paths_) %in% files_]
-##     
-##     zip::zipr(zip_, paths_, compression_level = 9)
-##     invisible(file.remove(paths_))
-##     
-##   }
-##   
-##   f_all &lt;- function(.row, .dir, .retry) {
-##     tab_ &lt;- suppressMessages(suppressWarnings(invisible(f_download(.row, .retry))))
-##     suppressMessages(suppressWarnings(invisible(f_zip(.row, .dir))))
-##     return(tab_)
-##   }
-##   
-##   f_all(.row = lst_[[1]], .dir = .dir, .retry)
-##   
-##   pb &lt;- progress::progress_bar$new(total = length(lst_))
-##   map_dfr(lst_, ~ {pb$tick(); f_all(.x, .dir, .retry)})
-##   
-##   
-## }</code></pre>
-<hr />
-</div>
-<div id="download-files" class="section level3">
-<h3>Download Files</h3>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>.dir_docs <span class="ot">&lt;-</span> <span class="st">&quot;2_output/01_get_edgar_data/documents/&quot;</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>tab_xxx <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_xxx, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>tab_htm <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_htm, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>tab_txt <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_txt, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>tab_zip_files <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(.dir_docs, <span class="at">info =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(doc_id, file_ext, path, size) <span class="sc">%&gt;%</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>.dir_docs <span class="ot">&lt;-</span> <span class="st">&quot;2_output/01_get_edgar_data/documents/&quot;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tab_xxx <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_xxx, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>tab_htm <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_htm, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>tab_txt <span class="ot">&lt;-</span> <span class="fu">download_edgar_files</span>(tab_download_txt, .dir_docs, <span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>tab_zip_files <span class="ot">&lt;-</span> <span class="fu">list_files_tab</span>(.dir_docs, <span class="at">info =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(doc_id, file_ext, path, size) <span class="sc">%&gt;%</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">size =</span> size <span class="sc">/</span> <span class="fl">1e6</span>)</span></code></pre></div>
 <p>Below you can see that we were able to reduce the dataset from more than 40 GB to just 3.7 GB by simply zipping the output.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_zip_files)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_zip_files<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Docs: &quot;</span>, <span class="fu">comma</span>(<span class="fu">nrow</span>(tab_zip_files)), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;Size: &quot;</span>, <span class="fu">comma</span>(<span class="fu">sum</span>(tab_zip_files<span class="sc">$</span>size)), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## Docs: 3,298
 ## Size: 3,768 MB</code></pre>
 <hr />
 </div>
-</div>
 <div id="save-files" class="section level2">
 <h2>Save Files</h2>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_htm, <span class="st">&quot;2_output/01_get_edgar_data/htm_download.rds&quot;</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_txt, <span class="st">&quot;2_output/01_get_edgar_data/txt_download.rds&quot;</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_xxx, <span class="st">&quot;2_output/01_get_edgar_data/xxx_download.rds&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_htm, <span class="st">&quot;2_output/01_get_edgar_data/htm_download.rds&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_txt, <span class="st">&quot;2_output/01_get_edgar_data/txt_download.rds&quot;</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(tab_download_xxx, <span class="st">&quot;2_output/01_get_edgar_data/xxx_download.rds&quot;</span>)</span></code></pre></div>
 <hr />
 </div>
 </div>
 <div id="own-function-calls" class="section level1">
 <h1>Own Function Calls</h1>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lsf.str</span>()</span></code></pre></div>
-<pre><code>## create_dirs : function (.dirs)  
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lsf.str</span>()</span></code></pre></div>
+<pre><code>## calculate_formula : function (.tab)  
+## calculate_wb_fn : function (.dir, .name)  
+## compare_word_frequqncies : function (.tab, .tab_data)  
+## create_dirs : function (.dirs)  
+## display_top_n_by : function (.tab, .col)  
 ## downlad_ar : function (.url, .dir)  
 ## download_edgar_files : function (.tab, .dir, .retry = 5, .sleep = 1)  
 ## download_google_drive : function (.id, .dir = NULL, .read_fun = NULL, .overwrite = FALSE)  
 ## get_company_table : function (.url)  
 ## get_f500 : function ()  
 ## get_infos : function (.path)  
+## get_lm_stop : function ()  
+## get_ngrams : function (.path, .ngram, .stop = tibble(word = &quot;&quot;, .rows = 0), .rm_num = TRUE)  
+## get_stand_statement : function (.paths, .path_map1, .path_map2)  
 ## list_files_tab : function (dirs, reg = &quot;*&quot;, id = &quot;doc_id&quot;, rec = FALSE, info = FALSE)  
-## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, 
-##     .page = 1, .progress = TRUE, .sleep = 0, .retry = 5)  
+## map_company_filings : function (.tickers, .ownership = FALSE, .type = &quot;&quot;, .before = &quot;&quot;, .count = 100, .page = 1, 
+##     .progress = TRUE, .sleep = 0, .retry = 5)  
 ## map_filing_details : function (.id, .hrefs, .progress = TRUE, .sleep = 0, .retry = 5)  
 ## own_get_fs : function (.path, .dir_cache)  
 ## own_XBRL : function ()  
-## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, 
-##     delete.cached.inst = TRUE)  
+## own_xbrlDoAll : function (file.inst, cache.dir = &quot;xbrl.Cache&quot;, prefix.out = NULL, verbose = FALSE, delete.cached.inst = TRUE)  
+## pdf_read_and_tokenize : function (.path, .dir)  
+## prep_top_n_by : function (.tab_word, .tab_data, .col, .n = 10)  
 ## remove_html_tags : function (.string, rm_linebreaks = TRUE)  
 ## safe_get_company_table : function (...)  
+## sec_read_and_tokenize : function (.path, .dir = NULL)  
+## show_sentiment : function (.tab, .type = c(&quot;pos/neg&quot;, &quot;uncertainty&quot;, &quot;litigious&quot;, &quot;constraining&quot;, &quot;superfluous&quot;))  
 ## show_table : function (.tab, .n = Inf)  
 ## standardize_name : function (.name)  
+## write_to_excel : function (.tab, .name, .dir, .template)  
 ## xbrl_extract_elements : function (.zip, .dir_tmp, .dir_out)  
+## xbrl_extract_line_items : function (.tab, .tags)  
 ## xbrl_process_elements : function (.inst)</code></pre>
 <hr />
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
-<pre><code>## - Session info ------------------------------------------------------------------
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sessioninfo<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<pre><code>## - Session info ---------------------------------------------------------------------------------
 ##  setting  value                       
 ##  version  R version 4.0.3 (2020-10-10)
 ##  os       Windows 10 x64              
@@ -2240,14 +2291,15 @@ type
 ##  collate  English_Germany.1252        
 ##  ctype    English_Germany.1252        
 ##  tz       Europe/Berlin               
-##  date     2021-04-20                  
+##  date     2021-04-21                  
 ## 
-## - Packages ----------------------------------------------------------------------
+## - Packages -------------------------------------------------------------------------------------
 ##  ! package        * version    date       lib source        
 ##  P assertthat       0.2.1      2019-03-21 [?] CRAN (R 4.0.0)
 ##  P backports        1.2.1      2020-12-09 [?] CRAN (R 4.0.3)
 ##  P broom            0.7.6      2021-04-05 [?] CRAN (R 4.0.3)
 ##  P bslib            0.2.4      2021-01-25 [?] CRAN (R 4.0.4)
+##  P cachem           1.0.4      2021-02-13 [?] CRAN (R 4.0.4)
 ##  P cellranger       1.1.0      2016-07-27 [?] CRAN (R 4.0.0)
 ##  P cli              2.4.0      2021-04-05 [?] CRAN (R 4.0.3)
 ##  P codetools        0.2-16     2018-12-24 [?] CRAN (R 4.0.3)
@@ -2264,24 +2316,24 @@ type
 ##  P evaluate         0.14       2019-05-28 [?] CRAN (R 4.0.0)
 ##  P fansi            0.4.2      2021-01-15 [?] CRAN (R 4.0.3)
 ##  P farver           2.1.0      2021-02-28 [?] CRAN (R 4.0.4)
+##  P fastmap          1.1.0      2021-01-25 [?] CRAN (R 4.0.4)
 ##  P forcats        * 0.5.1      2021-01-27 [?] CRAN (R 4.0.4)
 ##  P fs               1.5.0      2020-07-31 [?] CRAN (R 4.0.2)
-##  P fst              0.9.4      2020-08-27 [?] CRAN (R 4.0.2)
+##  P fst            * 0.9.4      2020-08-27 [?] CRAN (R 4.0.2)
 ##  P furrr          * 0.2.2      2021-01-29 [?] CRAN (R 4.0.4)
 ##  P future         * 1.21.0     2020-12-10 [?] CRAN (R 4.0.3)
 ##  P fuzzyjoin      * 0.1.6      2020-05-15 [?] CRAN (R 4.0.2)
-##  P gargle           1.1.0      2021-04-02 [?] CRAN (R 4.0.5)
 ##  P generics         0.1.0      2020-10-31 [?] CRAN (R 4.0.3)
 ##  P ggplot2        * 3.3.3      2020-12-30 [?] CRAN (R 4.0.3)
 ##  P globals          0.14.0     2020-11-22 [?] CRAN (R 4.0.3)
 ##  P glue             1.4.2      2020-08-27 [?] CRAN (R 4.0.2)
-##  P googledrive      1.0.1      2020-05-05 [?] CRAN (R 4.0.0)
 ##  P gtable           0.3.0      2019-03-25 [?] CRAN (R 4.0.0)
 ##  P haven            2.3.1      2020-06-01 [?] CRAN (R 4.0.0)
 ##  P here           * 1.0.1      2020-12-13 [?] CRAN (R 4.0.3)
 ##  P highr            0.8        2019-03-20 [?] CRAN (R 4.0.0)
 ##  P hms              1.0.0      2021-01-13 [?] CRAN (R 4.0.3)
 ##  P htmltools        0.5.1.1    2021-01-22 [?] CRAN (R 4.0.4)
+##  P httpuv           1.5.5      2021-01-13 [?] CRAN (R 4.0.3)
 ##  P httr             1.4.2      2020-07-20 [?] CRAN (R 4.0.2)
 ##  P ISOcodes       * 2021.02.24 2021-02-24 [?] CRAN (R 4.0.4)
 ##  P janeaustenr      0.1.5      2017-06-10 [?] CRAN (R 4.0.0)
@@ -2293,33 +2345,37 @@ type
 ##  P koRpus         * 0.13-5     2021-02-02 [?] CRAN (R 4.0.5)
 ##  P koRpus.lang.en * 0.1-4      2020-10-24 [?] CRAN (R 4.0.5)
 ##  P labeling         0.4.2      2020-10-20 [?] CRAN (R 4.0.3)
+##  P later            1.1.0.1    2020-06-05 [?] CRAN (R 4.0.0)
 ##  P lattice          0.20-41    2020-04-02 [?] CRAN (R 4.0.3)
 ##  P lifecycle        1.0.0      2021-02-15 [?] CRAN (R 4.0.4)
 ##  P listenv          0.8.0      2019-12-05 [?] CRAN (R 4.0.0)
 ##  P lubridate      * 1.7.10     2021-02-26 [?] CRAN (R 4.0.4)
 ##  P magrittr         2.0.1      2020-11-17 [?] CRAN (R 4.0.3)
 ##  P Matrix           1.2-18     2019-11-27 [?] CRAN (R 4.0.3)
+##  P mime             0.10       2021-02-13 [?] CRAN (R 4.0.4)
 ##  P modelr           0.1.8      2020-05-19 [?] CRAN (R 4.0.0)
+##  P modeltools       0.2-23     2020-03-05 [?] CRAN (R 4.0.3)
 ##  P munsell          0.5.0      2018-06-12 [?] CRAN (R 4.0.0)
+##  P NLP              0.2-1      2020-10-14 [?] CRAN (R 4.0.3)
 ##  P openxlsx       * 4.2.3      2020-10-27 [?] CRAN (R 4.0.3)
 ##  P parallelly       1.24.0     2021-03-14 [?] CRAN (R 4.0.4)
 ##  P patchwork      * 1.1.1      2020-12-17 [?] CRAN (R 4.0.3)
 ##  P pillar           1.5.1      2021-03-05 [?] CRAN (R 4.0.4)
 ##  P pkgconfig        2.0.3      2019-09-22 [?] CRAN (R 4.0.0)
-##  P prettydoc        0.4.1      2021-01-10 [?] CRAN (R 4.0.5)
+##  P plyr             1.8.6      2020-03-03 [?] CRAN (R 4.0.0)
 ##  P prettyunits      1.1.1      2020-01-24 [?] CRAN (R 4.0.0)
 ##  P progress         1.2.2      2019-05-16 [?] CRAN (R 4.0.0)
+##  P promises         1.2.0.1    2021-02-11 [?] CRAN (R 4.0.4)
 ##  P purrr          * 0.3.4      2020-04-17 [?] CRAN (R 4.0.0)
-##  P R.cache          0.14.0     2019-12-06 [?] CRAN (R 4.0.0)
-##  P R.methodsS3      1.8.1      2020-08-26 [?] CRAN (R 4.0.2)
-##  P R.oo             1.24.0     2020-08-26 [?] CRAN (R 4.0.2)
-##  P R.utils          2.10.1     2020-08-26 [?] CRAN (R 4.0.2)
 ##  P R6               2.5.0      2020-10-28 [?] CRAN (R 4.0.3)
+##  P rappdirs         0.3.3      2021-01-31 [?] CRAN (R 4.0.4)
 ##  P Rcpp             1.0.6      2021-01-15 [?] CRAN (R 4.0.3)
 ##  P readr          * 1.4.0      2020-10-05 [?] CRAN (R 4.0.3)
+##  P readtext       * 0.80       2020-09-22 [?] CRAN (R 4.0.2)
 ##  P readxl           1.3.1      2019-03-13 [?] CRAN (R 4.0.0)
 ##    renv             0.13.1     2021-03-18 [1] CRAN (R 4.0.3)
 ##  P reprex           2.0.0      2021-04-02 [?] CRAN (R 4.0.5)
+##  P reshape2         1.4.4      2020-04-09 [?] CRAN (R 4.0.0)
 ##  P rlang            0.4.10     2020-12-30 [?] CRAN (R 4.0.3)
 ##  P rmarkdown        2.7        2021-02-19 [?] CRAN (R 4.0.4)
 ##  P rprojroot        2.0.2      2020-11-15 [?] CRAN (R 4.0.3)
@@ -2328,35 +2384,42 @@ type
 ##  P sass             0.3.1      2021-01-24 [?] CRAN (R 4.0.4)
 ##  P scales         * 1.1.1      2020-05-11 [?] CRAN (R 4.0.0)
 ##  P sessioninfo      1.1.1      2018-11-05 [?] CRAN (R 4.0.0)
+##  P shiny          * 1.6.0      2021-01-25 [?] CRAN (R 4.0.4)
+##  P shinyWidgets   * 0.6.0      2021-03-15 [?] CRAN (R 4.0.4)
+##  P slam             0.1-48     2020-12-03 [?] CRAN (R 4.0.3)
 ##  P snakecase        0.11.0     2019-05-25 [?] CRAN (R 4.0.0)
 ##  P SnowballC        0.7.0      2020-04-01 [?] CRAN (R 4.0.0)
 ##  P stringdist     * 0.9.6.3    2020-10-09 [?] CRAN (R 4.0.3)
 ##  P stringi        * 1.5.3      2020-09-09 [?] CRAN (R 4.0.2)
 ##  P stringr        * 1.4.0      2019-02-10 [?] CRAN (R 4.0.2)
-##  P styler           1.4.1      2021-03-30 [?] CRAN (R 4.0.5)
 ##  P svglite          2.0.0      2021-02-20 [?] CRAN (R 4.0.4)
 ##  P sylly          * 0.1-6      2020-09-20 [?] CRAN (R 4.0.5)
 ##  P sylly.en         0.1-3      2018-03-19 [?] CRAN (R 4.0.5)
 ##  P systemfonts      1.0.1      2021-02-09 [?] CRAN (R 4.0.4)
+##  P textdata         0.4.1      2020-05-04 [?] CRAN (R 4.0.5)
 ##  P textstem       * 0.1.4      2018-04-09 [?] CRAN (R 4.0.5)
 ##  P tibble         * 3.1.0      2021-02-25 [?] CRAN (R 4.0.4)
 ##  P tidyr          * 1.1.3      2021-03-03 [?] CRAN (R 4.0.4)
 ##  P tidyselect       1.1.0      2020-05-11 [?] CRAN (R 4.0.0)
 ##  P tidytext       * 0.3.0      2021-01-06 [?] CRAN (R 4.0.3)
 ##  P tidyverse      * 1.3.0      2019-11-21 [?] CRAN (R 4.0.0)
+##  P tm               0.7-8      2020-11-18 [?] CRAN (R 4.0.3)
 ##  P tokenizers       0.2.1      2018-03-29 [?] CRAN (R 4.0.0)
+##  P topicmodels    * 0.2-12     2021-01-29 [?] CRAN (R 4.0.5)
 ##  P utf8             1.2.1      2021-03-12 [?] CRAN (R 4.0.3)
 ##  P vctrs            0.3.7      2021-03-29 [?] CRAN (R 4.0.5)
 ##  P viridisLite      0.3.0      2018-02-01 [?] CRAN (R 4.0.0)
 ##  P webshot          0.5.2      2019-11-22 [?] CRAN (R 4.0.0)
 ##  P withr            2.4.1      2021-01-26 [?] CRAN (R 4.0.4)
+##  P XBRL             0.99.18    2017-03-28 [?] CRAN (R 4.0.5)
 ##  P xfun             0.22       2021-03-11 [?] CRAN (R 4.0.4)
 ##  P xml2           * 1.3.2      2020-04-23 [?] CRAN (R 4.0.0)
+##  P xtable           1.8-4      2019-04-21 [?] CRAN (R 4.0.0)
 ##  P yaml             2.2.1      2020-02-01 [?] CRAN (R 4.0.0)
 ##  P zip            * 2.1.1      2020-08-27 [?] CRAN (R 4.0.2)
 ## 
 ## [1] E:/R/R_projects/MMA22_ACC/renv/library/R-4.0/x86_64-w64-mingw32
-## [2] C:/Users/MUcke/AppData/Local/Temp/RtmpcznxQl/renv-system-library
+## [2] C:/Users/MUcke/AppData/Local/Temp/Rtmpy4W2Au/renv-system-library
 ## 
 ##  P -- Loaded and on-disk path mismatch.</code></pre>
 </div>

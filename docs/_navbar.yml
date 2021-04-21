@@ -13,8 +13,11 @@ left:
   - text: "Day 2 - Analysing Data"
     menu:
        - text: "Session 1 - Analysing Data: XBRL Tags"
+         href: ./04_xbrl_analyze.html
        - text: "Session 2 - Analysing Data: Textual Analysis"
+         href: ./05_textual_analysis.html
        - text: "Session 3 - Analysing Data: Excel and R"
+         href: ./06_excel_ratio_analysis.html
 right:
   - text: "Contact"
     href: ./contact.html
